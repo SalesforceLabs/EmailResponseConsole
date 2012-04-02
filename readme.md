@@ -27,6 +27,7 @@ Note: significant contributions may require a [Contributor License Agreement](ht
 AppExchange Version
 -------------------
 ERC is available on the AppExchange both as a managed and an un-managed package.
+
 - managed version: http://bit.ly/ERCmanaged
 - unmanaged version: http://bit.ly/ERCunmanaged
 
@@ -35,6 +36,7 @@ Version History
 ---------------
 
 *Version 2 - AppExchange Release: 2012/04/02*
+
 - Draft email support
 - Email approval process support
 - Various optimizations, enhancements and fixes

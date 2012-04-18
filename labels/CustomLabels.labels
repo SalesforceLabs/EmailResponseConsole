@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Add</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Add</shortDescription>
+        <value>Add</value>
+    </labels>
+    <labels>
+        <fullName>Add_Bcc</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Add Bcc</shortDescription>
+        <value>Add Bcc</value>
+    </labels>
+    <labels>
+        <fullName>Add_Cc</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Add Cc</shortDescription>
+        <value>Add Cc</value>
+    </labels>
+    <labels>
+        <fullName>AdditionalTo_Recipients</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AdditionalTo Recipients</shortDescription>
+        <value>AdditionalTo Recipients</value>
+    </labels>
+    <labels>
+        <fullName>Additional_To</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Additional To</shortDescription>
+        <value>Additional To</value>
+    </labels>
+    <labels>
+        <fullName>Adds_the_contents_for_filtering</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Adds the contents for filtering</shortDescription>
+        <value>Adds the contents for filtering</value>
+    </labels>
+    <labels>
+        <fullName>All</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>All</shortDescription>
+        <value>All</value>
+    </labels>
+    <labels>
+        <fullName>ArticleTypes_filter</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ArticleTypes filter</shortDescription>
+        <value>ArticleTypes Filter</value>
+    </labels>
+    <labels>
+        <fullName>Article_Links_Base_URL</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Article Links Base URL</shortDescription>
+        <value>Article Links Base URL</value>
+    </labels>
+    <labels>
+        <fullName>Article_Links_Base_URL_field_is_blank</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>&apos;Article Links Base URL&apos; field is blank</shortDescription>
+        <value>&apos;Article Links Base URL&apos; field is blank</value>
+    </labels>
+    <labels>
+        <fullName>Article_Links_Options</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Article Links Options</shortDescription>
+        <value>Article Links Options</value>
+    </labels>
+    <labels>
+        <fullName>Attach</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Attach</shortDescription>
+        <value>Attach</value>
+    </labels>
+    <labels>
+        <fullName>Auto_populate</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Auto populate</shortDescription>
+        <value>Auto Populate the &quot;TO&quot; Field From the Case Contact</value>
+    </labels>
+    <labels>
+        <fullName>BCC_Recipients</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BCC Recipients</shortDescription>
+        <value>BCC Recipients</value>
+    </labels>
+    <labels>
+        <fullName>Back_to_List_Cases</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Back to List : Cases</shortDescription>
+        <value>Back to List : Cases</value>
+    </labels>
+    <labels>
+        <fullName>Body</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body</shortDescription>
+        <value>Body</value>
+    </labels>
+    <labels>
+        <fullName>CC_Recipients</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CC Recipients</shortDescription>
+        <value>CC Recipients</value>
+    </labels>
+    <labels>
+        <fullName>Cancel</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>Case_Attributes_to_filter_mapping</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Attributes to filter mapping</shortDescription>
+        <value>Case Attributes to Filter Mapping</value>
+    </labels>
+    <labels>
+        <fullName>Case_Filter_Mapping_Error</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Filter Mapping Error</shortDescription>
+        <value>Duplicate combination for Case Attribute to filter mapping</value>
+    </labels>
+    <labels>
+        <fullName>Case_Number</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Number</shortDescription>
+        <value>Case Number</value>
+    </labels>
+    <labels>
+        <fullName>Case_Owner</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Owner</shortDescription>
+        <value>Case Owner</value>
+    </labels>
+    <labels>
+        <fullName>Case_Owner_Changed_Title</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Owner Changed Title</shortDescription>
+        <value>Case Owner Changed</value>
+    </labels>
+    <labels>
+        <fullName>Case_Subject</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Subject</shortDescription>
+        <value>Case Subject</value>
+    </labels>
+    <labels>
+        <fullName>CategoryGroups_Error_Message</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CategoryGroups Error Message</shortDescription>
+        <value>Select minimum ONE and maximum THREE Category Groups in the filters</value>
+    </labels>
+    <labels>
+        <fullName>Change_Case_Status_to</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Change Case Status to</shortDescription>
+        <value>Status</value>
+    </labels>
+    <labels>
+        <fullName>Close_Tab</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Close Tab</shortDescription>
+        <value>Close Tab</value>
+    </labels>
+    <labels>
+        <fullName>Contacts</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contacts</shortDescription>
+        <value>Contacts</value>
+    </labels>
+    <labels>
+        <fullName>Create_New_Public_Group</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Create New Public Group</shortDescription>
+        <value>Create New Public Group</value>
+    </labels>
+    <labels>
+        <fullName>Current_Case_Owner_have_changed</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Current Case Owner have changed</shortDescription>
+        <value>Current Case Owner have changed</value>
+    </labels>
+    <labels>
+        <fullName>Data_Category_Group_filter</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Data Category Group filter</shortDescription>
+        <value>Data Category Group Filter</value>
+    </labels>
+    <labels>
+        <fullName>Default_Reply_To_address</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Default Reply-To address</shortDescription>
+        <value>Default Reply-to Address</value>
+    </labels>
+    <labels>
+        <fullName>Default_Reply_To_address_field_is_blank</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>&apos;Default Reply-To address&apos; field is blank</shortDescription>
+        <value>&apos;Default Reply-To address&apos; field is blank</value>
+    </labels>
+    <labels>
+        <fullName>Default_Templates</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Default Templates</shortDescription>
+        <value>Default Templates</value>
+    </labels>
+    <labels>
+        <fullName>Discard_Changes</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Discard Changes</shortDescription>
+        <value>Discard Changes</value>
+    </labels>
+    <labels>
+        <fullName>Draft_message_saved</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Draft message saved</shortDescription>
+        <value>Draft message saved</value>
+    </labels>
+    <labels>
+        <fullName>Drafts_Rejected</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Drafts/Rejected</shortDescription>
+        <value>Drafts/Rejected</value>
+    </labels>
+    <labels>
+        <fullName>Email_Body_Length_has_exceeded</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email Body Length has exceeded</shortDescription>
+        <value>Email Body Length has exceeded</value>
+    </labels>
+    <labels>
+        <fullName>Email_Body_length_Exceeded</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email Body length Exceeded</shortDescription>
+        <value>Email Body length Exceeded</value>
+    </labels>
+    <labels>
+        <fullName>Email_Publisher_Options</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email Publisher Options</shortDescription>
+        <value>Email Publisher Options</value>
+    </labels>
+    <labels>
+        <fullName>Email_Sent_Title</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email Sent Title</shortDescription>
+        <value>Email Sent</value>
+    </labels>
+    <labels>
+        <fullName>Email_for_Case_has_been_Rejected</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email for Case has been Rejected</shortDescription>
+        <value>Email for Case has been Rejected</value>
+    </labels>
+    <labels>
+        <fullName>Email_for_Case_is_under_Approval</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email for Case is under Approval</shortDescription>
+        <value>Email for Case is under Approval</value>
+    </labels>
+    <labels>
+        <fullName>Email_has_been_Sent</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email has been Sent</shortDescription>
+        <value>Email has been Sent</value>
+    </labels>
+    <labels>
+        <fullName>Enable_Approval_process</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enable Approval process</shortDescription>
+        <value>Enable Approval process</value>
+    </labels>
+    <labels>
+        <fullName>Enable_Draft_Emails</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enable Draft Emails</shortDescription>
+        <value>Enable Draft Emails</value>
+    </labels>
+    <labels>
+        <fullName>Error_Message</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error Message</shortDescription>
+        <value>Error Message</value>
+    </labels>
+    <labels>
+        <fullName>Find</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Find</shortDescription>
+        <value>Find</value>
+    </labels>
+    <labels>
+        <fullName>Go</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Go</shortDescription>
+        <value>Go</value>
+    </labels>
+    <labels>
+        <fullName>Group_of_Users_allowed_to_send_email_witout_going_through_the_approval_process</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Group of Users allowed to send email witout going through the approval process</shortDescription>
+        <value>Group of Users allowed to send email without going through the approval process</value>
+    </labels>
+    <labels>
+        <fullName>HVEM_Settings</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HVEM Settings</shortDescription>
+        <value>ERC Settings</value>
+    </labels>
+    <labels>
+        <fullName>HVEM_Settings_NOT_set</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HVEM Settings notset</shortDescription>
+        <value>ERC Settings not set</value>
+    </labels>
+    <labels>
+        <fullName>Hide_Filters</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Hide Filters</shortDescription>
+        <value>Hide Filters</value>
+    </labels>
+    <labels>
+        <fullName>Insert_url</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Insert url</shortDescription>
+        <value>Insert url</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_Email_Address</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>&quot;Invalid Email Address</shortDescription>
+        <value>&quot;Invalid Email Address</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_URL</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid URL</shortDescription>
+        <value>Invalid URL</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_Url_in_Base_URL</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid Url in Base URL</shortDescription>
+        <value>Invalid Url in Base URL</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_additional_to_address</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid additional to address</shortDescription>
+        <value>Invalid additional to address</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_additional_to_address_specified</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid additional to address specified</shortDescription>
+        <value>Invalid additional to address specified</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_bcc_address</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid bcc address</shortDescription>
+        <value>Invalid bcc address</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_bcc_address_specified</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid bcc address specified</shortDescription>
+        <value>Invalid bcc address specified</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_cc_address</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid cc address</shortDescription>
+        <value>Invalid cc address</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_cc_address_specified</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid cc address specified</shortDescription>
+        <value>Invalid cc address specified</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_email_Address_in_reply_to</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid email Address in reply to</shortDescription>
+        <value>Invalid email Address in reply to</value>
+    </labels>
+    <labels>
+        <fullName>Last_Published_on</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Published on</shortDescription>
+        <value>Last Published on</value>
+    </labels>
+    <labels>
+        <fullName>Limit_Exceeded_Error</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Limit Exceeded Error</shortDescription>
+        <value>Limit Exceeded Error</value>
+    </labels>
+    <labels>
+        <fullName>Mail_cannot_be_Send_with_a_blank_Body</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mail cannot be Send with a blank Body</shortDescription>
+        <value>Mail cannot be Send with a blank Body</value>
+    </labels>
+    <labels>
+        <fullName>Mail_cannot_be_sent_with_a_blank_To_Address</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mail cannot be sent with a blank To Address</shortDescription>
+        <value>Mail cannot be sent with a blank To Address</value>
+    </labels>
+    <labels>
+        <fullName>Mail_cannot_be_sent_with_a_blank_body</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mail cannot be sent with a blank body</shortDescription>
+        <value>Mail cannot be sent with a blank body</value>
+    </labels>
+    <labels>
+        <fullName>Mail_cannot_be_sent_with_a_blank_subject</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mail cannot be sent with a blank subject</shortDescription>
+        <value>Mail cannot be sent with a blank subject</value>
+    </labels>
+    <labels>
+        <fullName>Map_To</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Map To</shortDescription>
+        <value>Map To</value>
+    </labels>
+    <labels>
+        <fullName>Maximum_Public_Group_selection_limit_exceeded</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Maximum Public Group selection limit exceeded</shortDescription>
+        <value>Maximum Public Group selection limit exceeded</value>
+    </labels>
+    <labels>
+        <fullName>My_Assigned_Cases</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>My Assigned Cases Label</shortDescription>
+        <value>Cases</value>
+    </labels>
+    <labels>
+        <fullName>My_Assigned_Queues</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Queues assigned to me Label</shortDescription>
+        <value>Queues</value>
+    </labels>
+    <labels>
+        <fullName>New_case_status_when_sending_an_email_to_approval</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New case status when sending an email to approval</shortDescription>
+        <value>New case status when sending an email to approval</value>
+    </labels>
+    <labels>
+        <fullName>No_Case_Assigned_Error_Message</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Case Assigned Error Message</shortDescription>
+        <value>No Cases have been assigned to current user</value>
+    </labels>
+    <labels>
+        <fullName>No_Case_In_Queue_Error_Message</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Case In Queue Error Message</shortDescription>
+        <value>No Open Cases available in Selected Queue</value>
+    </labels>
+    <labels>
+        <fullName>No_Case_in_Selected_Queue_Title</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Case in Selected Queue Title</shortDescription>
+        <value>No Case in Selected Queue</value>
+    </labels>
+    <labels>
+        <fullName>No_Content_in_To_Address</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Content in the To Address</shortDescription>
+        <value>No content in To Address</value>
+    </labels>
+    <labels>
+        <fullName>No_Content_in_the_Subject</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Content in the Subject</shortDescription>
+        <value>No content in the subject</value>
+    </labels>
+    <labels>
+        <fullName>No_Content_in_the_body_Title</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Content in the body Title</shortDescription>
+        <value>No content in the body</value>
+    </labels>
+    <labels>
+        <fullName>No_Drafts_Rwjected_Cases_found</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Drafts/Rejected Cases found</shortDescription>
+        <value>No Drafts/Rejected Cases found</value>
+    </labels>
+    <labels>
+        <fullName>No_Open_Case_Available_in_Selected_Queue</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Open Case Available in Selected Queue</shortDescription>
+        <value>No Open Case Available in Selected Queue.</value>
+    </labels>
+    <labels>
+        <fullName>No_Queue_Assigned</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Queue Assigned</shortDescription>
+        <value>No Queue Assigned</value>
+    </labels>
+    <labels>
+        <fullName>No_Queue_assigned_to_current_User</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Queue assigned to current User</shortDescription>
+        <value>No Queue assigned to current User</value>
+    </labels>
+    <labels>
+        <fullName>Only_contacts_or_co_workers_with_stored_email_addresses_are_displayed_in_the_box</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Only contacts or co-workers with stored email addresses are displayed in the box</shortDescription>
+        <value>Only contacts or co-workers with stored email addresses are displayed in the box below</value>
+    </labels>
+    <labels>
+        <fullName>Previous_Case_Label</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Previous Case Label</shortDescription>
+        <value>Previous Case</value>
+    </labels>
+    <labels>
+        <fullName>Remove</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Remove</shortDescription>
+        <value>Remove</value>
+    </labels>
+    <labels>
+        <fullName>Removes_the_contents_from_filtering</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Removes the contents from filtering</shortDescription>
+        <value>Removes the contents from filtering</value>
+    </labels>
+    <labels>
+        <fullName>Required_field_Missing</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Required field Missing</shortDescription>
+        <value>Required field missing</value>
+    </labels>
+    <labels>
+        <fullName>Save</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>Save_confirmation_Message</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save confirmation Message</shortDescription>
+        <value>Settings saved successfully</value>
+    </labels>
+    <labels>
+        <fullName>Search_Options</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Search Options</shortDescription>
+        <value>Search Options</value>
+    </labels>
+    <labels>
+        <fullName>Search_for_public_Groups</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Search for public Groups</shortDescription>
+        <value>Search for public Groups</value>
+    </labels>
+    <labels>
+        <fullName>Send_and_Next_Case</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Send and Next Case</shortDescription>
+        <value>Send and Next Case</value>
+    </labels>
+    <labels>
+        <fullName>Setup_Manage_Users_Public_Groups</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Setup | Manage Users | Public Groups</shortDescription>
+        <value>Setup | Manage Users | Public Groups</value>
+    </labels>
+    <labels>
+        <fullName>Show</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Show</shortDescription>
+        <value>Show</value>
+    </labels>
+    <labels>
+        <fullName>Show_Filters</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Show Filters</shortDescription>
+        <value>Show Filters</value>
+    </labels>
+    <labels>
+        <fullName>Subject</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Subject</shortDescription>
+        <value>Subject</value>
+    </labels>
+    <labels>
+        <fullName>Submit_for_Review</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Submit for Review</shortDescription>
+        <value>Submit for Review</value>
+    </labels>
+    <labels>
+        <fullName>Suggested_Article_Component_Options</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Suggested Article Component Options</shortDescription>
+        <value>Suggested Article Component Options</value>
+    </labels>
+    <labels>
+        <fullName>Suggested_Articles</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Suggested Articles</shortDescription>
+        <value>Suggested Articles</value>
+    </labels>
+    <labels>
+        <fullName>Template</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template</shortDescription>
+        <value>Template</value>
+    </labels>
+    <labels>
+        <fullName>Template_Folder</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template Folder</shortDescription>
+        <value>Template Folder</value>
+    </labels>
+    <labels>
+        <fullName>To</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>To</shortDescription>
+        <value>To</value>
+    </labels>
+    <labels>
+        <fullName>To_create_a_new_public_group_go_to</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>To create a new public group, go to</shortDescription>
+        <value>To create a new public group, go to</value>
+    </labels>
+    <labels>
+        <fullName>Unfiled_Public_Email_Templates</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unfiled Public Email Templates</shortDescription>
+        <value>Unfiled Public Email Templates</value>
+    </labels>
+    <labels>
+        <fullName>Your_Draft_Is_Under_Approval_Process</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Your Draft Is Under Approval Process</shortDescription>
+        <value>Your Draft Is Under Approval Process</value>
+    </labels>
+    <labels>
+        <fullName>Your_message_have_been_saved_to_drafts</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Your message have been saved to drafts</shortDescription>
+        <value>Your message have been saved to drafts</value>
+    </labels>
+    <labels>
+        <fullName>articleTypes_Error_Message</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>articleTypes Error Message</shortDescription>
+        <value>Select minimum ONE and maximum FOUR Article Types in the filters</value>
+    </labels>
+    <labels>
+        <fullName>settings_for_HVEM_have_been_saved</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>settings for HVEM have been saved</shortDescription>
+        <value>Settings for ERC have been saved</value>
+    </labels>
+</CustomLabels>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Config settings for HVEM app</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Allow_Draft_Approval__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>HVEM config setting which allows the user to send the saved drafts for approval..</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which allows the user to send the saved drafts for approval.</inlineHelpText>
+        <label>Allow Draft Approval</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Allow_Drafts__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>HVEM config setting which allows the user to save drafts.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which allows the user to save drafts.</inlineHelpText>
+        <label>Allow Drafts</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Article_Link_Base_URL__c</fullName>
+        <description>HVEM config setting which sets article link base URL</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which sets article link base URL</inlineHelpText>
+        <label>Article Link Base URL</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Article_Types_Filter__c</fullName>
+        <description>HVEM config setting which sets default article types filters</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which sets default article types filters</inlineHelpText>
+        <label>Article Types Filter</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Auto_Populate_To_Field_From_Case_Contact__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>HVEM config setting which determines whether to populate &apos;To&apos; field by default from case contact</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which determines whether to populate &apos;To&apos; field by default from case contact</inlineHelpText>
+        <label>Auto-Populate To Field From Case Contact</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Available_Data_Category_Group_Filter__c</fullName>
+        <externalId>false</externalId>
+        <label>Available Data Category Group Filter</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Mappin_API__c</fullName>
+        <description>String that holds the case mapping API</description>
+        <externalId>false</externalId>
+        <inlineHelpText>String that holds the case mapping API</inlineHelpText>
+        <label>Case Mappin API</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Mapping_Label__c</fullName>
+        <description>String that holds the case mapping labels</description>
+        <externalId>false</externalId>
+        <inlineHelpText>String that holds the case mapping labels</inlineHelpText>
+        <label>Case Mapping Label</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Data_Category_Group_Filter__c</fullName>
+        <description>HVEM config setting which sets default data category group filters</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which sets default data category group filters</inlineHelpText>
+        <label>Data  Category Group Filter</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Default_Email_Template__c</fullName>
+        <description>Default email template for Email Composer component</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Default email template for Email Composer component</inlineHelpText>
+        <label>Default Email Template</label>
+        <length>18</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Manual_Submission_Of_Drafts__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>HVEM config setting which allows the manual submission of drafts.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which allows the manual submission of drafts.</inlineHelpText>
+        <label>Allow Manual Submission Of Drafts</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Public_Groups_With_No_Approval_Extended__c</fullName>
+        <externalId>false</externalId>
+        <label>Public Groups With No Approval Extended</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Public_Groups_With_No_Approval__c</fullName>
+        <description>HVEM config setting which saves the id of  public groups. with no need for approval.for sending mail</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which saves the id of  public groups. with no need for approval.for sending mail</inlineHelpText>
+        <label>Public Groups With No Approval</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Reply_To_Mail__c</fullName>
+        <externalId>false</externalId>
+        <label>Reply To Mail</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Under_Approval_Case_Status__c</fullName>
+        <description>HVEM config setting which allows the user to save drafts</description>
+        <externalId>false</externalId>
+        <inlineHelpText>HVEM config setting which allows the user to save drafts</inlineHelpText>
+        <label>Under Approval Case Status</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>HVEM Config Options</label>
+</CustomObject>

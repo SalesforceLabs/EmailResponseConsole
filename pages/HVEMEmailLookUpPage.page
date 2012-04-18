@@ -1,0 +1,182 @@
+<!--
+Copyright (c) 2012, salesforce.com, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, 
+    this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, 
+    this list of conditions and the following disclaimer in the documentation 
+    and/or other materials provided with the distribution.
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
+    may be used to endorse or promote products derived from this software 
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGE. 
+ -->
+
+<apex:page showheader="false" controller="HVEMEmailLookUpCtrl"  id="idLookUpPage">
+     <apex:form id="idLookUpForm">
+     <apex:actionFunction name="changeSelectionAF" action="{!changeSelection}" rerender="idMainUserContactLIst" />
+     <apex:pageBlock id="idLookUpPB">	
+     <apex:outputLabel value="Only contacts or co-workers with stored email addresses are displayed in the box below" />
+     	<table > 
+     		<tr>
+     			<td>
+     			<apex:outputLabel id="idInitialSelectionOption" value="Show: " />
+     			<apex:selectList onchange="changeSelectionAF();" id="idOptions" style="width:250px;border: 1px solid black;" multiselect="false" size="1" value="{!selectedOption}" >
+		        	<apex:selectOptions value="{!InitialOptions}"/>
+		        </apex:selectList>
+			    </td>	
+     		</tr>
+     		<br/><br/>
+     	</table>
+     	
+     	<table id="mainResultTable">
+     		<tr>
+     			<td>
+					<apex:outputPanel id="idMainUserContactLIst">
+					<apex:outputLabel style="font-weight:bold;" value="Contacts" /><br/>
+					<apex:selectList id="idUsers" style="width:200px;border: 1px solid black" multiselect="true" size="18" value="{!selectedUserContactList}" >
+			        	<apex:selectOptions value="{!UserContactOptions}"/>  
+			        </apex:selectList>
+			        </apex:outputPanel>
+     			</td>
+     			<td>
+     				<table>
+     					<tr >
+     						<td valign="middle">
+								<apex:commandLink id="idAdditionalToAdd"  onComplete="return false;" onclick="changeSelected(true,'additionalTo');">
+			                       <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif"/>
+			                   </apex:commandLink><br/>
+			                   <apex:commandLink id="idAdditionalToRemove"  onComplete="return false;"  onclick="changeSelected(false,'additionalTo');">
+			                      <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif"/>
+			                  </apex:commandLink>
+     						</td>
+     						<td>
+     							<apex:outputLabel style="font-weight:bold;" value="AdditionalTo Recipients" /><br/>
+     							<apex:selectList id="idAdditionalTo" multiselect="true" size="5" style="width:110px"/>
+     						</td>
+     					</tr>
+     					<tr/>
+     					<tr style="margin-top:10px;">
+     						<td valign="middle">
+     							<apex:commandLink id="idCcToAdd"  onComplete="return false;"   onclick="changeSelected(true,'ccTo');">
+			                       <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif"/>
+			                   </apex:commandLink><br/>
+			                   <apex:commandLink id="idCcToRemove"  onComplete="return false;"  onclick="changeSelected(false,'ccTo');"> 
+			                      <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif"/>
+			                  </apex:commandLink>
+     						</td>
+     						<td>
+     							<apex:outputLabel style="font-weight:bold;" value="CC Recipients" /><br/>
+     							<apex:selectList id="idCcTo" multiselect="true" size="5" style="width:110px"/>
+     						</td>
+     					</tr>
+     					<tr/>
+     					<tr style="margin-top:10px;">
+     						<td valign="middle">
+     							<apex:commandLink id="idBccToAdd" onComplete="return false;"   onclick="changeSelected(true,'bccTo');">
+			                       <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif"/>
+			                   </apex:commandLink><br/>
+			                   <apex:commandLink id="idBccToRemove"  onComplete="return false;"  onclick="changeSelected(false,'bccTo');">
+			                      <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif"/>
+			                  </apex:commandLink>
+     						</td>
+     						<td>
+     							<apex:outputLabel style="font-weight:bold;" value="BCC Recipients" /><br/>
+     							<apex:selectList id="idBccTo" multiselect="true" size="5" style="width:110px"/>
+     						</td>
+     					</tr>
+     				</table>
+     			</td>
+     		</tr>
+     	</table>
+     	<center>
+	     	<input type="button" Class="btn" onclick="sendSaveValues();" value="Save" /> 
+	     	<input style="margin-left:10px;" type="button" Class="btn" onclick="window.close();" value="Cancel" />
+	    </center> 
+       </apex:pageBlock>
+       </apex:form>
+      <script>
+		window.onload = init ();
+		
+		function init(){
+			document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idAdditionalTo').options[0] = null;
+			document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idCcTo').options[0] = null;
+			document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idBccTo').options[0] = null;
+		}    
+		
+		function sendSaveValues(){
+			var additionalTo = document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idAdditionalTo').options;
+			var ccTo = document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idCcTo').options;
+			var bccTo = document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idBccTo').options;
+			
+			var finalAdditionalTo = '';
+			var finalCcTo = '';
+			var finalBccTo = '';
+			
+			for(var i=0; i<additionalTo.length; i++){
+				if(additionalTo[i].value != 'null'){
+					finalAdditionalTo = finalAdditionalTo + additionalTo[i].value + ';';
+				}
+			}
+			for(var i=0; i<ccTo.length; i++){
+				if(ccTo[i].value != 'null'){
+					finalCcTo = finalCcTo + ccTo[i].value + ';';
+				}
+			}
+			for(var i=0; i<bccTo.length; i++){
+				if(bccTo[i].value != 'null'){
+					finalBccTo = finalBccTo + bccTo[i].value + ';';
+				}
+			}
+			window.close();
+			window.opener.displayEmailAddresses(finalAdditionalTo,finalCcTo,finalBccTo);
+			
+		}
+		  
+      	function changeSelected(blnFromLeft,type)
+	    {
+	    var LeftListBox = document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idUsers');
+		var RightListBox;
+		if(type == 'additionalTo'){
+			RightListBox = document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idAdditionalTo');
+		}else if(type == 'ccTo'){
+			RightListBox = document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idCcTo');
+		}else if(type == 'bccTo'){
+			RightListBox = document.getElementById('idLookUpPage:idLookUpForm:idLookUpPB:idBccTo');
+		}
+		var ListItems = new Array();
+		FromList = (blnFromLeft ? LeftListBox : RightListBox); 
+		ToList = (blnFromLeft ? RightListBox : LeftListBox);
+		if(blnFromLeft){
+			for(var i=(FromList.options.length - 1);i>=0;i--)
+			if(FromList.options[i].selected){
+				ListItems[ListItems.length] = new Option(FromList.options[i].text,FromList.options[i].value,true,false);
+			} 
+			for(var i=ListItems.length - 1;i>=0;i--)
+			ToList.options[ToList.options.length]= ListItems[i];
+				FromList.options[i] = null;
+		}else{
+			for(var i=(FromList.options.length - 1);i>=0;i--){
+				if(FromList.options[i].selected){
+					FromList.options[i] = null;
+				}
+			}
+		}
+		
+	  }
+      </script>
+</apex:page>

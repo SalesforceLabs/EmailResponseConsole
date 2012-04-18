@@ -1,0 +1,481 @@
+<!--
+Copyright (c) 2012, salesforce.com, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, 
+    this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, 
+    this list of conditions and the following disclaimer in the documentation 
+    and/or other materials provided with the distribution.
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
+    may be used to endorse or promote products derived from this software 
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGE. 
+ -->
+
+<apex:page id="HVEMPageId" controller="HVEMSettingsCtrl" showheader="true" sidebar="false"> 
+<apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMSettings_js.js')}"/>  
+
+    <style>
+    #disablingDiv
+    {
+        /* Do not display it on entry */
+        display: none;
+    
+        /* Display it on the layer with index 1001.
+           Make sure this is the highest z-index value
+           used by layers on that page */
+        z-index:1001;
+         
+        /* make it cover the whole screen */
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 300%;
+    
+        /* make it white but fully transparent */
+        background-color: #6D7B8D;
+        opacity:.20;
+        filter: alpha(opacity=20);
+    }
+    #loadingImage{
+        display:none;
+    }
+     .borderStyle
+      {
+      border: 1px solid black;
+       border-color: #778899;
+         }   
+    </style>
+  
+   <div id="disablingDiv" style="position:absolute;top: 0px;left: 0px;">
+   	</div>
+   	<div id="loadingImage" style="position:absolute;left: 40%;top:40%;">
+   		<apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}" width="20px" height="20px"/>
+   	</div>
+<apex:form id="hvemForm" >
+    <apex:pageBlock id="hvemPageBlockId" title="{!$Label.HVEM_Settings}">
+        <apex:outputPanel id="idErrorMessagePanel">
+            <apex:pageMessage id="saveMessageId" rendered="{!saveCS}" severity="confirm" strength="3" title="{!$Label.Save_confirmation_Message}" summary="{!$Label.settings_for_HVEM_have_been_saved}"/>
+            <apex:pageMessage id="ArticleErrorId" rendered="{!articleTypesError}" severity="error" strength="2" summary="{!$Label.articleTypes_Error_Message}"/>
+            <apex:pageMessage id="CategoryErrorId" rendered="{!categoryGroupsError}" severity="error" strength="2" summary="{!$Label.CategoryGroups_Error_Message}"/>
+            <apex:pageMessage id="CaseFilterErrorId" rendered="{!caseFilterError}" severity="error" strength="2" summary="{!$Label.Case_Filter_Mapping_Error}"/>            
+            <apex:pageMessage id="replyToBlankErrorId" rendered="{!replyToBlankError}" severity="error" strength="2" summary="{!$Label.Invalid_email_Address_in_reply_to}" title="{!$Label.Invalid_Email_Address}"/>            
+            <apex:pageMessage id="baseUrlBlankErrorId" rendered="{!baseURLBlankError}" severity="error" strength="2" summary="{!$Label.Invalid_Url_in_Base_URL}" title="{!$Label.Invalid_URL}"/>            
+            <apex:pageMessage id="PublicGroupErrorId" rendered="{!PublicGroupError}" severity="error" strength="2" summary="{!$Label.Maximum_Public_Group_selection_limit_exceeded}" title="{!$Label.Limit_Exceeded_Error}"/>            
+        </apex:outputPanel>  
+        <table cellpadding="5" cellspacing="5">
+        <tr><td colspan="2"><center><apex:commandButton id="SaveButton1Id" value="{!$Label.Save}" onclick="OnBtnSaveClick();" oncomplete="return false;"/></center></td></tr>
+        <tr><td><apex:outputText value="{!$Label.Email_Publisher_Options}" style="font-weight:bold;"/></td></tr>    
+        <tr>
+            <td><apex:outputLabel value="{!$Label.Template_Folder}"/></td>
+            <td>
+                <apex:selectList id="folderSelectListId" style="width:250px" size="1" value="{!folders}" onchange="initializeEmailTemplate()">
+                    <apex:selectOptions value="{!emailFolders}"/>
+                </apex:selectList><p/>
+            </td>           
+        </tr>  
+        <tr>
+            <td><apex:outputLabel value="{!$Label.Default_Templates}"/></td>
+            <td>
+                <apex:selectList id="emailTemplateId" style="width:250px" size="1" value="{!templates}" >
+                    <apex:selectOptions value="{!emailTemplates}"/>
+                </apex:selectList><p/>
+            </td>
+        </tr> 
+        <tr>
+            <td ><apex:outputLabel value="{!$Label.Default_Reply_To_address}" /></td>
+            <td><apex:inputText style="width:250px;border-left:4px solid red;" value="{!replyToAddress}"/></td>
+        </tr>
+        <tr>
+            <td colspan="2"><apex:inputCheckbox value="{!autoPopulate}"/>
+            <apex:outputText value="{!$Label.Auto_populate}"/></td>
+        </tr>
+        <tr>
+            <td colspan="2"><apex:inputCheckbox value="{!enableDraftEmails}"/>
+            <apex:outputText value="{!$Label.Enable_Draft_Emails}"/></td>
+        </tr>
+        <tr>
+            <td colspan="2"><apex:inputCheckbox value="{!enableApprovalProcess}" onclick="enableApproval();"/>
+            <apex:outputText value="{!$Label.Enable_Approval_process}"/></td>
+        </tr>
+        <tr>
+            <td colspan="2"><apex:outputText style="margin-left:50px;" value="{!$Label.New_case_status_when_sending_an_email_to_approval}"/>
+            <apex:selectList id="caseStatusListId" disabled="{!IF(enableApprovalProcess,false,true)}" style="margin-left:5px;min-width:110px;" size="1" value="{!caseStatusUnderApproval}" >
+                <apex:selectoptions value="{!caseStatusFieldValues}"/>
+            </apex:selectList>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><apex:outputText style="margin-left:50px;" value="{!$Label.Group_of_Users_allowed_to_send_email_witout_going_through_the_approval_process}"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <apex:outputText style="margin-left:100px;font-weight:bold;" value="{!$Label.Search_for_public_Groups} "/>                                
+                <apex:inputText id="searchTextId" disabled="{!IF(enableApprovalProcess,false,true)}" style="margin-left:2px;margin-right:5px;" value="{!searchGroupText}" onkeypress="if (event.keyCode == 13) {enterHit(); return false;}"/>                
+                <apex:commandButton id="SearchButtonId" title="Filter" disabled="{!IF(enableApprovalProcess,false,true)}" value="{!$Label.Find}" action="{!filterGroups}" reRender="PublicGroupSelectList1Id" status="loadingStatus"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <apex:outputText style="margin-left:100px;font-weight:bold;" value="{!$Label.To_create_a_new_public_group_go_to} "/> 
+                <apex:outputPanel id="createGroupId">
+                    <apex:commandLink title="{!$Label.Create_New_Public_Group}" onclick="openPublicGroups();" oncomplete="return false;" rendered="{!IF(enableApprovalProcess,true,false)}"> {!$Label.Setup_Manage_Users_Public_Groups}</apex:commandLink>                
+                    <apex:outputLabel style="text-decoration:underline;color:#787878;" rendered="{!IF(enableApprovalProcess,false,true)}">{!$Label.Setup_Manage_Users_Public_Groups}</apex:outputLabel>
+                </apex:outputPanel>                
+            </td>
+        </tr>
+        <tr>           
+            <td/>
+            <td>                                  
+                <table>
+                <tr>
+                    <td>
+                        <apex:selectList id="PublicGroupSelectList1Id" title="Available" disabled="{!IF(enableApprovalProcess,false,true)}" value="{!selectedPubliGroupsList}" multiselect="true" size="5" style="min-width:110px">
+                            <apex:selectOptions value="{!publicGroups}"/>
+                        </apex:selectList> 
+                    </td>
+                    <td>
+                        <table>
+                        <tr>
+                            <td>
+                                <apex:outputPanel id="addPublicGroupId">
+                                    <apex:commandLink oncomplete="return false;" action="{!addOption}" reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id" status="loadingStatus" rendered="{!IF(enableApprovalProcess,true,false)}">
+                                        <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif"/>
+                                    </apex:commandLink>
+                                    <apex:outputLabel style="color:#787878;" rendered="{!IF(enableApprovalProcess,false,true)}">
+                                        <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif"/>
+                                    </apex:outputLabel>
+                                </apex:outputPanel>                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:outputPanel id="removePublicGroupId" >
+                                    <apex:commandLink oncomplete="return false;" action="{!removeOption}" reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id" status="loadingStatus" rendered="{!IF(enableApprovalProcess,true,false)}">
+                                        <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif"/>
+                                    </apex:commandLink>
+                                    <apex:outputLabel style="color:#787878;" rendered="{!IF(enableApprovalProcess,false,true)}">
+                                        <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif"/>
+                                    </apex:outputLabel>
+                                </apex:outputPanel>                                
+                            </td>
+                        </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <apex:selectList id="PublicGroupSelectList2Id" title="Selected" disabled="{!IF(enableApprovalProcess,false,true)}" value="{!saveGroupList}" multiselect="true" size="5" style="min-width:110px">
+                            <apex:selectOptions value="{!savedOptions}"/>
+                        </apex:selectList>
+                    </td>              
+                </tr>
+                </table>
+            </td>
+        </tr>
+        <tr><td colspan="2"><br/><apex:outputText value="{!$Label.Suggested_Article_Component_Options}" style="font-weight:bold;"/></td></tr> 
+        <tr><td colspan="2"><apex:outputLabel value="{!$Label.Search_Options}" style="font-weight:bold;"/></td></tr> 
+        <tr>
+            <td><apex:outputLabel value="{!$Label.Data_Category_Group_filter}"/></td>
+            <td>                
+                <table>
+                <tr>
+                    <td>
+                        <apex:inputTextArea id="categoryGroupTextId" styleClass="borderStyle" title="Available" style="width:110px;resize:none;" value="{!availableCategoryGroups}" rows="5"/>    
+                    </td>
+                    <td>
+                        <apex:commandLink style="margin-bottom:7px;" id="CategoryAddLinkId" onclick="populateCategoryGroupSelected();" oncomplete="return false;">
+                            <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif"/>
+                        </apex:commandLink> <br/>       
+                       <apex:commandLink id="CategoryRemoveLinkId" oncomplete="return false;" onclick="categoryGroupPopulate(false);" >
+                            <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif"/>
+                        </apex:commandLink>
+                    </td>
+                    <td>
+                        <apex:selectList id="CategoryGroups2Id" title="Selected" multiselect="true" disabled="false" size="5" style="min-width:110px">
+                            <apex:selectoptions value="{!enteredCategoryGroups}"/>
+                        </apex:selectList>
+                    </td>              
+                </tr>
+                </table>
+                <!--===========================Commented=====================                
+                <table>
+                <tr>
+                    <td>
+                        <apex:selectList id="CategoryGroups1Id" value="{!selectedCategoryGroupsList}" multiselect="true" size="5" style="width:110px">
+                            <apex:selectOptions value="{!categoryGroups}"/>
+                        </apex:selectList>
+                    </td>
+                    <td>
+                        <table>
+                        <tr>
+                            <td>
+                                <apex:commandLink id="CategoryAddLinkId" oncomplete="return false;" onclick="OnTransferBtnClick1(true);">
+                                    <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif"/>
+                                </apex:commandLink>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:commandLink id="CategoryRemoveLinkId" oncomplete="return false;" onclick="OnTransferBtnClick1(false);">
+                                    <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif"/>
+                                </apex:commandLink>
+                            </td>
+                        </tr>
+                        
+                        </table>                        
+                    </td>
+                    <td>
+                        <apex:selectList id="CategoryGroups2Id" multiselect="true" size="5" style="width:110px"/>
+                    </td>              
+                </tr>
+                </table>
+                =======================================================-->                
+            </td>
+        </tr> 
+        <tr>
+            <td><apex:outputText value="{!$Label.ArticleTypes_filter}"/></td>
+            <td>  
+                <table>
+                <tr>
+                    <td>
+                        <apex:selectList id="articleTypesFilter1Id" title="Available" value="{!selectedArticleTypesList}" multiselect="true" size="5" style="min-width:110px">
+                            <apex:selectOptions value="{!articleTypesDevName}"/>
+                        </apex:selectList>
+                    </td>
+                    <td>
+                        <table>
+                        <tr>
+                            <td>
+                                <apex:commandLink id="addLinkId" oncomplete="return false;" onclick="OnTransferBtnClick2(true,'articleType');">
+                                    <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif"/>
+                                </apex:commandLink>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:commandLink id="removeLinkId" oncomplete="return false;" onclick="OnTransferBtnClick2(false,'articleType');">
+                                    <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif"/>
+                                </apex:commandLink>
+                            </td>
+                        </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <apex:selectList id="articleTypesFilter2Id" title="Selected" multiselect="true" size="5" style="min-width:110px"/>
+                    </td>              
+                </tr>
+                </table>
+            </td>    
+        </tr>
+        <tr>
+            <td><apex:outputText value="{!$Label.Case_Attributes_to_filter_mapping}"/></td>
+            <td>
+                <apex:selectList id="CaseSelectListId" title="Case Field" value="{!selectedPickListCaseField}" multiselect="false" size="1" style="width:110px" onchange="initializeCasePicListValues();">
+                    <apex:selectOptions value="{!casePickListFields}"/>
+                </apex:selectList>&nbsp;&nbsp;
+                <apex:selectList id="CaseSelectListValueId" title="Selected Field's values" value="{!selectedPickListCaseValue}" multiselect="false" size="1" style="width:110px">
+                    <apex:selectOptions value="{!casePickListFieldsValues}"/>
+                </apex:selectList>&nbsp;&nbsp;
+                <apex:outputText value="{!$Label.Map_To}" style="font-weight:bold;"/>&nbsp;&nbsp;
+                <apex:outputPanel id="mappingCategorygroupPanel">
+                <apex:selectList id="CategoryGroupSelectId" title="Category Group" value="{!selectedCategoryGroups}" multiselect="false" size="1" onchange="getDataCategoriesAF();" style="width:110px">
+                    <apex:selectOptions value="{!EnteredCategoryGroups}"/>
+                </apex:selectList>&nbsp;&nbsp;
+                </apex:outputPanel>
+                <apex:outputPanel id="dataCategoryListId">
+                    <select id="dataCategorySelectLisrtId" title="Data Category" name="categoryType_{!selectedCategoryGroups}" style="width:110px">
+                        <option value="All >> All">{!$label.All}</option>
+                        <knowledge:categoryList categoryVar="category" categoryGroup="{!selectedCategoryGroups}" rootCategory="All" level="-1">
+                            <option value="{!category.name} >> {!category.label}">
+                                <apex:outputText escape="false" value="{!LPAD(' ',6*category.depth,'&nbsp;')}" />
+                                {!category.label}
+                            </option>
+                        </knowledge:categoryList>
+                    </select>&nbsp;
+                </apex:outputPanel>
+                
+        <!--===========================Commented=====================                                 
+                <apex:selectList id="CategoryGroupValuesId" value="{!dataCategory}" multiselect="false" size="1" style="border: 1px solid black;width:110px">
+                    <apex:selectOptions value="{!dataCategories}"/>
+                </apex:selectList>&nbsp;&nbsp; 
+        =======================================================================-->                                   
+                <apex:commandButton onclick="fetchSelectedDataCategory();" status="loadingStatus" style="width:100px;" id="AddFiltersButtonId" value="{!$Label.Add}"  title="{!$Label.Adds_the_contents_for_filtering}" onComplete="return false;"/>                       
+            </td>
+        </tr> 
+        <tr>
+        <td></td>
+        <td>
+            <apex:outputPanel id="caseFilterMappingPanelId">
+                <apex:selectList style="width:504px;" id="caseFilterMappingSelectListId" value="{!caseMapSelected}" multiselect="false" size="6">
+                    <apex:selectOptions value="{!caseFilterMapEntry}"/>
+                </apex:selectList>&nbsp;&nbsp;
+            </apex:outputPanel>            
+            <apex:commandButton status="loadingStatus" style="width:100px" id="RemoveFiltersButtonId" value="{!$Label.Remove}" title="{!$Label.Removes_the_contents_from_filtering}" action="{!removeMapping}" rerender="caseFilterMappingPanelId,idErrorMessagePanel"/>
+        </td>
+        </tr>
+        <tr><td><br/><apex:outputText style="font-weight:bold;" value="{!$Label.Article_Links_Options}"/></td></tr> 
+        <tr>
+            <td><apex:outputText value="{!$Label.Article_Links_Base_URL}"/></td>
+            <td><apex:inputText style="border-left:4px solid red;" id="baseURLId" label="Base URL" value="{!baseURL}" size="82"/></td>  
+        </tr> 
+        <tr><td colspan="2"><center><apex:commandButton id="SaveButton2Id" value="{!$Label.Save}" onclick="OnBtnSaveClick();" oncomplete="return false;"/></center></td></tr>
+        </table>
+    </apex:pageBlock> 
+    
+    <apex:actionFunction name="addMappingAF" status="loadingStatus" oncomplete="reRenderFilter();">
+        <apex:param name="dataCategory" assignTo="{!dataCategory}"  value=""/>
+    </apex:actionFunction>    
+    <apex:actionFunction name="reRenderFilter" action="{!addMapping}" rerender="caseFilterMappingPanelId,idErrorMessagePanel"/>
+    <apex:actionFunction action="{!initializeEmailTemplate}" status="loadingStatus" name="initializeEmailTemplate" reRender="emailTemplateId"/>
+    <apex:actionFunction name="setFilters" status="loadingStatus" action="{!saveTOCustomSettings}" rerender="idErrorMessagePanel" >
+        <apex:param assignTo="{!strChosenCategoryGroups}" name="strChosenCategoryGroups" value=""/>
+        <apex:param assignTo="{!strChosenArticleTypes}" name="strChosenArticleTypes" value=""/>
+        <apex:param assignTo="{!availableCategoryGroups}" name="availableCategoryGroups" value=""/>
+    </apex:actionfunction> 
+    <apex:actionFunction action="{!initializeCasePicListValues}" status="loadingStatus" name="initializeCasePicListValues" reRender="CaseSelectListValueId"/> 
+    <!--===========================Commented===================================                
+    <apex:actionFunction name="getDataCategoriesAF" oncomplete="hyphenReplacement();" action="{!populateDataCategories}" reRender="CategoryGroupValuesId"/>
+    =======================================================================-->
+    <apex:actionFunction name="getDataCategoriesAF" status="loadingStatus" reRender="dataCategoryListId"/> 
+    <apex:actionFunction name="categoryGroupListAF" status="afterLoadingStatus" oncomplete="dataCategoryAF();" action="{!refreshFunction}" reRender="mappingCategorygroupPanel"> 
+         <apex:param name="strChosenCategoryGroups" assignTo="{!chosenCategoryGroups}" value=""/>
+    </apex:actionFunction>
+    <apex:actionFunction name="dataCategoryAF" action="{!refreshFunction}" reRender="dataCategoryListId" oncomplete="unFreezeBackground();"/> 
+    <apex:actionfunction name="enterHit" reRender="PublicGroupSelectList1Id" action="{!filterGroups}" status="loadingStatus"/> 
+    <apex:actionFunction name="enableApproval" status="loadingStatus" reRender="createGroupId,caseStatusListId,searchTextId,SearchButtonId,PublicGroupSelectList1Id,addPublicGroupId,removePublicGroupId,PublicGroupSelectList2Id"/>
+    <apex:actionStatus id="loadingStatus" onstart="freezeBackground();" onstop="unFreezeBackground();">  
+    </apex:actionStatus>
+     <apex:actionStatus id="afterLoadingStatus" onstart="freezeBackground();" >  
+    </apex:actionStatus>
+    
+</apex:form>
+ 
+ <script>
+      var strChosenCategoryGroups ="";
+      //var strChosenArticleTypes = ""; 
+      window.onload=function(){
+        var categoryGroup1Id= document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups1Id');
+        //var categoryGroup2Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups2Id');
+        var articleType1Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter1Id');
+        var articleType2Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter2Id');
+        //categoryGroup2Id.remove(0);
+        articleType2Id.length = 0 ;
+        if('{!configOptions}' != null){
+          //var categoryGroups = '{!JSENCODE(strChosenCategoryGroups)}'.split(',');
+          var articleTypes = '{!JSENCODE(strChosenArticleTypes)}'.split(',');
+          /*for(var c=0;c<categoryGroups.length;c++){
+            for(var i=(categoryGroup1Id.options.length - 1);i>=0;i--){
+              if(categoryGroup1Id.options[i].value == categoryGroups[c])
+              {                                       
+                 categoryGroup2Id[categoryGroup2Id.length] = new Option(categoryGroup1Id.options[i].text,categoryGroup1Id.options[i].value,true,false);
+                 categoryGroup1Id.options[i] = null;
+              } 
+            }
+          }*/
+          for(var a=0;a<articleTypes.length;a++){
+            for(var i=(articleType1Id.options.length - 1);i>=0;i--){
+              if(articleType1Id.options[i].value == articleTypes[a])
+              {
+                 articleType2Id[articleType2Id .length] = new Option(articleType1Id.options[i].text,articleType1Id.options[i].value,true,false);
+                 articleType1Id.options[i] = null;
+              } 
+            }
+          }
+          //hyphenReplacement();   
+       }       
+    }
+    
+    function openPublicGroups(){       
+        var path = window.location.protocol+'//'+window.location.host+'/p/own/OrgPublicGroupsPage';
+        var newWindow = window.open(path, '_blank');
+        newWindow.focus();
+        return false;
+    }
+    
+    function fetchSelectedDataCategory(){
+        var dataCategory = document.getElementById('dataCategorySelectLisrtId').value;
+        addMappingAF(dataCategory);
+    }
+    
+    function categoryGroupPopulate(blnFromLeft)
+    {
+        var finalString = '';
+        var LeftTextBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:categoryGroupTextId');
+        var RightListBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups2Id');
+        var ListItems = new Array();
+        var fullString = LeftTextBox.value;
+        var finalcategoryGroup = new Array();
+        var selectedCategoryGroups = "";
+        
+        FromList = (blnFromLeft ? LeftTextBox : RightListBox); 
+        ToText = (blnFromLeft ? RightListBox : LeftTextBox);
+        var optionsArrayFrmLst = FromList.options;
+        var j= 0;
+        for(var i=0;i<=(optionsArrayFrmLst.length - 1);i++){
+            if(optionsArrayFrmLst[i].selected){
+               if(fullString.indexOf(optionsArrayFrmLst[i].text + ',') != -1){
+                   fullString = fullString.replace(optionsArrayFrmLst[i].text + ',','');
+               }else if(fullString.indexOf(optionsArrayFrmLst[i].text) != -1){
+                   fullString = fullString.replace(optionsArrayFrmLst[i].text,'');
+               }
+               //FromList.options[i] = null;
+            }else{
+                finalcategoryGroup[j++] = new Option(optionsArrayFrmLst[i].text,optionsArrayFrmLst[i].text,true,false);
+            }
+        }
+        RightListBox.options.length = 0;
+        
+        for(var i=0; i<finalcategoryGroup.length;i++){
+            RightListBox.options[i] = finalcategoryGroup[i];
+            selectedCategoryGroups += RightListBox.options[i].text + ',';
+        }
+        LeftTextBox.value = fullString ;
+        categoryGroupListAF(selectedCategoryGroups);
+     
+    } 
+    function populateCategoryGroupSelected(){
+        var LeftTextBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:categoryGroupTextId');
+        var RightListBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups2Id');
+        var categoryGroupList = LeftTextBox.value.split(",");
+        var ListItems = new Array();
+        var selectedCategoryGroups = "";
+        for(var i=0; i< categoryGroupList.length; i++){
+            if(categoryGroupList[i] != null && categoryGroupList[i] != ''){
+                ListItems[i] = new Option(categoryGroupList[i],categoryGroupList[i],true,false);
+            }
+        }
+        RightListBox.options.length = 0;
+        for(var i=0;i<ListItems.length;i++){
+          RightListBox.options[i]= ListItems[i];
+          selectedCategoryGroups += RightListBox.options[i].text + ',';
+        }
+        categoryGroupListAF(selectedCategoryGroups);
+        
+    }
+    function freezeBackground(){
+          document.getElementById('disablingDiv').style.display='block';
+          document.getElementById('loadingImage').style.display='block';
+        }  
+     
+      function unFreezeBackground(){
+          document.getElementById('disablingDiv').style.display='none';
+          document.getElementById('loadingImage').style.display='none';
+      }
+    
+    
+</script>  
+</apex:page>

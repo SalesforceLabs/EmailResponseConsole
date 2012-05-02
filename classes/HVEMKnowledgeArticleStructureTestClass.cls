@@ -30,16 +30,16 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 @isTest
 private class HVEMKnowledgeArticleStructureTestClass {
 
-  static testMethod void testKnowledgeArticleStructure() {
-  List<KnowLedgeArticleVersion> knowledgeArticleList = new List<KnowLedgeArticleVersion>();
-  knowledgeArticleList = [select id from KnowledgeArticleVersion where language='en_US' AND PublishStatus='online'];
-  if(knowledgeArticleList != null && knowledgeArticleList.size() > 0){
-      HVEMKnowledgeArticleStructure structure = new HVEMKnowledgeArticleStructure(knowledgeArticleList[0], 'Products__c', 'Products', true);
-      System.assertEquals('Products__c',structure.getarticleName());
-      System.assertEquals('Products',structure.getarticleLabel());
-      System.assertEquals(true,structure.getIsAttached());
-      System.assertEquals(knowledgeArticleList[0],structure.getKnowledgeArticle());
-  }
- }
+	static testMethod void testKnowledgeArticleStructure() {
+		List<KnowLedgeArticleVersion> knowledgeArticleList = new List<KnowLedgeArticleVersion>();
+		knowledgeArticleList = [select id from KnowledgeArticleVersion where language='en_US' AND PublishStatus='online'];
+		if(knowledgeArticleList != null && knowledgeArticleList.size() > 0){
+			HVEMKnowledgeArticleStructure structure = new HVEMKnowledgeArticleStructure(knowledgeArticleList[0], 'Products__c', 'Products', true);
+			System.assertEquals('Products__c',structure.getarticleName());
+			System.assertEquals('Products',structure.getarticleLabel());
+			System.assertEquals(true,structure.getIsAttached());
+			System.assertEquals(knowledgeArticleList[0],structure.getKnowledgeArticle());
+		}
+	}
 
 }

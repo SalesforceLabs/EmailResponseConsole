@@ -28,49 +28,49 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /* HVEMKnowledgeArticleCtrl Class
-* This class is used to process the Knowledge Article actions.
-*/
+ * This class is used to process the Knowledge Article actions.
+ */
 public Class HVEMKnowledgeArticleStructure{
-    
-    private KnowLedgeArticleVersion knowledgeArticle{get;set;}
-    private String articleName{get;set;}
-    private String articleLabel{get;set;}
-    private Boolean isAttached {get; set;}
-    
-    /**
-    * Constructor
-    */
-    public HVEMKnowledgeArticleStructure(KnowledgeArticleVersion pKnowledgeArticle, String pArticleName, String pArticleLabel,Boolean pIsAttached){
-        knowledgeArticle = pKnowledgeArticle; 
-        articleName = pArticleName;
-        articleLabel = pArticleLabel;
-        isAttached = pIsAttached; 
-    }
-    
-    
-    public Boolean getIsAttached(){
-        return this.isAttached;
-    }
-    
-    /**
-    * function that return an Instance of KnowledgeArticleVersion Object
-    */
-    public KnowLedgeArticleVersion getKnowledgeArticle(){
-        return this.knowledgeArticle;
-    }
-    
-    /**
-    * Function thet return the string that contains the knowledge article name.
-    */
-    public String getarticleName(){
-        return this.articleName ;
-    }
-    
-    /**
-    * Function thet return the string that contains the knowledge article Label.
-    */
-    public String getarticleLabel(){
-        return this.articleLabel ;
-    }
-       
+
+	private KnowLedgeArticleVersion knowledgeArticle{get;set;}
+	private String articleName{get;set;}
+	private String articleLabel{get;set;}
+	private Boolean isAttached {get; set;}
+
+	/**
+	 * Constructor
+	 */
+	public HVEMKnowledgeArticleStructure(KnowledgeArticleVersion pKnowledgeArticle, String pArticleName, String pArticleLabel,Boolean pIsAttached){
+		knowledgeArticle = pKnowledgeArticle; 
+		articleName = pArticleName;
+		articleLabel = pArticleLabel;
+		isAttached = pIsAttached; 
+	}
+
+
+	public Boolean getIsAttached(){
+		return this.isAttached;
+	}
+
+	/**
+	 * function that return an Instance of KnowledgeArticleVersion Object
+	 */
+	public KnowLedgeArticleVersion getKnowledgeArticle(){
+		return this.knowledgeArticle;
+	}
+
+	/**
+	 * Function thet return the string that contains the knowledge article name.
+	 */
+	public String getarticleName(){
+		return this.articleName ;
+	}
+
+	/**
+	 * Function thet return the string that contains the knowledge article Label.
+	 */
+	public String getarticleLabel(){
+		return this.articleLabel ;
+	}
+
 }

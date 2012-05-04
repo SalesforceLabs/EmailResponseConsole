@@ -40,7 +40,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public Task taskInstance {get; set;}
     public EmailMessage emailMessageInstance{get;set;}
     public HVEM_Config_Options__c configOptions{get;set;}
-    
+    public EmailTemplate emailtemplate{get; set;} 
     //Case Instance for temporary usage.
     public Case temporaryCase{get;set;}  
     
@@ -49,7 +49,8 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public List<GroupMember> loggedInUserQueueList {get; set;}
     public List<Case> casesInQueueList{get; set;}
     public List<boolean> incomingMail{get;set;}
-      
+    public List<folder> folderList{get;set;}
+    public List<EmailTemplate> templateList{get;set;}   
       
     public boolean isValidated {get; set;}
     public boolean isNoCustomError {get; set;}
@@ -64,7 +65,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public boolean noCaseInQueueError{get;set;}
     public boolean emailBodyLengthExceededError{get;set;}
     public Boolean noQueueAssigned {get; set;}
-    
+    public boolean enableDraftEmails{get;set;}
     
     //public Integer emailMessageListSize{get;set;}
     public Integer emailCount{get;set;}
@@ -83,7 +84,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public String editorHtmlValue {get; set;}
     public String finalQueueId{get; set;}
     public Id loggedUser {get; set;}
-	public String bodyValue {get; set;}
+    public String bodyValue {get; set;}
     public User activeUser{get; set;}
     public String ccAddress {get; set;}
     public String bccAddress {get; set;}
@@ -92,7 +93,8 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public boolean superUserApprovalRendered{get;set;}
     public Boolean superUserApproval {get; set;}
     public boolean isSuperUser{get;set;}
-    
+    public boolean flag{get;set;}
+    public String folders{get;set;}
     
     /** Phase II Variable declaration -- START */
     
@@ -116,6 +118,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         loggedUser  = Userinfo.getuserId();
         loggedInUserQueueList = new List<GroupMember>();
         casesInQueueList = new List<Case>();
+        folderList = new List<folder>();
         selectedEmailTemplate = new EmailTemplate();
         dbHelper = new HVEMDBhelper();
         caseId = ApexPages.currentPage().getParameters().get('Id');
@@ -134,6 +137,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         isRejected = false;
         isTemplateDeleted = false;
         superUserApprovalRendered = false;
+        enableDraftEmails=false;
         //isSuper = verifyUser();
         // Get full user instance
         userName = UserInfo.getUserName();
@@ -147,11 +151,28 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         caseFromQueue = new Case();
         if(configOptions != null){            
             selectedTemplate = configOptions.Default_Email_Template__c;
+            enableDraftEmails = configOptions.Allow_Drafts__c;
         }
         else{
             selectedTemplate = 'none';
         }
-        
+        folderList = [Select Name,Id From Folder where Type='Email' AND AccessType='Public'];
+            try{
+               
+               // if(selectedTemplate !='None'){
+                    folders = configOptions.Default_Email_Folder__c;
+                    //emailtemplate = [select FolderId from EmailTemplate where id=:selectedTemplate];
+                    //folders = emailtemplate.FolderId;
+                //}
+                /*else{
+                    folders='None';
+                } */    
+            }
+            catch(Exception e){
+                selectedTemplate = 'None';
+                 
+                }
+                
         emailTemplateList = new List<EmailTemplate>();         
         //emailTemplateList= [Select id,Body,Subject,HtmlValue,DeveloperName from EmailTemplate where Name = 'Main Email' ];                        
                
@@ -172,7 +193,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         }       
        
        
-	   
+       
        emailSubject = 'Re: ' + caseInstance.Subject;
        caseStatus = caseInstance.Status;        
        if(configOptions != null){           
@@ -185,7 +206,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
        // Phase II Implementation -- START 
         draftInstance = new DraftEmailMessage__c();
         List<String> activeStatus = String.valueOf(HVEMUtil.DraftEmailActiveStatus).split(',',-1);
-        List<DraftEmailMessage__c> currentDraft = [SELECT id,BccAddress__c,Include_Thread__c,Case__c,CcAddress__c,FromAddress__c,FromName__c,FutureCaseStatus__c,HtmlBody__c,OldCaseStatus__c,Status__c,Subject__c,TemplateId__c,TextBody__c,ToAddress__c FROM DraftEmailMessage__c WHERE Case__r.id =: caseId AND (Status__c IN : activeStatus )];        
+        List<DraftEmailMessage__c> currentDraft = [SELECT id,BccAddress__c,Include_Thread__c,Case__c,CcAddress__c,FromAddress__c,FromName__c,FutureCaseStatus__c,HtmlBody__c,OldCaseStatus__c,Status__c,Subject__c,TemplateId__c,TextBody__c,ToAddress__c,FolderId__c FROM DraftEmailMessage__c WHERE Case__r.id =: caseId AND (Status__c IN : activeStatus )];        
         if(currentDraft.size() == 1 && currentDraft[0].status__c != 'Approved'){
             isActiveStatus = true;
             draftInstance = currentDraft[0];
@@ -239,6 +260,8 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             }
             caseStatus = draftInstance.FutureCaseStatus__c;
             includeThread = draftInstance.Include_Thread__c;
+            folders = draftInstance.FolderId__c;
+           // selectedTemplate = draftInstance.TemplateId__c;            
             //Approval Implementaion
             if(draftInstance.Status__c == 'Approval'){                
                 isUnderApproval = true;
@@ -260,7 +283,10 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         try{
             if(selectedTemplate != 'none'){
                 selectedEmailTemplate = [Select e.HtmlValue,e.Id,e.FolderId,e.templateType,e.body  From EmailTemplate e WHERE e.Id = : selectedTemplate AND isActive = true];        
-                type = selectedEmailTemplate.templateType;                
+                type = selectedEmailTemplate.templateType;
+                //folders = selectedEmailTemplate.FolderId;  
+                // folders = draftInstance.FolderId__c;  
+                 folders = configOptions.Default_Email_Folder__c;             
                 if(selectedEmailTemplate.Body != null && selectedEmailTemplate.Body != ''){
                     if(selectedEmailTemplate.templateType == 'text'){
                         bodyValue =  String.valueOf(selectedEmailTemplate.body).replaceAll('\n','<br/>');
@@ -283,12 +309,22 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         }
         catch(Exception e){
             selectedTemplate = 'none';
+            bodyValue ='';
         }
         Finally{
             try{
                  // Phase II Implementation -- START 
                  if(currentDraft.size() == 1 && currentDraft[0].status__c != 'Approved'){                                              
                     selectedTemplate = draftInstance.TemplateId__c;                                
+                    if(selectedTemplate !='None'){
+                       // emailtemplate = [select FolderId from EmailTemplate where id=:selectedTemplate];
+                       // folders = emailtemplate.FolderId;
+                      folders = draftInstance.FolderId__c;
+                    }
+                    else{
+                        folders='None';
+                    } 
+                    
                     //Body load
                      if(selectedTemplate != 'none'){
                         selectedEmailTemplate = [Select e.HtmlValue,e.Id,e.FolderId,e.templateType,e.body  From EmailTemplate e WHERE e.Id = : selectedTemplate];        
@@ -297,21 +333,33 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                                 if(draftInstance.TextBody__c != null && draftInstance.TextBody__c!= ''){
                                     bodyValue =  String.valueOf(draftInstance.TextBody__c).replaceAll('\n','<br/>');
                                 }else{
-									bodyValue = '';
-								}
+                                    bodyValue = '';
+                                }
                             }else if(selectedEmailTemplate.templateType == 'custom'){
                                 if(draftInstance.HtmlBody__c != null && draftInstance.HtmlBody__c!= ''){
                                     bodyValue = String.valueOf(draftInstance.HtmlBody__c);
                                 }else{
-									bodyValue = '';
-								}
+                                    bodyValue = '';
+                                }
                             }
                      }else{
-                         if(draftInstance.TextBody__c != null && draftInstance.TextBody__c!= ''){
+                         folders = draftInstance.FolderId__c;
+                         System.debug('****************folders*********'+folders);
+                         System.debug('****************textbody*********'+draftInstance.TextBody__c);
+                        if(draftInstance.TextBody__c != null && draftInstance.TextBody__c!= ''){
+                                type = 'text';
+                                bodyValue =  String.valueOf(draftInstance.TextBody__c).replaceAll('\n','<br/>');
+                        }else if(draftInstance.HtmlBody__c != null && draftInstance.HtmlBody__c!= ''){
+                                type = 'custom';
+                                bodyValue = String.valueOf(draftInstance.HtmlBody__c);                    
+                           }
+                        
+                        /* if(draftInstance.TextBody__c != null && draftInstance.TextBody__c!= ''){
                             bodyValue =  String.valueOf(draftInstance.TextBody__c).replaceAll('\n','<br/>');
                         }else{
                             bodyValue = '';
-                        }
+                        }*/
+                        
                      }
                  }
             } 
@@ -337,35 +385,35 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     /**
     * Function to extract content with merge fields
     */
-	public String extractContent(String templateType, String fullHtml){
-		String finalContent = '';
-		String valueString = '';
-		if(templateType == 'text'){
-			String var = '<input type="hidden" ' + ' id=\"text_body_hidden\" ' + 'name=\"text_body_hidden\"';  
-			List<String> contentList = fullHtml.split(var);
-			if(contentList.size() > 0 ){
-				valueString = contentList[1];
-			}
-			
-			List<String> valueList = valueString.split('"');
-			if(valueList.size() > 0 ){
-				finalContent =  valueList[1];
-			}
-			return finalContent;
-		}else if(templateType == 'custom'){
-			String var = '<input type="hidden" ' + ' id=\"html_body_hidden\" ' + 'name=\"html_body_hidden\"';  
-			List<String> contentList = fullHtml.split(var);
-			if(contentList.size() > 0 ){
-				valueString = contentList[1];
-			}
-			List<String> valueList = valueString.split('"');
-			if(valueList.size() > 0 ){
-				finalContent =  valueList[1];
-			}
-			return finalContent;
-		}
-		return finalContent;
-	}    
+    public String extractContent(String templateType, String fullHtml){
+        String finalContent = '';
+        String valueString = '';
+        if(templateType == 'text'){
+            String var = '<input type="hidden" ' + ' id=\"text_body_hidden\" ' + 'name=\"text_body_hidden\"';  
+            List<String> contentList = fullHtml.split(var);
+            if(contentList.size() > 0 ){
+                valueString = contentList[1];
+            }
+            
+            List<String> valueList = valueString.split('"');
+            if(valueList.size() > 0 ){
+                finalContent =  valueList[1];
+            }
+            return finalContent;
+        }else if(templateType == 'custom'){
+            String var = '<input type="hidden" ' + ' id=\"html_body_hidden\" ' + 'name=\"html_body_hidden\"';  
+            List<String> contentList = fullHtml.split(var);
+            if(contentList.size() > 0 ){
+                valueString = contentList[1];
+            }
+            List<String> valueList = valueString.split('"');
+            if(valueList.size() > 0 ){
+                finalContent =  valueList[1];
+            }
+            return finalContent;
+        }
+        return finalContent;
+    }    
     
     public boolean verifyUser(){        
         boolean isSuperUser = false;
@@ -459,7 +507,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
              bodyBlankError = false;
              subjectblankError = false;
              toEmailBlankError  = false;
-			 draftSaved = false;
+             draftSaved = false;
              isAdditionalToAddressValid = false;
              isCcAddressValid = false;
              isBccAddressValid = false;
@@ -711,18 +759,19 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         selectedEmailTemplate = [Select e.HtmlValue,e.Id,e.FolderId,e.templateType,e.body  From EmailTemplate e WHERE e.Id = : selectedTemplate];
         type = selectedEmailTemplate.templateType;
         PageReference emailEditorPageRef = new PageReference(URL.getSalesforceBaseUrl().getProtocol() + '://' + URL.getSalesforceBaseUrl().getHost() + '/email/author/emailauthor.jsp?retURL=/' + caseId + '&p3_lkid=' + caseId + '&rtype=003&p2_lkid=' + caseInstance.ContactId + '&template_id=' + selectedTemplate);
-	    String fullHtml  =  emailEditorPageRef.getContent().toString();
-		String finalContent = extractContent(selectedEmailTemplate.templateType , fullHtml);
-		bodyValue = finalContent;
-          	
-   	   if(selectedEmailTemplate.templateType == 'text'){
-  			bodyValue =  String.valueOf(bodyValue).replaceAll('\n','<br/>');
-      	}else if(selectedEmailTemplate.templateType == 'Custom'){
-      		bodyValue =  String.valueOf(bodyValue);
-       	}
+        String fullHtml  =  emailEditorPageRef.getContent().toString();
+        String finalContent = extractContent(selectedEmailTemplate.templateType , fullHtml);
+        bodyValue = finalContent;
+            
+       if(selectedEmailTemplate.templateType == 'text'){
+            bodyValue =  String.valueOf(bodyValue).replaceAll('\n','<br/>');
+        }else if(selectedEmailTemplate.templateType == 'Custom'){
+            bodyValue =  String.valueOf(bodyValue);
+        }
       }else{
         selectedEmailTemplate = new EmailTemplate();
         bodyValue = '';
+        type='text';
       }
          
          
@@ -873,7 +922,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     /**
     * PHASE - II 
     */
-	/**
+    /**
     * function called on click of Save draft functionality
     **/
     public void saveDraft(){        
@@ -881,7 +930,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         isAdditionalToAddressValid = false;
         isCcAddressValid = false;
         isBccAddressValid = false;
-		emailBodyLengthExceededError = false;
+        emailBodyLengthExceededError = false;
         changeCaseOwnerError = false;
         bodyBlankError = false;
         subjectblankError = false;
@@ -922,19 +971,50 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             
             //lDraftEmailMessageInstance.ToAddress__c= contactEmailAddress;
             emailBody = emailBody.replaceAll('<br/>','\n');
-			if(selectedEmailTemplate.TemplateType == 'custom'){                
+            System.debug('template type' + selectedEmailTemplate.TemplateType);
+            if(type == 'custom'){
                 lDraftEmailMessageInstance.HtmlBody__c = emailBody;
                 lDraftEmailMessageInstance.EmailTemplate_Type__c = 'custom';
                 lDraftEmailMessageInstance.TextBody__c = '';
-            }else  if(selectedEmailTemplate.TemplateType == 'text'){                
+            }else if(type == 'text'){
                 lDraftEmailMessageInstance.TextBody__c = emailBody;
                 lDraftEmailMessageInstance.EmailTemplate_Type__c = 'text';
                 lDraftEmailMessageInstance.HtmlBody__c = '';
-            }else{               
+            }else{
                 lDraftEmailMessageInstance.TextBody__c = emailBody;
                 lDraftEmailMessageInstance.EmailTemplate_Type__c = 'text';
                 lDraftEmailMessageInstance.HtmlBody__c = '';
             }
+            
+          /*  if(currentDraft.size() == 1){
+                if(lDraftEmailMessageInstance.HtmlBody__c != '' ){
+                    lDraftEmailMessageInstance.HtmlBody__c = emailBody;
+                    lDraftEmailMessageInstance.EmailTemplate_Type__c = 'custom';
+                    lDraftEmailMessageInstance.TextBody__c = '';
+                }else if(lDraftEmailMessageInstance.TextBody__c != ''){
+                    lDraftEmailMessageInstance.TextBody__c = emailBody;
+                    lDraftEmailMessageInstance.EmailTemplate_Type__c = 'text';
+                    lDraftEmailMessageInstance.HtmlBody__c = '';
+                }else{
+                    lDraftEmailMessageInstance.HtmlBody__c = emailBody;
+                    lDraftEmailMessageInstance.EmailTemplate_Type__c = 'custom';
+                    lDraftEmailMessageInstance.TextBody__c = '';
+                }
+            }else{
+                if(selectedEmailTemplate.TemplateType == 'custom'){                
+                    lDraftEmailMessageInstance.HtmlBody__c = emailBody;
+                    lDraftEmailMessageInstance.EmailTemplate_Type__c = 'custom';
+                    lDraftEmailMessageInstance.TextBody__c = '';
+                }else  if(selectedEmailTemplate.TemplateType == 'text'){                
+                    lDraftEmailMessageInstance.TextBody__c = emailBody;
+                    lDraftEmailMessageInstance.EmailTemplate_Type__c = 'text';
+                    lDraftEmailMessageInstance.HtmlBody__c = '';
+                }else{               
+                    lDraftEmailMessageInstance.TextBody__c = emailBody;
+                    lDraftEmailMessageInstance.EmailTemplate_Type__c = 'text';
+                    lDraftEmailMessageInstance.HtmlBody__c = '';
+                }
+            }*/
             lDraftEmailMessageInstance.Subject__c = emailSubject;
             lDraftEmailMessageInstance.Case__c = caseId;
             lDraftEmailMessageInstance.FromName__c = userName;           
@@ -950,8 +1030,15 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             else{
                 lDraftEmailMessageInstance.Status__c = 'Draft'; 
             }  
-            lDraftEmailMessageInstance.TemplateId__c = selectedTemplate;
+            
+            if(enableDraftEmails == true){
+              if(selectedTemplate != ''){
+                       lDraftEmailMessageInstance.TemplateId__c = selectedTemplate;
+                       lDraftEmailMessageInstance.FolderId__c = folders; 
+                }
+            }
             upsert lDraftEmailMessageInstance;
+            
             if(isUnderApproval == true){
                  draftSaved = false;    
             } 
@@ -995,6 +1082,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                 selectedTemplate = configOptions.Default_Email_Template__c;
                 selectedEmailTemplate = [Select e.HtmlValue,e.Id,e.FolderId,e.templateType,e.body  From EmailTemplate e WHERE e.Id = : selectedTemplate AND isActive = true];        
                 type = selectedEmailTemplate.templateType;
+                folders = configOptions.Default_Email_Folder__c;
                 if(selectedEmailTemplate.templateType == 'text'){
                     bodyValue =  String.valueOf(selectedEmailTemplate.body).replaceAll('\n','<br/>');
                 }
@@ -1005,11 +1093,13 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                  String fullHtml  =  emailEditorPageRef.getContent().toString();
                    String finalContent = extractContent(selectedEmailTemplate.templateType , fullHtml);
                    bodyValue = finalContent;
-                   
+                    folders = configOptions.Default_Email_Folder__c;
                    if(selectedEmailTemplate.templateType == 'text'){
                         bodyValue =  String.valueOf(bodyValue).replaceAll('\n','<br/>');
+                        type = 'text';
                     }else if(selectedEmailTemplate.templateType == 'Custom'){
                         bodyValue =  String.valueOf(bodyValue);
+                        type = 'custom';
                     }
                 } 
                 
@@ -1017,13 +1107,79 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             else{
                 selectedTemplate = 'none';
                 bodyValue = '';
+                type = 'text';
             }
         }
         catch(Exception e){            
             selectedTemplate = 'none';            
             bodyValue = '';
             isTemplateDeleted = true;
+            folders = configOptions.Default_Email_Folder__c;
+            //folders='none';
         } 
 
     }
+    public pageReference initializeEmailTemplate(){
+     
+        if(folders != null){
+            if(folders == 'None'){
+                Organization org  = [Select ID from Organization LIMIT 1];
+                folders = org.id;
+                templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
+                bodyValue = '';
+                        
+            }
+            templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' )  AND IsActive=true AND FolderId=:folders];
+        }else{
+            if(folderList != null && !folderList.isEmpty()){
+                folders = folderList[0].id;
+                templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
+            }else{
+                Organization org  = [Select ID from Organization LIMIT 1];
+                folders = org.id;
+               templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
+            }
+        }
+        return null;
+    }   
+    
+    public void getEmailTemplatefolders(){
+    
+        folderList = [Select Name,Id From Folder where Type='Email' AND AccessType='Public'];
+    }
+    
+     public List<SelectOption> getEmailFolders() {
+        List<SelectOption> options = new List<SelectOption>();
+       Organization org  = [Select ID from Organization LIMIT 1];
+        options.add(new SelectOption(org.Id,'Please select a template folder'));
+             for(folder f : folderList){
+                options.add(new SelectOption(f.Id,f.Name));
+            }
+           
+        return options;
+        
+     
+    }  
+   
+    public List<SelectOption> getEmailTemplatesList() {
+        List<SelectOption> options = new List<SelectOption>();
+        options.add(new SelectOption('None','Please select a template'));
+        if(folders=='None')
+        {
+        Organization org  = [Select ID from Organization LIMIT 1];
+        folders = org.Id;
+        templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
+        }
+        else
+        {
+        templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
+        }
+        for(EmailTemplate t : templateList){
+            options.add(new SelectOption(t.Id,t.Name));
+        }
+        
+        return options;
+    }  
+    
+
 }

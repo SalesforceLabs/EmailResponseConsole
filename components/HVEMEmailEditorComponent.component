@@ -26,200 +26,343 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE. 
  -->
 
-<apex:component access="global" id="hvemEmailEditoComponentId" controller="HVEMEmailEditorCompCtrl" allowDML="true"> 
-<apex:includeScript value="/support/console/22.0/integration.js"/>
-<apex:includeScript value="{!URLFOR($Resource.HVEMCKEditor,'/ckeditor/ckeditor.js')}"/> 
-<!-- <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HtmlDecode.js')}"/> -->
+<apex:component access="global" id="hvemEmailEditoComponentId"
+    controller="HVEMEmailEditorCompCtrl" allowDML="true">
+    <apex:includeScript value="/support/console/22.0/integration.js" />
+    <apex:includeScript value="{!URLFOR($Resource.HVEMCKEditor,'/ckeditor/ckeditor.js')}" />
+    <!-- <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HtmlDecode.js')}"/> -->
 
-    
-<style>
-.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton, .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton {
-    background: url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}") -65px -7px no-repeat transparent;
-}
 
-.LabelStyle{
-    font-size: 14px;
-    font-weight: normal;
-    color:black;
-    cursor:pointer;
-    background:grey;
-}
-
-body .btn{
-padding: 2px 0;
-}
-
-</style>
+    <style>
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton
+            {
+            background:
+                url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
+                -65px -7px no-repeat transparent;
+        }
+        
+        .LabelStyle {
+            font-size: 14px;
+            font-weight: normal;
+            color: black;
+            cursor: pointer;
+            background: grey;
+        }
+        
+        body .btn {
+            padding: 2px 0px;
+        }
+        
+        .Fontbolder {
+            font-weight: bolder;
+        }
+        
+        .btnhidden {
+            display: none;
+        }
+        
+        .btnvisible {
+            -moz-border-bottom-colors: none;
+            -moz-border-image: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            border-color: #B5B5B5 #B5B5B5 #7F7F7F;
+            border-radius: 3px 3px 3px 3px;
+            border-style: solid;
+            border-width: 1px;
+            color: #333333;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 1px;
+            font-family: Arial, Helvetica, sans-serif;
+            cursor: pointer;
+            display: inline;
+            float: right;
+        }
+        
+        .hyperLink {
+            cursor: pointer;
+            margin: 3px;
+            color: #0055e3;
+            text-decoration: none;
+        }
+    </style>
     <apex:outputPanel id="errorPanel" rendered="{!isServiceCloud}">
         <apex:pageMessages />
-        <apex:pageMessage id="bodyBlankErrorId" rendered="{!bodyBlankError}" severity="error" strength="2" summary="{!$Label.Mail_cannot_be_sent_with_a_blank_body}" title="{!$Label.No_Content_in_the_body_Title}"/>
-        <apex:pageMessage id="subjectBlankErrorId" rendered="{!subjectblankError}" severity="error" strength="2" summary="{!$Label.Mail_cannot_be_sent_with_a_blank_subject}" title="{!$Label.No_Content_in_the_Subject}"/>
-        <apex:pageMessage id="BlankErrorId" rendered="{!toEmailBlankError}" severity="error" strength="2" summary="{!$Label.Mail_cannot_be_sent_with_a_blank_To_Address}" title="{!$Label.No_Content_in_To_Address}"/>
-        <apex:pageMessage id="EmailBodyLengthExceededId" rendered="{!emailBodyLengthExceededError}" severity="error" strength="2" summary="{!$Label.Email_Body_length_Exceeded}" title="{!$Label.Email_Body_length_Exceeded}"/>
-        <apex:pageMessage id="DraftSavedId" rendered="{!draftSaved}" severity="info" strength="2" summary="{!$Label.Your_message_have_been_saved_to_drafts}" title="{!$Label.Draft_message_saved}" />
-        <apex:pageMessage id="UnderApprovalId" rendered="{!isUnderApproval}" severity="info" strength="2" summary="{!$Label.Your_Draft_Is_Under_Approval_Process}" title="{!$Label.Email_for_Case_is_under_Approval}" />
-        <apex:pageMessage id="DraftRejectedId" rendered="{!isRejected}" severity="info" strength="2" summary="{!rejectionComment}" title="{!$Label.Email_for_Case_has_been_Rejected}" />
-        <apex:pageMessage id="ccAddressInvalidId" rendered="{!isCcAddressValid}" severity="error" strength="2" summary="{!$Label.Invalid_cc_address_specified}" title="{!$Label.Invalid_cc_address}" />
-        <apex:pageMessage id="additionalToaddressInvalidId" rendered="{!isAdditionalToAddressValid}" severity="error" strength="2" summary="{!$Label.Invalid_additional_to_address_specified}" title="{!$Label.Invalid_additional_to_address}" />
-        <apex:pageMessage id="bccAddressInvalidId" rendered="{!isBccAddressValid}" severity="error" strength="2" summary="{!$Label.Invalid_bcc_address_specified}" title="{!$Label.Invalid_bcc_address}" />
+        <apex:pageMessage id="bodyBlankErrorId" rendered="{!bodyBlankError}"
+            severity="error" strength="2"
+            summary="{!$Label.Mail_cannot_be_sent_with_a_blank_body}"
+            title="{!$Label.No_Content_in_the_body_Title}" />
+        <apex:pageMessage id="subjectBlankErrorId"
+            rendered="{!subjectblankError}" severity="error" strength="2"
+            summary="{!$Label.Mail_cannot_be_sent_with_a_blank_subject}"
+            title="{!$Label.No_Content_in_the_Subject}" />
+        <apex:pageMessage id="BlankErrorId" rendered="{!toEmailBlankError}"
+            severity="error" strength="2"
+            summary="{!$Label.Mail_cannot_be_sent_with_a_blank_To_Address}"
+            title="{!$Label.No_Content_in_To_Address}" />
+        <apex:pageMessage id="EmailBodyLengthExceededId"
+            rendered="{!emailBodyLengthExceededError}" severity="error"
+            strength="2" summary="{!$Label.Email_Body_length_Exceeded}"
+            title="{!$Label.Email_Body_length_Exceeded}" />
+        <apex:pageMessage id="DraftSavedId" rendered="{!draftSaved}"
+            severity="info" strength="2"
+            summary="{!$Label.Your_message_have_been_saved_to_drafts}"
+            title="{!$Label.Draft_message_saved}" />
+        <apex:pageMessage id="UnderApprovalId" rendered="{!isUnderApproval}"
+            severity="info" strength="2"
+            summary="{!$Label.Your_Draft_Is_Under_Approval_Process}"
+            title="{!$Label.Email_for_Case_is_under_Approval}" />
+        <apex:pageMessage id="DraftRejectedId" rendered="{!isRejected}"
+            severity="info" strength="2" summary="{!rejectionComment}"
+            title="{!$Label.Email_for_Case_has_been_Rejected}" />
+        <apex:pageMessage id="ccAddressInvalidId"
+            rendered="{!isCcAddressValid}" severity="error" strength="2"
+            summary="{!$Label.Invalid_cc_address_specified}"
+            title="{!$Label.Invalid_cc_address}" />
+        <apex:pageMessage id="additionalToaddressInvalidId"
+            rendered="{!isAdditionalToAddressValid}" severity="error"
+            strength="2"
+            summary="{!$Label.Invalid_additional_to_address_specified}"
+            title="{!$Label.Invalid_additional_to_address}" />
+        <apex:pageMessage id="bccAddressInvalidId"
+            rendered="{!isBccAddressValid}" severity="error" strength="2"
+            summary="{!$Label.Invalid_bcc_address_specified}"
+            title="{!$Label.Invalid_bcc_address}" />
     </apex:outputPanel>
-     <div id="disablingDiv" style="position:absolute;top: 0px;left: 0px;">
-   	</div>
-   	<div id="loadingImage" style="position:absolute;left: 40%;top:40%;">
-   		<apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}" width="20px" height="20px"/>
-   	</div>
-    <apex:actionFunction name="populateEditorAF" status="loadingStatus"  action="{!populateEditor}"  reRender="idEditorPanel"  oncomplete="populateEditorJS();"/>
-    <apex:actionFunction name="sendAndNextActionAF"  status="loadingStatus" action="{!sendAndNextAction}" rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel"  oncomplete="handleTabs();">
-        <apex:param name="nameEmailContent"  id="idEmailContent" value="" assignTo="{!emailBody}"/>
-        <apex:param name="additionalToAddress"  id="idAdditionalToAddress" value=""  assignTo="{!additionalToAddress}"/>
-        <apex:param name="ccAddress"  id="idCcAddress" value=""  assignTo="{!ccAddress}"/>
-        <apex:param name="bccAddress"  id="idBccAddress" value=""  assignTo="{!bccAddress}"/>
-        <apex:param name="superUserApproval"  id="idSuperUserApproval" value=""  assignTo="{!superUserApproval}"/>
+    <div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"/>
+    <div id="loadingImage" style="position: absolute; left: 40%; top: 40%;">
+        <apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
+            width="20px" height="20px" />
+    </div>
+    <apex:actionFunction name="populateEditorAF" status="loadingStatus"
+        action="{!populateEditor}" reRender="idEditorPanel"
+        oncomplete="populateEditorJS();" />
+    <apex:actionFunction name="sendAndNextActionAF" status="loadingStatus"
+        action="{!sendAndNextAction}"
+        rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel"
+        oncomplete="handleTabs();">
+        <apex:param name="nameEmailContent" id="idEmailContent" value=""
+            assignTo="{!emailBody}" />
+        <apex:param name="additionalToAddress" id="idAdditionalToAddress"
+            value="" assignTo="{!additionalToAddress}" />
+        <apex:param name="ccAddress" id="idCcAddress" value=""
+            assignTo="{!ccAddress}" />
+        <apex:param name="bccAddress" id="idBccAddress" value=""
+            assignTo="{!bccAddress}" />
+        <apex:param name="superUserApproval" id="idSuperUserApproval" value=""
+            assignTo="{!superUserApproval}" />
     </apex:actionFunction>
-    <apex:actionFunction name="discardDraftAF" status="loadingStatus" action="{!discardDraft}" rerender="idfullBodyPanel,idEditorPanel,errorPanel" oncomplete="reloadCKEditor();"/>
-    <apex:actionFunction name="saveDraftAF" status="loadingStatus" action="{!saveDraft}" oncomplete="return false" rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,saveDiscardId" >
-        <apex:param name="nameEmailContent"  id="EmailContent" value="" assignTo="{!emailBody}"/>
-        <apex:param name="additionalToAddress"  id="AdditionalToAddress" value=""  assignTo="{!additionalToAddress}"/>
-        <apex:param name="ccAddress"  id="CcAddress" value=""  assignTo="{!ccAddress}"/>
-        <apex:param name="bccAddress"  id="BccAddress" value=""  assignTo="{!bccAddress}"/>
+    <apex:actionFunction name="discardDraftAF" status="loadingStatus"
+        action="{!discardDraft}"
+        rerender="idfullBodyPanel,idEditorPanel,errorPanel"
+        oncomplete="reloadCKEditor();" />
+    <apex:actionFunction name="saveDraftAF" status="loadingStatus"
+        action="{!saveDraft}" oncomplete="return false"
+        rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,saveDiscardId">
+        <apex:param name="nameEmailContent" id="EmailContent" value=""
+            assignTo="{!emailBody}" />
+        <apex:param name="additionalToAddress" id="AdditionalToAddress"
+            value="" assignTo="{!additionalToAddress}" />
+        <apex:param name="ccAddress" id="CcAddress" value=""
+            assignTo="{!ccAddress}" />
+        <apex:param name="bccAddress" id="BccAddress" value=""
+            assignTo="{!bccAddress}" />
     </apex:actionFunction>
+    <apex:actionFunction name="initializeEmailTemplateAF" status="loadingStatus"
+         action="{!initializeEmailTemplate}" reRender="emailTemplateId" />
+             
     <apex:outputPanel id="idfullBodyPanel" rendered="{!isServiceCloud}">
-    <table class="hvemPubTable" width="100%;" >
-        <tr>
-            <td align="right" >
-                <apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Subject}" />
-            </td>
-            <td>
-                <apex:inputText disabled="{!isUnderApproval}" style="width:90%;" size="95" value="{!emailSubject}" />
-            </td>
-        </tr>
-        <tr>
-            <td align="right">
-                <apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.To}" />
-            </td>
-           
-            <td >
-                <apex:outputPanel id="idToAddressPanel">
-                <apex:inputField rendered="{!!isUnderApproval}" id="idCaseSubject" value="{!caseInstance.contactId}" />
-                <apex:outputField rendered="{!isUnderApproval}" id="idCaseSubjectoutput" value="{!caseInstance.contactId}" />
-                </apex:outputPanel>
-                <a onclick="displayComponents('additionalTo');" style="cursor:pointer;margin:3px;">{!$Label.Additional_To}</a>&nbsp;|
-                <a onclick="displayComponents('addCc');" style="cursor:pointer;margin:3px;" >{!$Label.Add_Cc}</a>&nbsp;|
-                <a onclick="displayComponents('addBcc');" style="cursor:pointer;margin:3px;" >{!$Label.Add_Bcc}</a>
-            </td>
-        </tr>
-        <tr id="idAdditionalToTr" style="display:none;">
-            <td align="right">
-                <apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Additional_To}  " />
-            </td>
-            <td align="left" style="margin-left:3px;">
-                <apex:inputTextArea style="resize:none;" disabled="{!isUnderApproval}" cols="50" rows="5" id="idAdditionalTo" value="{!additionalTo}"/>  
-                <apex:outputPanel rendered="{!!isUnderApproval}">
-                <a>
-                    <img onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');" class="lookupIcon" title="Contact Name Lookup (New Window)" onmouseover="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onblur="this.className = 'lookupIcon';"  style="cursor:pointer;" alt="Contact Name Lookup (New Window)" src="/s.gif" />
-                </a>                               
-                </apex:outputPanel>                                                                   
-            </td>
-        </tr>
-        <tr id="idCcToTr" style="display:none;">
-            <td align="right">
-                <apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Add_Cc}  " />
-            </td>
-            <td align="left" style="margin-left:3px;">
-                <apex:inputTextArea cols="50" rows="5"  id="idCcTo" value="{!addCc}" disabled="{!isUnderApproval}"/>
-                <apex:outputPanel rendered="{!!isUnderApproval}">
-                <a>
-                    <img style="cursor:pointer;" onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');" class="lookupIcon" title="Contact Name Lookup (New Window)" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onblur="this.className = 'lookupIcon';" alt="Contact Name Lookup (New Window)" src="/s.gif" />
-                </a>
-                </apex:outputPanel>
-            </td>
-        </tr>
-        <tr border="1" id="idBccToTr" style="display:none;">
-            <td align="right">
-                <apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Add_Bcc}  " />
-            </td>
-            <td align="left" style="margin-left:3px;">
-                <apex:inputTextArea cols="50" rows="5"  id="idBccTo" value="{!addBcc}" disabled="{!isUnderApproval}" />
-                <apex:outputPanel rendered="{!!isUnderApproval}">
-                <a>
-                    <img style="cursor:pointer;" onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');" class="lookupIcon" title="Contact Name Lookup (New Window)" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onblur="this.className = 'lookupIcon';" alt="Contact Name Lookup (New Window)" src="/s.gif" />
-                </a>
-                </apex:outputPanel>
-            </td>
-        </tr>
-        <tr>
-            <td align="right">
-                <apex:outputLabel value="{!$Label.Template}" style="font-weight:bold;"/>
-            </td>
-            <td>    
-                <apex:selectList disabled="{!isUnderApproval}" id="emailTemplateId" style="width:250px;border: 1px solid black" size="1" value="{!selectedTemplate}"  onchange="populateEditorAF();">
-                    <apex:selectOptions value="{!emailTemplates}"/>
-                </apex:selectList>
-            </td>
-        </tr>
-        <tr align="right">
-            <td><apex:outputLabel style="font-weight:bold;" value="{!$Label.Body}"/></td>
-            <td>
-                <textArea style="width:100%;" id="idMainEmailBody"  name="nameMainEmailBody"   rows="20" cols="120"/>    
-            </td>
-        </tr>
-        <tr>
-            <td align="right" class="statusLabel"><apex:outputLabel id="caseStatusTextId" value="{!$Label.Change_Case_Status_to}" style="font-weight:bold;"/></td>              
-            <td>
-                <apex:selectList disabled="{!isUnderApproval}" id="caseStatusSelectListId" value="{!caseStatus}" multiselect="false" size="1" style="border: 1px solid black">
-                    <apex:selectOptions value="{!caseStatusFieldValues}"/>    
-                </apex:selectList> 
-                <apex:inputCheckbox disabled="{!isUnderApproval}" id="includeThreadCheckBoxId" value="{!includeThread}" selected="false"/><apex:outputLabel style="font-weight:bold;" >Include Thread</apex:outputLabel>           
-                <apex:outputPanel id="saveDiscardId" styleClass="hvemAction">
-                  <!--  <a id="DiscardId" onclick="discardDraftAF();">Discard Changes</a>&nbsp;|&nbsp; -->
-                  <!--  <apex:outputLink id="DiscardId" disabled="{!isUnderApproval}" rendered="{!configOptions.Allow_Drafts__c}" onclick="discardDraftAF();">Discard Changes</apex:outputLink>&nbsp; -->
-                    <apex:commandLink rendered="{!configOptions.Allow_Drafts__c}" id="DiscardId" value="{!$Label.Discard_Changes}" onclick="discardDraftAF();" oncomplete="return false;"/>&nbsp;
-                    <apex:outputLabel rendered="{!configOptions.Allow_Drafts__c}"> | </apex:outputLabel> &nbsp;
+        <table class="hvemPubTable" width="100%;">
+            <tr>
+                <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Subject}" />
+                </td>
+                <td><apex:inputText disabled="{!isUnderApproval}"
+                    style="width:90%;" size="95" value="{!emailSubject}" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.To}" /></td>
 
-                    <apex:commandLink rendered="{!configOptions.Allow_Drafts__c}" id="SaveId" onclick="saveDraftJS();" oncomplete="return false;">{!$Label.Save}</apex:commandLink>&nbsp;&nbsp;
-                    <span>
-                    <apex:commandButton disabled="{!isUnderApproval}" value="{!$Label.Send_and_Next_Case}"  onclick="sendAndNextActionJS('NormalSend');" oncomplete="return false;"/>
-                    <apex:commandButton disabled="{!isUnderApproval}" value="▼" onclick="showOptions();" onblur="hideOptions('Other')" oncomplete="return false;" style="width:6%;float:right;" rendered="{!superUserApprovalRendered}"/><br/>
-                        <span onmouseover="populateMouseVar('in');" onmouseout="populateMouseVar('out')" id="superUserApproval" Class="btn" style="float:right;visibility:hidden;width:130px;" onclick="hideOptions('Review');">{!$label.Submit_for_Review}</span>
-                    </span>
-               </apex:outputPanel>
-                    
-            </td>
-        </tr>       
-    </table>
-    </apex:outputPanel>
-    <apex:outputPanel id="caseDetailSection" rendered="{!IF(isServiceCloud ==true,false,true)}">
-        <table>
-            <tr id="detailTDId">
-                <td><apex:outputLink style="white-space:nowrap;" title="Link" value="/apex/HVEMMainPage" id="theLink"> {!$Label.Back_to_List_Cases} </apex:outputLink></td>
-                <td><apex:detail id="detailTag_Id" title="false" relatedListHover="true" relatedList="true" subject="{!caseInstance.id}" /></td>            
+                <td><apex:outputPanel id="idToAddressPanel">
+                    <apex:inputField rendered="{!!isUnderApproval}" id="idCaseSubject"
+                        value="{!caseInstance.contactId}" />
+                    <apex:outputField rendered="{!isUnderApproval}"
+                        id="idCaseSubjectoutput" value="{!caseInstance.contactId}" />
+                </apex:outputPanel> <a onclick="displayComponents('additionalTo');" class="hyperLink">{!$Label.Additional_To}</a>&nbsp;|
+                <a onclick="displayComponents('addCc');" class="hyperLink">{!$Label.Add_Cc}</a>&nbsp;|
+                <a onclick="displayComponents('addBcc');" class="hyperLink">{!$Label.Add_Bcc}</a>
+                </td>
+            </tr>
+            <tr id="idAdditionalToTr" style="display: none;">
+                <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;"
+                    value="{!$Label.Additional_To}  " /></td>
+                <td align="left" style="margin-left: 3px;"><apex:inputTextArea style="resize:none;" disabled="{!isUnderApproval}" cols="50"
+                    rows="5" id="idAdditionalTo" value="{!additionalTo}" /> 
+                    <apex:outputPanel rendered="{!!isUnderApproval}">
+                    <a> <img
+                        onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
+                        class="lookupIcon" title="Contact Name Lookup (New Window)"
+                        onmouseover="this.className = 'lookupIconOn';"
+                        onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';"
+                        onfocus="this.className = 'lookupIconOn';"
+                        onblur="this.className = 'lookupIcon';" style="cursor: pointer;"
+                        alt="Contact Name Lookup (New Window)" src="/s.gif" /> </a>
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr id="idCcToTr" style="display: none;">
+                <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Add_Cc}  " />
+                </td>
+                <td align="left" style="margin-left: 3px;">
+                    <apex:inputTextArea cols="50" rows="5" id="idCcTo" value="{!addCc}"
+                        disabled="{!isUnderApproval}" /> 
+                    <apex:outputPanel rendered="{!!isUnderApproval}">
+                            <a> <img style="cursor: pointer;"
+                                onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
+                                class="lookupIcon" title="Contact Name Lookup (New Window)"
+                                onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';"
+                                onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';"
+                                onfocus="this.className = 'lookupIconOn';"
+                                onblur="this.className = 'lookupIcon';"
+                                alt="Contact Name Lookup (New Window)" src="/s.gif" /> </a>
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr border="1" id="idBccToTr" style="display: none;">
+                <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Add_Bcc}  " />
+                </td>
+                <td align="left" style="margin-left: 3px;"><apex:inputTextArea cols="50" rows="5" id="idBccTo" value="{!addBcc}"
+                    disabled="{!isUnderApproval}" /> 
+                    <apex:outputPanel rendered="{!!isUnderApproval}">
+                        <a> <img style="cursor: pointer;"
+                            onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
+                            class="lookupIcon" title="Contact Name Lookup (New Window)"
+                            onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';"
+                            onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';"
+                            onfocus="this.className = 'lookupIconOn';"
+                            onblur="this.className = 'lookupIcon';"
+                            alt="Contact Name Lookup (New Window)" src="/s.gif" /> </a>
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><apex:outputLabel value="{!$Label.Template}" style="font-weight:bold;" /></td>
+                 <td>
+                  <apex:outputPanel id="templatePanaelId">
+                      <apex:selectList disabled="{!isUnderApproval}" 
+                        id="folderSelectListId" style="width:250px;border: 1px solid black" 
+                        size="1" value="{!folders}" onchange="initializeEmailTemplateAF();">
+                        <apex:selectOptions value="{!emailFolders}"/>
+                    </apex:selectList>&nbsp;&nbsp;
+                        <apex:selectList disabled="{!isUnderApproval}"
+                        id="emailTemplateId" style="width:250px;border: 1px solid black" 
+                        size="1" value="{!selectedTemplate}"  onchange="populateEditorAF();">
+                        <apex:selectOptions value="{!EmailTemplatesList}"/>
+                    </apex:selectList>
+                  </apex:outputPanel>
+                 </td>
+            </tr>
+            <tr align="right">
+                 <td><apex:outputLabel style="font-weight:bold;"
+                      value="{!$Label.Body}" /></td>
+                 <td>
+                    <apex:outputPanel >
+                       <textArea style="width:100%;" id="idMainEmailBody"  name="nameMainEmailBody"   rows="20" cols="120"/> 
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" class="statusLabel"><apex:outputLabel id="caseStatusTextId" value="{!$Label.Change_Case_Status_to}"
+                    style="font-weight:bold;" /></td>
+                <td>
+                    <apex:selectList disabled="{!isUnderApproval}"
+                        id="caseStatusSelectListId" value="{!caseStatus}"
+                        multiselect="false" size="1" style="border: 1px solid black">
+                        <apex:selectOptions value="{!caseStatusFieldValues}" />
+                    </apex:selectList> 
+                    <apex:inputCheckbox disabled="{!isUnderApproval}"
+                        id="includeThreadCheckBoxId" value="{!includeThread}"
+                        selected="false" />
+                        <apex:outputLabel style="font-weight:bold;">Include Thread</apex:outputLabel>
+                    <apex:outputPanel id="saveDiscardId" styleClass="hvemAction">
+                        <apex:commandLink rendered="{!configOptions.Allow_Drafts__c}"
+                            id="DiscardId" value="{!$Label.Discard_Changes}"
+                            onclick="discardDraftAF();" oncomplete="return false;"
+                            styleclass="hyperLink" />&nbsp;
+                        <apex:outputLabel rendered="{!configOptions.Allow_Drafts__c}"> | </apex:outputLabel> &nbsp;
+    
+                        <apex:commandLink rendered="{!configOptions.Allow_Drafts__c}" id="SaveId"
+                            onclick="saveDraftJS();" oncomplete="return false;"
+                            styleClass="hyperLink">{!$Label.Save}</apex:commandLink>&nbsp;&nbsp;
+                        <span> <apex:commandButton disabled="{!isUnderApproval}" value="{!$Label.Send_and_Next_Case}"
+                            onclick="sendAndNextActionJS('NormalSend');"
+                            oncomplete="return false;" /> <apex:commandButton disabled="{!isUnderApproval}" value="▼" onclick="showOptions();"
+                            onblur="hideOptions('Other')" oncomplete="return false;"
+                            style="width:6%;float:right;"
+                            rendered="{!superUserApprovalRendered}" /><br />
+                        <span onmouseover="populateMouseVar('in');"
+                            onmouseout="populateMouseVar('out')" id="superUserApproval"
+                            class="btnhidden" style="width: 125px; height: 15px;"
+                            onclick="hideOptions('Review');">{!$Label.Submit_for_Review}</span>
+                        </span>
+                    </apex:outputPanel>
+                </td>
             </tr>
         </table>
-    </apex:outputPanel>    
-    <apex:outputPanel id="idNoCaseinQueuePanel"  style="display:none;">
-
-        <apex:pageMessage rendered="{!AND(!changeCaseOwnerError,NOT(isUnderApproval))}"  id="mailSentid" severity="info" strength="2" summary="{!$Label.Email_has_been_Sent}" title="{!$Label.Email_Sent_Title}"/>
-        <apex:pageMessage rendered="{!noCaseInQueueError}"  id="noCaseinQueueid" severity="error" strength="2" summary="{!$Label.No_Open_Case_Available_in_Selected_Queue}" title="{!$Label.No_Case_in_Selected_Queue_Title}"/>
-        <apex:pageMessage id="changeCaseOwnerErrorId" rendered="{!changeCaseOwnerError}" severity="info" strength="2" summary="{!$Label.Current_Case_Owner_have_changed}" title="{!$Label.Case_Owner_Changed_Title}" />
-        <apex:pageMessage id="NoQueuePresentId" rendered="{!noQueueAssigned}" severity="info" strength="2" summary="{!$Label.No_Queue_assigned_to_current_User}" title="{!$Label.No_Queue_Assigned}" /><br/>
-        <input type="button" Class="btn" id="idCloaseTabButton" value="{!$label.Close_Tab}" onclick="testCloseTab();" />
     </apex:outputPanel>
-     <apex:outputPanel id="idEditorPanel">
-           <apex:inputHidden value="{!isTemplateDeleted}" id="TemplateDeleted"/>
-           <apex:inputHidden value="{!selectedEmailTemplate.HtmlValue}" id="htmlValue" />
-           <apex:inputHidden value="{!type}" id="templateType" />
-           <apex:inputHidden value="{!bodyValue}" id="textValue" />
-           <apex:inputHidden value="{!caseFromQueue.Id}" id="nextCaseId" />
-           <apex:inputHidden value="{!caseFromQueue.caseNumber}" id="nextCasenumber" />
-           <apex:inputHidden value="{!isValidated}" id="isValidated" />
-           <apex:inputHidden value="{!isNoCustomError}" id="isNoCustomError" />
-     </apex:outputPanel>
-      <!-- Loading image to be used -->
-      <div style="position:absolute;top: 150px;left: 200px;">
-      <apex:actionStatus id="loadingStatus" onstart="freezeBackground();" onstop="unFreezeBackground();">  
-      </apex:actionStatus>   
-     </div>
-      <script>             
+    <apex:outputPanel id="caseDetailSection"
+        rendered="{!IF(isServiceCloud ==true,false,true)}">
+        <table>
+            <tr id="detailTDId">
+                <td><apex:outputLink style="white-space:nowrap;" title="Link"
+                    value="/apex/HVEMMainPage" id="theLink"> {!$Label.Back_to_List_Cases} </apex:outputLink></td>
+                <td><apex:detail id="detailTag_Id" title="false"
+                    relatedListHover="true" relatedList="true"
+                    subject="{!caseInstance.id}" /></td>
+            </tr>
+        </table>
+    </apex:outputPanel>
+    <apex:outputPanel id="idNoCaseinQueuePanel" style="display:none;">
+
+        <apex:pageMessage rendered="{!AND(!changeCaseOwnerError,NOT(isUnderApproval))}"
+            id="mailSentid" severity="info" strength="2"
+            summary="{!$Label.Email_has_been_Sent}"
+            title="{!$Label.Email_Sent_Title}" />
+        <apex:pageMessage rendered="{!noCaseInQueueError}"
+            id="noCaseinQueueid" severity="error" strength="2"
+            summary="{!$Label.No_Open_Case_Available_in_Selected_Queue}"
+            title="{!$Label.No_Case_in_Selected_Queue_Title}" />
+        <apex:pageMessage id="changeCaseOwnerErrorId"
+            rendered="{!changeCaseOwnerError}" severity="info" strength="2"
+            summary="{!$Label.Current_Case_Owner_have_changed}"
+            title="{!$Label.Case_Owner_Changed_Title}" />
+        <apex:pageMessage id="NoQueuePresentId" rendered="{!noQueueAssigned}"
+            severity="info" strength="2"
+            summary="{!$Label.No_Queue_assigned_to_current_User}"
+            title="{!$Label.No_Queue_Assigned}" />
+        <br />
+        <input type="button" Class="btn" id="idCloaseTabButton"
+            value="{!$label.Close_Tab}" onclick="testCloseTab();" />
+    </apex:outputPanel>
+    <apex:outputPanel id="idEditorPanel">
+        <apex:inputHidden value="{!isTemplateDeleted}" id="TemplateDeleted" />
+        <apex:inputHidden value="{!selectedEmailTemplate.HtmlValue}"
+            id="htmlValue" />
+        <apex:inputHidden value="{!type}" id="templateType" />
+        <apex:inputHidden value="{!bodyValue}" id="textValue" />
+        <apex:inputHidden value="{!caseFromQueue.Id}" id="nextCaseId" />
+        <apex:inputHidden value="{!caseFromQueue.caseNumber}"
+            id="nextCasenumber" />
+        <apex:inputHidden value="{!isValidated}" id="isValidated" />
+        <apex:inputHidden value="{!isNoCustomError}" id="isNoCustomError" />
+    </apex:outputPanel>
+    <!-- Loading image to be used -->
+    <div style="position: absolute; top: 150px; left: 200px;"><apex:actionStatus id="loadingStatus" onstart="freezeBackground();"
+        onstop="unFreezeBackground();">
+    </apex:actionStatus></div>
+    <script>             
             var isTemplateDeleted = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:TemplateDeleted').value;
             var editorHtmlValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:htmlValue').value;
             var templateType = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:templateType').value;
@@ -252,68 +395,60 @@ padding: 2px 0;
                 
             }
          
-		  //changes
+          //changes
             window.onload=function(){  
-				if(inConsole == 1){
-					var templateSelectList = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:emailTemplateId');                               
-					
-					for(var i=(templateSelectList.options.length - 1);i>=0;i--){
-						 if(templateSelectList .options[i].disabled == true){
-							templateSelectList .options[i].style.fontWeight = 'bolder'; 
-							//availableOptions[i].innerHTML='<B>'+availableOptions[i].innerHTML+'</B>';                         
-						}
-					}                
-				   //Phase - II - Email Editor Component - START
-				   var saveLink = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:SaveId');
-				   var discardLink = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:DiscardId');
-				   //var discardLink = document.getElementById('DiscardId');
-				   if('{!configOptions.Allow_Drafts__c}' == 'true'){
-					   if('{!isActiveStatus}' == 'true' ){
-						   //saveLink.removeAttribute('onClick');
-						   //saveLink.removeAttribute('href');
-						   //saveLink.className = 'diabledLink';
-					   }else{
-						   discardLink.removeAttribute('onClick');
-						   discardLink.removeAttribute('href');
-						   discardLink.className = 'diabledLink';
-					   }
-				  }     
-				   if('{!isUnderApproval}' == 'true'){
-					   if('{!configOptions.Allow_Drafts__c}' == 'true'){
-						   discardLink.removeAttribute('onClick');
-						   discardLink.removeAttribute('href');
-						   discardLink.className = 'diabledLink';
-						   
-						   saveLink.removeAttribute('onClick');
-						   saveLink.removeAttribute('href');
-						   saveLink.className = 'diabledLink';
-					  }
-					   
-				   }else if('{!isUnderApproval}' == 'false'){}
-				   if(templateType == 'custom' && '{!isUnderApproval}' == 'true'){
-					   CKEDITOR.instances.idMainEmailBody.setReadOnly(true);
-				   }else if('{!isUnderApproval}' == 'true'){
-					   document.getElementById('idMainEmailBody').disabled = true;
-				   }
-				   
-				//Phase - II - Email Editor Component - END 
-				}
-			}
-			
-          
-           
-      </script>
-      
-      <script>
+                if(inConsole == 1){
+                    var templateSelectList = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:emailTemplateId');                               
+                    
+                    for(var i=(templateSelectList.options.length - 1);i>=0;i--){
+                         if(templateSelectList .options[i].disabled == true){
+                            templateSelectList .options[i].className = 'Fontbolder'; 
+                        }
+                    }                
+                   //Phase - II - Email Editor Component - START
+                   var saveLink = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:SaveId');
+                   var discardLink = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:DiscardId');
+                   if('{!configOptions.Allow_Drafts__c}' == 'true'){
+                       if('{!isActiveStatus}' != 'true' ){
+                           discardLink.removeAttribute('onClick');
+                           discardLink.removeAttribute('href');
+                           discardLink.className = 'diabledLink';
+                       }
+                  }     
+                   if('{!isUnderApproval}' == 'true'){
+                       if('{!configOptions.Allow_Drafts__c}' == 'true'){
+                           discardLink.removeAttribute('onClick');
+                           discardLink.removeAttribute('href');
+                           discardLink.className = 'diabledLink';
+                           
+                           saveLink.removeAttribute('onClick');
+                           saveLink.removeAttribute('href');
+                           saveLink.className = 'diabledLink';
+                      }
+                       
+                   }else if('{!isUnderApproval}' == 'false'){}
+                   if(templateType == 'custom' && '{!isUnderApproval}' == 'true'){
+                       CKEDITOR.instances.idMainEmailBody.setReadOnly(true);
+                   }else if('{!isUnderApproval}' == 'true'){
+                       document.getElementById('idMainEmailBody').disabled = true;
+                   }
+                   
+                //Phase - II - Email Editor Component - END 
+                }
+            }
+                               
+    </script>
+
+    <script>
           /** Script to show and hide drop down button */
           
          var isMouseOver = false;
          function showOptions(){
              if(inConsole == 1){
-                 if(document.getElementById('superUserApproval').style.visibility == 'hidden')
-                     document.getElementById('superUserApproval').style.visibility = 'visible';
-                 else if(document.getElementById('superUserApproval').style.visibility == 'visible')
-                     document.getElementById('superUserApproval').style.visibility = 'hidden';   
+                 if(document.getElementById('superUserApproval').className == 'btnhidden')
+                     document.getElementById('superUserApproval').className = 'btnvisible';
+                 else if(document.getElementById('superUserApproval').className == 'btnvisible')
+                     document.getElementById('superUserApproval').className = 'btnhidden';   
              } 
          }
          
@@ -323,7 +458,7 @@ padding: 2px 0;
                      sendAndNextActionJS('SuperUserApproval');
                  }
                  if(isMouseOver == 'false'){
-                     document.getElementById('superUserApproval').style.visibility = 'hidden';
+                     document.getElementById('superUserApproval').className = 'btnhidden'; 
                  }   
              } 
          }
@@ -336,6 +471,15 @@ padding: 2px 0;
                  }  
              }             
          }
-      
-          </script>
+        /* function clearEditor(){
+             if(previousEmailTemplate == 'custom'){
+                 CKEDITOR.instances.idMainEmailBody.destroy();
+                 previousEmailTemplate = 'text';
+             }else{
+                 previousEmailTemplate = 'text';
+             }
+             document.getElementById('idMainEmailBody').value = '';
+            
+         }*/
+    </script>
 </apex:component>

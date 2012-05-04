@@ -27,54 +27,54 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 /* DBhelper Class
-* This Class is a generic class defined to perform SOQL queries.
-*/
+ * This Class is a generic class defined to perform SOQL queries.
+ */
 
 public with Sharing class HVEMDBhelper{
-    
-    /* getQueryResults method
-    *  This method takes following Parameters : Sobject, Field list to retrieve, Instance of ConditionBuilder
-    *  if field value specified as null then retrive full data
-    */
-    
-    public List<SObject> getQueryResults(SObject sobj, List<String> fieldsList,HVEMConditionBuilder condition){
-        List<SObject> lQueryReultList  = new List<SObject>();
-        String lExtractedFields = '';
-        String lQuery;
-        Integer lCount = 0;
-        
-        
-        if(fieldsList != null && fieldsList.size() > 0){
-            for(String fieldValue : fieldsList){
-                if((lCount + 1) == fieldsList.size()){
-                    lExtractedFields += fieldValue;
-                }else{
-                    lExtractedFields += fieldValue + ',';
-                }
-                lCount++;
-            }   
-        }else{
-            Map<String, Schema.SObjectField> sObjectFieldMap = new Map<String, Schema.SObjectField>();
-            sObjectFieldMap  = sobj.getSObjectType().getDescribe().fields.getMap();
-            for(String fieldName : sObjectFieldMap.keySet()){
-                if((lCount + 1) == sObjectFieldMap.size()){
-                    lExtractedFields += fieldName;
-                }else{
-                    lExtractedFields += fieldName + ',';
-                }
-                lCount++;
-            }
-        }
-        if(condition != null && condition.getCondition() != null && condition.getCondition().trim().length() > 0 && condition.getCondition().trim().toLowerCase().startsWith('order by')){
-            lQuery = 'SELECT ' +  lExtractedFields + ' FROM ' + sobj.getSObjectType() + ' ' + condition.getCondition();
-        }else if(condition != null && condition.getCondition() != null && condition.getCondition().trim().length() > 0 && (!condition.getCondition().trim().toLowerCase().startsWith('order by'))){
-            lQuery = 'SELECT ' +  lExtractedFields + ' FROM ' + sobj.getSObjectType() + ' WHERE ' + condition.getCondition();   
-        }else{
-            lQuery = 'SELECT ' +  lExtractedFields + ' FROM ' + sobj.getSObjectType();
-        }
-        lQueryReultList = Database.query(lQuery);
-                
-        return lQueryReultList;
-    }
+
+	/* getQueryResults method
+	 *  This method takes following Parameters : Sobject, Field list to retrieve, Instance of ConditionBuilder
+	 *  if field value specified as null then retrive full data
+	 */
+
+	public List<SObject> getQueryResults(SObject sobj, List<String> fieldsList,HVEMConditionBuilder condition){
+		List<SObject> lQueryReultList  = new List<SObject>();
+		String lExtractedFields = '';
+		String lQuery;
+		Integer lCount = 0;
+
+
+		if(fieldsList != null && fieldsList.size() > 0){
+			for(String fieldValue : fieldsList){
+				if((lCount + 1) == fieldsList.size()){
+					lExtractedFields += fieldValue;
+				}else{
+					lExtractedFields += fieldValue + ',';
+				}
+				lCount++;
+			}   
+		}else{
+			Map<String, Schema.SObjectField> sObjectFieldMap = new Map<String, Schema.SObjectField>();
+			sObjectFieldMap  = sobj.getSObjectType().getDescribe().fields.getMap();
+			for(String fieldName : sObjectFieldMap.keySet()){
+				if((lCount + 1) == sObjectFieldMap.size()){
+					lExtractedFields += fieldName;
+				}else{
+					lExtractedFields += fieldName + ',';
+				}
+				lCount++;
+			}
+		}
+		if(condition != null && condition.getCondition() != null && condition.getCondition().trim().length() > 0 && condition.getCondition().trim().toLowerCase().startsWith('order by')){
+			lQuery = 'SELECT ' +  lExtractedFields + ' FROM ' + sobj.getSObjectType() + ' ' + condition.getCondition();
+		}else if(condition != null && condition.getCondition() != null && condition.getCondition().trim().length() > 0 && (!condition.getCondition().trim().toLowerCase().startsWith('order by'))){
+			lQuery = 'SELECT ' +  lExtractedFields + ' FROM ' + sobj.getSObjectType() + ' WHERE ' + condition.getCondition();   
+		}else{
+			lQuery = 'SELECT ' +  lExtractedFields + ' FROM ' + sobj.getSObjectType();
+		}
+		lQueryReultList = Database.query(lQuery);
+
+		return lQueryReultList;
+	}
 
 }

@@ -29,43 +29,43 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @isTest
 private class HVEMEmailLookUpCtrlTestClass {            
-    static HVEMEmailLookUpCtrl emailLookup;
-    static Case caseIns;
-    static testMethod void setupDataInit() {
-        Account accountIns = new Account(name='test');
-        insert accountIns;
-        Contact contactIns = new Contact(LastName='test',email='test@hvem.com',Accountid=accountIns.id);
-        insert contactIns;        
-        caseIns = new Case(status='New',AccountId=accountIns.id,Origin='Phone');
-        insert caseIns;        
-        System.assertNotEquals(null,caseIns);
-        ApexPages.currentPage().getParameters().put('Id',caseIns.Id); 
-        emailLookup = new HVEMEmailLookUpCtrl();         
-    }    
-    static testmethod void testChangeSelectionwithUser(){
-        setupDataInit();
-        emailLookup.selectedOption = 'Users';        
-        test.startTest();
-        emailLookup.changeSelection();
-        test.stopTest();
-        System.assertEquals(true,emailLookup.UserContactOptions.size() > 0);
-    }
-    static testmethod void testChangeSelectionwithContact(){
-        setupDataInit(); 
-        //setup data for testChangeSelectionwithContact        
-        emailLookup.selectedOption = 'Contacts';               
-        test.startTest();        
-        emailLookup.changeSelection();
-        test.stopTest();
-        System.assertEquals(true,emailLookup.UserContactOptions.size() > 0);
-    }
-    static testmethod void testHVEMEmailLookUpCtrlInit(){
-        setupDataInit();
-        //setup data for         
-        test.startTest();        
-        List<selectOption> options = emailLookup.getInitialOptions();               
-        test.stopTest();
-        System.assertEquals(true,options.size() > 0);
-    }    
-    
+	static HVEMEmailLookUpCtrl emailLookup;
+	static Case caseIns;
+	static testMethod void setupDataInit() {
+		Account accountIns = new Account(name='test');
+		insert accountIns;
+		Contact contactIns = new Contact(LastName='test',email='test@hvem.com',Accountid=accountIns.id);
+		insert contactIns;        
+		caseIns = new Case(status='New',AccountId=accountIns.id,Origin='Phone');
+		insert caseIns;        
+		System.assertNotEquals(null,caseIns);
+		ApexPages.currentPage().getParameters().put('Id',caseIns.Id); 
+		emailLookup = new HVEMEmailLookUpCtrl();         
+	}    
+	static testmethod void testChangeSelectionwithUser(){
+		setupDataInit();
+		emailLookup.selectedOption = 'Users';        
+		test.startTest();
+		emailLookup.changeSelection();
+		test.stopTest();
+		System.assertEquals(true,emailLookup.UserContactOptions.size() > 0);
+	}
+	static testmethod void testChangeSelectionwithContact(){
+		setupDataInit(); 
+		//setup data for testChangeSelectionwithContact        
+		emailLookup.selectedOption = 'Contacts';               
+		test.startTest();        
+		emailLookup.changeSelection();
+		test.stopTest();
+		System.assertEquals(true,emailLookup.UserContactOptions.size() > 0);
+	}
+	static testmethod void testHVEMEmailLookUpCtrlInit(){
+		setupDataInit();
+		//setup data for         
+		test.startTest();        
+		List<selectOption> options = emailLookup.getInitialOptions();               
+		test.stopTest();
+		System.assertEquals(true,options.size() > 0);
+	}    
+
 }

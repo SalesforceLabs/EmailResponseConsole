@@ -26,187 +26,227 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE. 
  -->
 
-<apex:component controller="HVEMKnowledgeArticleCtrl" access="global" allowDML="true" id="HVEMKnowledgeArticleCompId">            
-    <input type="hidden" id="idPreviousArticleHidden" value="" />
-    <input type="hidden" id="idCurrentArticleHidden" value="" />
-    <div class="hvemTable">
-        <apex:form id="HVEMKnowledgeArticleFormId" onkeypress="if (event.keyCode == 13) {fetchSelection(); return false;}" >
-              <apex:outputPanel id="ErrorId">
-                  <apex:pageMessages />
-              </apex:outputPanel>
-              <apex:pageBlock id="HVEMKnowledgeArticleFilterPageBlockId">
-                <table width="100%">
-                    <tr>
-                        <td>
-                            <table width="100%" class="hvemBasicPanel hvemControlPanel">
-                                <tr>
-                                    <td><apex:inputText onkeypress="if (event.keyCode == 13) {fetchSelection(); return false;}" value="{!subjectFilter}" style="width:100%;"/></td>
-                                    <td align="right">
-                                        <apex:commandButton id="SearchButtonId" value="{!$Label.Go}" action="{!filterArticleList}"  status="loadingStatus"  oncomplete="setFirstArticleStyle();" rerender="SearchResultId,ErrorId,customArticle_id">
-                                            <apex:param assignTo="{!calledFrom}" name="calledFrom" value="page"/>
-                                        </apex:commandButton>
-                                    </td>
-                                </tr>
-                                <tr id="searchFiltersToggle">
-                                    <td colspan="2">
-                                        <a class="hvemToggle" href="" onclick="toggleFilters(true);return false;">Show Filters</a>
-                                    </td>
-                                </tr>
-                                <tr id="searchFilters" style="display:none;">
-                                    <td colspan="2">
-                                        <table width="100%">
-                                            <tr>
-                                                <a class="hvemToggle" href="" onclick="toggleFilters();return false;">Hide Filters</a>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <apex:selectCheckboxes layout="pageDirection" value="{!selectedArticleTypes}" style="selected:true;font-size:11px;">                                                           
-                                                        <apex:selectOptions value="{!articleTypesDevName}"/>
-                                                    </apex:selectCheckboxes>                      
-                                                </td>
-                                            </tr>
-                                             <tr>
-                                                <td>                       
-                                                    <apex:repeat value="{!categoryGroupDisplayList}" var="dataCategory" id="repeatCategory_Id">
-                                                        <table width="80%">
-                                                        <tr>                            
-                                                            <!--<td width="40%">
-                                                                <apex:outputLabel value="{!dataCategory}" style="font-size:11px;"/>
-                                                            </td>-->                                
-                                                            <td>
-                                                                <select id="categoryType_{!dataCategory}" name="categoryType_{!dataCategory}" onchange = "fetchSelection();" style="border: 1px solid black;width:95%">
-                                                                    <option value="No Filter">No filter</option>
-                                                                    <option value="{!dataCategory}__c ABOVE_OR_BELOW All__c">All</option>
-                                                                    <knowledge:categoryList categoryVar="category" categoryGroup="{!dataCategory}" rootCategory="All" level="-1">
-                                                                        <option value="{!dataCategory}__c ABOVE_OR_BELOW {!category.name}__c">
-                                                                            <apex:outputText escape="false" value="{!LPAD(' ',6*category.depth,'&nbsp;')}" />
-                                                                            {!category.label}
-                                                                        </option>
-                                                                    </knowledge:categoryList>
-                                                                </select>
-                                                            </td>                                    
-                                                        </tr>
-                                                        </table>                            
-                                                    </apex:repeat>
-                                                    <!--<apex:repeat value="{!dataCategoriesToDisplay}" var="dataCategory" id="repeatCategory_Id">
-                                                        <table width="100%">
-                                                        <tr>                            
-                                                            <td width="40%">
-                                                                <apex:outputLabel value="{!dataCategory.label}" style="font-size:11px;"/>
-                                                            </td>                                
-                                                            <td width="60%">
-                                                                <apex:selectList value="{!dataCategory.selectedOption}" size="1" style="border: 1px solid black;width:95%" id="HVEMKnowledgeArticleCategoryGroupFilterId">
-                                                                    <apex:selectOptions value="{!dataCategory.options}"/>
-                                                                </apex:selectList>&nbsp;&nbsp;
-                                                            </td>                                    
-                                                        </tr>
-                                                        </table>                            
-                                                    </apex:repeat>-->
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table> 
-            </apex:pageBlock>
-            <apex:pageBlock id="SearchResultId">
-                <apex:outputPanel id="articleResultPanel" layout="block" style="overflow:auto;height:300px;">
-                    <apex:pageMessage rendered="{!noArticlesToFilterError}" severity="info" strength="1" title="{!$Label.HVEM_Settings_NOT_set}"/>
-                    <apex:pageMessage rendered="{!AND(IF((filteredKnowledgeArticlesSize == 0),true,false),(subjectBlankError != true),(noArticlesToFilterError != true))}"  severity="info" strength="1" summary="No Search Results Found" id="ListEmptyError_Id"/>
-                    <apex:pageBlockTable id="idArticlePageBlockTable" rendered="{!IF((filteredKnowledgeArticlesSize == 0),false,true)}" value="{!filteredKnowledgeArticles}" var="article" border="1" style="overflow:auto;height:210px;">
-                        <apex:column id="idArticleColumn" headerValue="{!$Label.Suggested_Articles} : {!filteredKnowledgeArticlesSize}">                        
-                            <apex:outputPanel id="idSingleArticlePanel" layout="block" styleClass="hvemCaseItem">
-                                <apex:commandLink value="{!If(article.isAttached,$Label.Insert_url,$Label.Attach)}" status="loadingStatus" action="{!attachArticle}"  oncomplete="callEmailEditorPage('{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/' + '{!SUBSTITUTE(articleName,'_', '-')}' + '/' + '{!selectedKnowledgeArticleURL}');" style="display:inline;">
-                                    <apex:param value="{!article.knowledgeArticle.KnowledgeArticleId }" assignTo="{!selectedKnowledgeArticleId}" name="selectedKnowledgeArticleId"/>
-                                    <apex:param value="{!article.knowledgeArticle.UrlName}" assignTo="{!selectedKnowledgeArticleURL}" name="selectedKnowledgeArticleURL"/>
-                                    <apex:param value="{!LEFT(article.articleName,LEN(article.articleName)-5)}" assignTo="{!articleName}" name="selectedKnowledgeArticleFrameSource"/>
-                                </apex:commandLink>                            
+<apex:component controller="HVEMKnowledgeArticleCtrl" access="global"
+	allowDML="true" id="HVEMKnowledgeArticleCompId">
+	<input type="hidden" id="idPreviousArticleHidden" value="" />
+	<input type="hidden" id="idCurrentArticleHidden" value="" />
+	<style>
+		.Link {
+			color: #0055e3;
+			text-decoration: none;
+			cursor: pointer;
+		}
+	</style>
+	<div class="hvemTable">
+	<apex:form id="HVEMKnowledgeArticleFormId"
+		onkeypress="if (event.keyCode == 13) {fetchSelection(); return false;}">
+		<apex:outputPanel id="ErrorId">
+			<apex:pageMessages />
+		</apex:outputPanel>
+		<apex:pageBlock id="HVEMKnowledgeArticleFilterPageBlockId">
+			<table width="100%">
+				<tr>
+					<td>
+					<table width="100%" class="hvemBasicPanel hvemControlPanel">
+						<tr>
+							<td><apex:inputText onkeypress="if (event.keyCode == 13) {fetchSelection(); return false;}"
+								value="{!subjectFilter}" style="width:100%;" /></td>
+							<td align="right"><apex:commandButton id="SearchButtonId"
+								value="{!$Label.Go}" action="{!filterArticleList}"
+								status="loadingStatus" oncomplete="setFirstArticleStyle();"
+								rerender="SearchResultId,ErrorId,customArticle_id">
+								<apex:param assignTo="{!calledFrom}" name="calledFrom"
+									value="page" />
+							</apex:commandButton></td>
+						</tr>
+						<tr id="searchFiltersToggle">
+							<td colspan="2"><a class="hvemToggle" href=""
+								onclick="toggleFilters(true);return false;"
+								style="color: #0055e3; text-decoration: none; cursor: pointer;">Show
+							Filters</a></td>
+						</tr>
+						<tr id="searchFilters" style="display: none;">
+							<td colspan="2">
+							<table width="100%">
+								<tr>
+									<a class="hvemToggle" href=""
+										onclick="toggleFilters();return false;"
+										style="color: #0055e3; text-decoration: none; cursor: pointer;">Hide
+									Filters</a>
+								</tr>
+								<tr>
+									<td><apex:selectCheckboxes layout="pageDirection"
+										value="{!selectedArticleTypes}"
+										style="selected:true;font-size:11px;">
+										<apex:selectOptions value="{!articleTypesDevName}" />
+									</apex:selectCheckboxes></td>
+								</tr>
+								<tr>
+									<td><apex:repeat value="{!categoryGroupDisplayList}"
+										var="dataCategory" id="repeatCategory_Id">
+										<table width="80%">
+											<tr>
+												<td><select id="categoryType_{!dataCategory}"
+													name="categoryType_{!dataCategory}"
+													onchange="fetchSelection();"
+													style="border: 1px solid black; width: 95%">
+													<option value="No Filter">No filter</option>
+													<option value="{!dataCategory}__c ABOVE_OR_BELOW All__c">All</option>
+													<knowledge:categoryList categoryVar="category"
+														categoryGroup="{!dataCategory}" rootCategory="All"
+														level="-1">
+														<option
+															value="{!dataCategory}__c ABOVE_OR_BELOW {!category.name}__c">
+														<apex:outputText escape="false"
+															value="{!LPAD(' ',6*category.depth,'&nbsp;')}" />
+														{!category.label}</option>
+													</knowledge:categoryList>
+												</select></td>
+											</tr>
+										</table>
+									</apex:repeat></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+		</apex:pageBlock>
+		<apex:pageBlock id="SearchResultId">
+			<apex:outputPanel id="articleResultPanel" layout="block"
+				style="overflow:auto;height:300px;">
+				<apex:pageMessage rendered="{!noArticlesToFilterError}"
+					severity="info" strength="1"
+					title="{!$Label.HVEM_Settings_NOT_set}" />
+				<apex:pageMessage rendered="{!AND(IF((filteredKnowledgeArticlesSize == 0),true,false),(subjectBlankError != true),(noArticlesToFilterError != true))}"
+					severity="info" strength="1" summary="No Search Results Found"
+					id="ListEmptyError_Id" />
+				<apex:pageBlockTable id="idArticlePageBlockTable"
+					rendered="{!IF((filteredKnowledgeArticlesSize == 0),false,true)}"
+					value="{!filteredKnowledgeArticles}" var="article" border="1"
+					style="overflow:auto;height:210px;">
+					<apex:column id="idArticleColumn"
+						headerValue="{!$Label.Suggested_Articles} : {!filteredKnowledgeArticlesSize}">
+						<apex:outputPanel id="idSingleArticlePanel" layout="block"
+							styleClass="hvemCaseItem">
+							<apex:commandLink value="{!If(article.isAttached,$Label.Insert_url,$Label.Attach)}"
+								status="loadingStatus" action="{!attachArticle}"
+								oncomplete="callEmailEditorPage('{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
+								style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;">
+								<apex:param value="{!article.knowledgeArticle.KnowledgeArticleId }"
+									assignTo="{!selectedKnowledgeArticleId}"
+									name="selectedKnowledgeArticleId" />
+								<apex:param value="{!article.knowledgeArticle.UrlName}"
+									assignTo="{!selectedKnowledgeArticleURL}"
+									name="selectedKnowledgeArticleURL" />
+								<apex:param value="{!LEFT(article.articleName,LEN(article.articleName)-5)}"
+									assignTo="{!articleName}"
+									name="selectedKnowledgeArticleFrameSource" />
+							</apex:commandLink>                            
                                 &nbsp;&nbsp;
-                                <apex:commandLink onclick="setCurrentId(this);" status="loadingStatus"  action="{!displayCustomArticle}" oncomplete="setStyleClass(this);" rerender="idSingleArticlePanel,customArticle_id" value="{!IF((LEN(article.knowledgeArticle.title)>30),LEFT(article.knowledgeArticle.title,30)+'...',article.knowledgeArticle.title)}" style="font-weight:bold;display:inline;margin-right:5px;">
-                                    <apex:param value="{!article.knowledgeArticle.id}" assignTo="{!selectedKnowledgeArticleFrameSourceId}" name="selectedKnowledgeArticleFrameSourceId"/>
-                                    <apex:param value="{!LEFT(article.articleName,LEN(article.articleName)-5)+'/'+article.knowledgeArticle.UrlName}" assignTo="{!selectedKnowledgeArticleFrameSource}" name="selectedKnowledgeArticleFrameSource"/>
-                                    <apex:param value="{!article.articleName}" assignTo="{!articleTypeOfSelectedArticle}" name="articleTypeOfSelectedArticle"/>
-                                    <apex:param assignTo="{!articleTitle}" value="{!article.knowledgeArticle.title}" name="articleTitle"/>
-                                    <apex:param assignTo="{!articleSummary}" value="{!article.knowledgeArticle.summary}" name="articleSummary"/>
-                                </apex:commandLink>                                &nbsp;   
-                                <apex:outputLabel style="font-style:italic;font-size:11px;" value="{!IF((LEN(article.knowledgeArticle.summary)>65),LEFT(article.knowledgeArticle.summary,65)+'...',article.knowledgeArticle.summary)}"/><br/>
-        
-                                <em><apex:outputLabel style="font-size:11px;" value="{!article.articleLabel} - {!$Label.Last_Published_on} {!DATEVALUE(article.knowledgeArticle.LastPublishedDate)}"/></em>
-                            </apex:outputPanel>
-                        </apex:column>
-                    </apex:pageBlockTable>
-                </apex:outputPanel>        
-            </apex:pageBlock> 
-            
-            <div class="hvemBasicPanel hvemArticleViewer">
-            <apex:pageBlock id="customArticle_id">
-                <apex:outputLabel rendered="{!IF((filteredKnowledgeArticlesSize == 0),false,true)}">
-                    <h2 style="font-size:15px;margin-right:5px;"><apex:outputLabel value="{!articleTitle}"/></h2>&nbsp;
-                    <apex:outputLabel value="{!articleSummary}" style="font-style:italic;font-size:11px;"/><br /><br />
-                    <apex:repeat value="{!knowledgeArticleLabelValueList}" var="customField">
-                        <apex:outputText value="{!customField.fieldLabel}" style="font-weight:bold;font-size:13px;"/>
-                        <p><apex:outputText escape="false" value="{!customField.fieldValue}"/></p><br/>
-                    </apex:repeat>
-                </apex:outputLabel>
-            </apex:PageBlock>
-            </div>
-            
-            <!--<apex:actionFunction name="runSearch"  status="loadingStatus" action="{!filterArticleList}" rerender="SearchResultId,ErrorId,customArticle_id" oncomplete="setFirstArticleStyle();">
-                <apex:param assignTo="{!withDataCategoryClause}" name="withDataCategoryClauseName" value=""/>
-                <apex:param assignTo="{!calledFrom}" name="calledFrom" value="page"/>
-            </apex:actionFunction> -->       
-            
-            <apex:actionFunction name="refreshSearchResultAF" status="loadingStatus"  action="{!filterArticleList}" reRender="SearchResultId,customArticle_id" oncomplete="setFirstArticleStyle();">
-                <apex:param assignTo="{!withDataCategoryClause}" name="withDataCategoryClauseName" value=""/>
-                <apex:param assignTo="{!calledFrom}" name="calledFromName" value=""/>
-            
-            </apex:actionfunction>    
-            
-             <apex:actionStatus id="loadingStatus" onstart="freezeBackground();" onstop="unFreezeBackground();"> 
-            </apex:actionStatus>         
-        </apex:form>
-    </div>
-    <div id="disablingDiv" style="position:absolute;top: 0px;left: 0px;">
+                                <apex:commandLink onclick="setCurrentId(this);" status="loadingStatus"
+								action="{!displayCustomArticle}"
+								oncomplete="setStyleClass(this);"
+								rerender="idSingleArticlePanel,customArticle_id"
+								value="{!IF((LEN(article.knowledgeArticle.title)>30),LEFT(article.knowledgeArticle.title,30)+'...',article.knowledgeArticle.title)}"
+								style="color:#0055e3 ;text-decoration:none;cursor:pointer;font-weight:bold;display:inline;margin-right:5px;">
+								<apex:param value="{!article.knowledgeArticle.id}"
+									assignTo="{!selectedKnowledgeArticleFrameSourceId}"
+									name="selectedKnowledgeArticleFrameSourceId" />
+								<apex:param value="{!LEFT(article.articleName,LEN(article.articleName)-5)+'/'+article.knowledgeArticle.UrlName}"
+									assignTo="{!selectedKnowledgeArticleFrameSource}"
+									name="selectedKnowledgeArticleFrameSource" />
+								<apex:param value="{!article.articleName}"
+									assignTo="{!articleTypeOfSelectedArticle}"
+									name="articleTypeOfSelectedArticle" />
+								<apex:param assignTo="{!articleTitle}"
+									value="{!article.knowledgeArticle.title}" name="articleTitle" />
+								<apex:param assignTo="{!articleSummary}"
+									value="{!article.knowledgeArticle.summary}"
+									name="articleSummary" />
+							</apex:commandLink>&nbsp;   
+                            <apex:outputLabel style="font-style:italic;font-size:11px;"
+								value="{!IF((LEN(article.knowledgeArticle.summary)>65),LEFT(article.knowledgeArticle.summary,65)+'...',article.knowledgeArticle.summary)}" />
+							<br/>
 
-   	</div>
-   	<div id="loadingImage" style="position:absolute;left: 40%;top:60%;">
-   		<apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}" width="20px" height="20px"/>
-   	</div>
-     <script>  
+							<em><apex:outputLabel style="font-size:11px;"
+								value="{!article.articleLabel} - {!$Label.Last_Published_on} {!DATEVALUE(article.knowledgeArticle.LastPublishedDate)}" /></em>
+						</apex:outputPanel>
+					</apex:column>
+				</apex:pageBlockTable>
+			</apex:outputPanel>
+		</apex:pageBlock>
+
+		<div class="hvemBasicPanel hvemArticleViewer"><apex:pageBlock id="customArticle_id">
+			<apex:outputLabel rendered="{!IF((filteredKnowledgeArticlesSize == 0),false,true)}">
+				<h2 style="font-size: 15px; margin-right: 5px;"><apex:outputLabel value="{!articleTitle}" /></h2>&nbsp;
+                    <apex:outputLabel value="{!articleSummary}"
+					style="font-style:italic;font-size:11px;" />
+				<br />
+				<br />
+				<apex:repeat value="{!knowledgeArticleLabelValueList}"
+					var="customField">
+					<apex:outputText value="{!customField.fieldLabel}"
+						style="font-weight:bold;font-size:13px;" />
+					<p><apex:outputText escape="false"
+						value="{!customField.fieldValue}" /></p>
+					<br />
+				</apex:repeat>
+			</apex:outputLabel>
+		</apex:PageBlock></div>
+
+		<apex:actionFunction name="refreshSearchResultAF"
+			status="loadingStatus" action="{!filterArticleList}"
+			reRender="SearchResultId,customArticle_id"
+			oncomplete="setFirstArticleStyle();">
+			<apex:param assignTo="{!withDataCategoryClause}"
+				name="withDataCategoryClauseName" value="" />
+			<apex:param assignTo="{!calledFrom}" name="calledFromName" value="" />
+
+		</apex:actionfunction>
+
+		<apex:actionStatus id="loadingStatus" onstart="freezeBackground();"
+				onstop="unFreezeBackground();"/>
+	</apex:form></div>
+	<div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"/>
+	<div id="loadingImage" style="position: absolute; left: 40%; top: 60%;">
+		<apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
+			width="20px" height="20px" />
+	</div>
+	<script>  
         var categoryGroupCount = {!categoryGroupCount};
         var categoryGroupNames = '{!JSENCODE(hvemSettingsIns.Data_Category_Group_Filter__c)}';
         var withDataCategoryClause = '';      
         function callEmailEditorPage(url){
-        var frameArr = this.parent.frames; 
-        var frameInst; 
-        var lCaseId = '{!caseId}';
-        String.prototype.trim = function() {  
-            return this.replace(/^\s+|\s+$/g,"");  
-        }
-        if(lCaseId.length == '18'){
-        	lCaseId = lCaseId.substring(0,14);
-        }
-        for(i=0;i<frameArr.length;i++){ 
-            try{ 
-                if(frameArr[i].document.URL!=null && frameArr[i].document.URL!='undefined')
-                { 
-                    if(frameArr[i].document.URL.indexOf('HVEMEmailEditorPublisherPage') != -1 && frameArr[i].document.URL.indexOf(lCaseId) != -1){ 
-                        frameInst = frameArr[i]; break; 
-                    } 
-                }   
-            }catch(err){ 
-                continue; 
-            } 
-         }
-         if(frameInst != null){
-             frameInst.insertURL(url);
-         }    
-      }
+	        var frameArr = this.parent.frames; 
+	        var frameInst; 
+	        var lCaseId = '{!caseId}';
+	        String.prototype.trim = function() {  
+	            return this.replace(/^\s+|\s+$/g,"");  
+	        }
+	        if(lCaseId.length == '18'){
+	            lCaseId = lCaseId.substring(0,14);
+	        }
+	        for(i=0;i<frameArr.length;i++){ 
+	            try{ 
+	                if(frameArr[i].document.URL!=null && frameArr[i].document.URL!='undefined')
+	                { 
+	                    if(frameArr[i].document.URL.indexOf('HVEMEmailEditorPublisherPage') != -1 && frameArr[i].document.URL.indexOf(lCaseId) != -1){ 
+	                        frameInst = frameArr[i]; break; 
+	                    } 
+	                }   
+	            }catch(err){ 
+	                continue; 
+	            } 
+	        }
+	        if(frameInst != null){
+	            frameInst.insertURL(url);
+	        }    
+	    }
 
-      window.onload = init;
+        window.onload = init;
         function init(){
             if(document.getElementById('HVEMKnowledgeArticlePageId:KnowledgeArticleComId:HVEMKnowledgeArticleCompId:HVEMKnowledgeArticleFormId:SearchResultId:idArticlePageBlockTable:0:idSingleArticlePanel') != null){
                 document.getElementById('HVEMKnowledgeArticlePageId:KnowledgeArticleComId:HVEMKnowledgeArticleCompId:HVEMKnowledgeArticleFormId:SearchResultId:idArticlePageBlockTable:0:idSingleArticlePanel').className = "hvemCaseItemSelection";
@@ -219,7 +259,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 for(var i = 0; i < datacategoryClauseFromCtrlList.length; i++){                
                     var dataCategoryClauseList = datacategoryClauseFromCtrlList[i].split("__c ABOVE_OR_BELOW ");
                     var element = 'categoryType_'+dataCategoryClauseList[0].replace(/^\s+|\s+$/g,"");
-                    //document.getElementById(element).value = datacategoryClauseFromCtrlList[i].substr(1,datacategoryClauseFromCtrlList[i].length-2);  
                     if(document.getElementById(element) != undefined){
                         if(document.getElementById(element).value == 'No Filter'){
                             document.getElementById(element).value = datacategoryClauseFromCtrlList[i].replace(/^\s+|\s+$/g,"");  
@@ -231,8 +270,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 }
             }            
         }
-                                 
-         
+                                         
     </script>
-   
+
 </apex:component>

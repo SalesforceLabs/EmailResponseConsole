@@ -28,36 +28,36 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /* HVEMUtil Class
-* This Class is used to create reusable methods.
-*/
+ * This Class is used to create reusable methods.
+ */
 public Class HVEMUtil {
-    public Static String DraftEmailActiveStatus = 'Draft,Approval,Rejected,Approved';
-    
-    /** 
-    * Function to handle 
-    **/
-    public Static Boolean validateEmail(List<String> emailAddressList){
-        Boolean isValid = true;
-        Pattern emailPattern= Pattern.compile('((.)+[@][a-zA-Z0-9]+[.](.)+)');
-        Matcher emailMatcher;
-        // Then instantiate a new Matcher object "MyMatcher"
-        if(emailAddressList != null && emailAddressList.size() > 0){
-            for(String emailString : emailAddressList){
-                if(emailString.split('@',-1).size() > 2){
-                    return false;
-                }
-                emailMatcher = emailPattern.matcher(emailString);
-                if(!emailMatcher.matches()){
-                    isValid = false; 
-                }else{
-                    isValid = true; 
-                }
-            }
-            return isValid;
-        }else{
-            return true;
-        }
-        
-    }
+	public Static String DraftEmailActiveStatus = 'Draft,Approval,Rejected,Approved';
+
+	/** 
+	 * Function to handle 
+	 **/
+	public Static Boolean validateEmail(List<String> emailAddressList){
+		Boolean isValid = true;
+		Pattern emailPattern= Pattern.compile('((.)+[@][a-zA-Z0-9]+[.](.)+)');
+		Matcher emailMatcher;
+		// Then instantiate a new Matcher object "MyMatcher"
+		if(emailAddressList != null && emailAddressList.size() > 0){
+			for(String emailString : emailAddressList){
+				if(emailString.split('@',-1).size() > 2){
+					return false;
+				}
+				emailMatcher = emailPattern.matcher(emailString);
+				if(!emailMatcher.matches()){
+					isValid = false; 
+				}else{
+					isValid = true; 
+				}
+			}
+			return isValid;
+		}else{
+			return true;
+		}
+
+	}
 
 }

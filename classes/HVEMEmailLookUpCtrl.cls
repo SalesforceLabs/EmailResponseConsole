@@ -28,12 +28,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /* HVEMEmailLookUpCtrl Class
-* This Class is used to populate look up page for Additional to , cc and bcc look up.
-*/
+ * This Class is used to populate look up page for Additional to , cc and bcc look up.
+ */
 public with Sharing class HVEMEmailLookUpCtrl{
 	public  List<User> userList {get; set;}
 	private List<Contact> contactList {get; set;}
-	
+
 	public List<String> selectedUserContactList {get; set;}
 
 	public String selectedOption {get; set;}
@@ -42,51 +42,51 @@ public with Sharing class HVEMEmailLookUpCtrl{
 	public String caseId{get;set;}
 	public Case caseInstance {get; set;}
 	/** Constructor */
-	
+
 	public HVEMEmailLookUpCtrl(){
 		userList = new List<User>();
 		contactList = new List<Contact>();
 		UserContactOptions = getUserContactOptions('Users');
 		selectedUserContactList = new List<String>(); 
-	   
-	   caseId = ApexPages.currentPage().getParameters().get('Id');
-	   caseInstance = new Case();
-	   if(caseId != null && caseId != ''){
-	    	caseInstance = [SELECT  AccountId,Account.Name FROM Case WHERE id=: caseId];
-	   } 
+
+		caseId = ApexPages.currentPage().getParameters().get('Id');
+		caseInstance = new Case();
+		if(caseId != null && caseId != ''){
+			caseInstance = [SELECT  AccountId,Account.Name FROM Case WHERE id=: caseId];
+		} 
 	}
-	
+
 	public void changeSelection(){
 		UserContactOptions = getUserContactOptions(selectedOption);
-		
+
 	}
 	/**
-	* populate default choice for look up
-	*/
+	 * populate default choice for look up
+	 */
 	public List<SelectOption> getInitialOptions(){
 		List<SelectOption> options = new List<SelectOption>();
 		options.add(new SelectOption('Users','All Co-Workers in Company'));
 		if(caseInstance.AccountId != null ){
-		 	options.add(new SelectOption('Contacts','Contacts: ' + caseInstance.Account.Name));
-		 } 
-		 return options;
+			options.add(new SelectOption('Contacts','Contacts: ' + caseInstance.Account.Name));
+		} 
+		return options;
 	}
-	 /**
+	/**
 	 * populate data based on initial option selected
 	 */
 	public List<SelectOption> getUserContactOptions(String selectedOption){
 		List<SelectOption> options = new List<SelectOption>();
 		If(selectedOption == 'Users'){
 			userList  = [Select Name, Id,Email From User WHERE IsActive = true];
-	        for(User userInstance : userList){
-	            options.add(new SelectOption(userInstance.Email,userInstance.Name));           
-	        }
+			for(User userInstance : userList){
+				options.add(new SelectOption(userInstance.Email,userInstance.Name));           
+			}
 		}else if(selectedOption == 'Contacts'){
 			contactList = [SELECT id,Name,Email FROM Contact WHERE AccountId =: caseInstance.AccountId and Email != null];
 			for(Contact contactInstance: contactList){
-	           options.add(new SelectOption(contactInstance.Email + ' ',contactInstance.Name));           
-	        }
+				options.add(new SelectOption(contactInstance.Email + ' ',contactInstance.Name));           
+			}
 		}
-        return options;		
+		return options;		
 	} 
 }

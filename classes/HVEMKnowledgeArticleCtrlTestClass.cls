@@ -34,9 +34,10 @@ private class HVEMKnowledgeArticleCtrlTestClass {
     static Organization orgInstance;
     static EmailTemplate selectedEmailTemplate;
     static HVEM_Config_Options__c configOptions;
-    
+    static String prepareWithDataCategoryString;
+  
     static testMethod void setupDataInitPositive(){
-        
+
         HVEM_Config_Options__c configIns = new HVEM_Config_Options__c();
         configIns.name = 'Case Mapping';        
         configIns.Case_Mappin_API__c = 'Status:New >> CategoryTest:All' ;
@@ -50,7 +51,7 @@ private class HVEMKnowledgeArticleCtrlTestClass {
         HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
         System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
     }
-    
+
     static testMethod void setupDataInit(){
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
@@ -60,7 +61,7 @@ private class HVEMKnowledgeArticleCtrlTestClass {
         EmailTemplate testTemp = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body');
         selectedEmailTemplate = testTemp;
         System.runAs(u){
-           insert testTemp;
+            insert testTemp;
         }
         if(HVEM_Config_Options__c.getInstance('HVEM') == null){
             configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id, Data_Category_Group_Filter__c = 'ABC , DEF', Article_Types_Filter__c = 'FAQ , TEST');
@@ -69,84 +70,56 @@ private class HVEMKnowledgeArticleCtrlTestClass {
         else{
             configOptions = HVEM_Config_Options__c.getInstance('HVEM');
         }
-        
-        
+
+
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
         HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
         System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
         HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
     }
-    
-    static testMethod void setupDataInitNegative(){
+
+    /*static testMethod void setupDataInitNegative(){
         caseInstance = new Case(status='New',Origin='Phone');
         insert caseInstance;
+        //ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
+       // HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
+       // System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
+        HVEMKnowledgeArticleCtrlInstance.attachArticle();
+    }*/
+    /*static void setupDataForAttachArticle(){
+        User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
+        caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
+        insert caseInstance;
+        EmailMessage emailmsg = new EmailMessage(ParentId=caseInstance.Id,HtmlBody ='This is HTML Body');
+        insert emailmsg;
+        EmailTemplate testTemp = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body');
+        selectedEmailTemplate = testTemp;
+        System.runAs(u){
+            insert testTemp;
+        }
+        if(HVEM_Config_Options__c.getInstance('HVEM') == null){
+            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id, Data_Category_Group_Filter__c = 'ABC , DEF', Article_Types_Filter__c = 'FAQ , TEST');
+            insert configOptions;
+        }
+        else{
+            configOptions = HVEM_Config_Options__c.getInstance('HVEM');
+        }
+
+        
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
         HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
-        System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
-        HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
-    }
-    
-  
-  /*  static testMethod void setupDataInit() {
-        caseIns = new Case(status='New',Origin='Phone');
-        insert caseIns;
-        ApexPages.currentPage().getParameters().put('Id',caseIns.Id);             
         
-        String articleTypes = '';
-        String categoryGroups = '';                    
-        
-        orgInstance = [select id from Organization];
-        selectedEmailTemplate = new EmailTemplate(Name='Test Template', DeveloperName='Test_Template', templateType='custom', folderid = orgInstance.id);        
-        ID userId = UserInfo.getUserId();
-        User u = [SELECT id from User where id=:userId];
-        System.runAs(u){
-            insert selectedEmailTemplate;
-        }
-              
-        List<Schema.SObjectType> gd = Schema.getGlobalDescribe().Values();
-        for(Schema.SObjectType f : gd){
-            if (f.getDescribe().getName().endsWith('__kav')) {
-                articleTypes = articleTypes + f.getDescribe().getName() + ',';
-            }
-        }
-        String[] objTypes = new String[] {'KnowledgeArticleVersion'};
-        Describedatacategorygroupresult[] results = Schema.describeDataCategoryGroups(objTypes);
-        for (Describedatacategorygroupresult singleResult : results) {
-            categoryGroups = categoryGroups + singleResult.getName() +',';
-        }                
-        HVEM_Config_Options__c configOptions = new HVEM_Config_Options__c();        
-        configOptions.name = 'HVEM';
-        configOptions.Article_Types_Filter__c = articleTypes;
-        configOptions.Data_Category_Group_Filter__c = categoryGroups;
-        configOptions.Article_Link_Base_URL__c = 'http://testing/hvem';
-        configOptions.Default_Email_Template__c = selectedEmailTemplate.id;
-        configOptions.Reply_To_Mail__c = 'test@hvem.com';
-        insert configOptions; 
-        HVEM_Config_Options__c configOptionsIns = new HVEM_Config_Options__c();
-        configOptionsIns = HVEM_Config_Options__c.getInstance('HVEM');
-        
-        System.assertEquals('http://testing/hvem',configOptionsIns.Article_Link_Base_URL__c);
-                
-        String apiString = '';
-        String singleCategoryGroup = '';
-        if((results != null) && (results.size() > 0)){
-            singleCategoryGroup = results[0].getName();
-        }        
-        apiString = 'status:New >> '+ singleCategoryGroup + ':All';       
-        configOptions = new HVEM_Config_Options__c();
-        configOptions.Name = System.now().getTime() + 'CaseMap';
-        configOptions.Case_Mappin_API__c = apiString;
-        insert configOptions;                
-        
-        knowledge = new HVEMKnowledgeArticleCtrl(); 
         
     }
+   static testMethod void  testAttachArticle(){
+        setupDataForAttachArticle();
+        Test.startTest();
+        
+        HVEMKnowledgeArticleCtrlInstance.filterArticleList();
+        //assertEquals(true,KnowledgeArticlesList.size()>0); 
+        
+        Test.stopTest();
     
-    static testmethod void setcomponentsOnLoad(){
-        setupDataInit();                   
-        List<selectOption> articlesList = knowledge.getArticleTypesDevName();
-        System.assertEquals(true,articlesList.size() > 0); 
-    }
-    
-    */
+    }*/
+
 }

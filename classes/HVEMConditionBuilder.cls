@@ -28,16 +28,16 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /* HVEMConditionBuilder Class
-* This Class is a generic class used to help HVEMDBHelper class to add condition to query.
-*/
+ * This Class is a generic class used to help HVEMDBHelper class to add condition to query.
+ */
 public class HVEMConditionBuilder {
-    private String condition;
-    
-    public String getCondition(){
-        return this.condition;
-    }
-    
-    public void setCondition(String condition){
-        this.condition = condition;
-    }
+	private String condition;
+
+	public String getCondition(){
+		return this.condition;
+	}
+
+	public void setCondition(String condition){
+		this.condition = condition;
+	}
 }

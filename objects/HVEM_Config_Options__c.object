@@ -95,6 +95,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Default_Email_Folder__c</fullName>
+        <description>Default email Folder for Email Composer component</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Default email Folder for Email Composer component</inlineHelpText>
+        <label>Default Email Folder</label>
+        <length>18</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Default_Email_Template__c</fullName>
         <description>Default email template for Email Composer component</description>
         <externalId>false</externalId>

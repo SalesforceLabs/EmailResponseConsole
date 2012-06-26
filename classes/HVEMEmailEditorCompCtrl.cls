@@ -1304,7 +1304,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                  String replace = '<img src=\"' + pkbUrl + '/servlet';
                  // Compile regular expression
                  //  note: alt attribute is lost but this is OK
-                 pattern myPattern = pattern.compile('<img*[^\">]*/servlet');
+                 pattern myPattern = pattern.compile('<img*[^\\>]*/servlet');
                  // Replace all occurrences of pattern in input
                  matcher myMatcher = mypattern.matcher(articleFieldValue);
                  String output = myMatcher.replaceAll(replace);

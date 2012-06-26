@@ -1,12 +1,11 @@
 @isTest
 public class HVEMDBhelperTestClass
 {
-  static HVEMDBhelper HVEMDBhelperInstance;
-  static List<String> fieldsList;
-  static HVEMConditionBuilder lCondition;
+   static HVEMDBhelper HVEMDBhelperInstance;
+   static List<String> fieldsList;
+   static HVEMConditionBuilder lCondition;
   
-  static void setUpInitData()
-   {
+   public static void setUpInitData(){
       HVEMDBhelperInstance= new HVEMDBhelper();
       fieldsList = new List<String>();
       lCondition = new HVEMConditionBuilder();
@@ -19,16 +18,14 @@ public class HVEMDBhelperTestClass
       fieldsList.add('Status');
         
    }      
-  static testMethod void testgetQueryResults()
-   {
+   public static testMethod void testgetQueryResults(){
        setUpInitData();
        Test.startTest();
        HVEMDBhelperInstance.getQueryResults(new Case(), fieldsList , lCondition);
        System.AssertEquals(true,lCondition!=null);
        Test.stopTest();
-    }
-  static void setUpInitDataElse()
-   {
+   }
+   public static void setUpInitDataElse(){
       HVEMDBhelperInstance= new HVEMDBhelper();
       fieldsList = new List<String>();
       lCondition = new HVEMConditionBuilder();
@@ -41,8 +38,7 @@ public class HVEMDBhelperTestClass
       fieldsList.add('Status');
         
    }    
-  static testMethod void testgetQueryResultsElse()
-   {
+   public static testMethod void testgetQueryResultsElse(){
        setUpInitDataElse();
        Test.startTest();
        HVEMDBhelperInstance.getQueryResults(new Case(), fieldsList , lCondition);

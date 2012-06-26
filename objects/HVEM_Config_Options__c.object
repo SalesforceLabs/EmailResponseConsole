@@ -24,6 +24,14 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Allow_changing_case_status__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Allow changing case status without sending an email</description>
+        <externalId>false</externalId>
+        <label>Allow_changing_case_status</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Article_Link_Base_URL__c</fullName>
         <description>HVEM config setting which sets article link base URL</description>
         <externalId>false</externalId>
@@ -62,7 +70,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>CSP_Channel_Available__c</fullName>
+        <description>CSPChannelAvailable</description>
+        <externalId>false</externalId>
+        <label>CSP_Channel_Available</label>
+        <length>25</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Case_Mappin_API__c</fullName>
+        <caseSensitive>false</caseSensitive>
         <description>String that holds the case mapping API</description>
         <externalId>false</externalId>
         <inlineHelpText>String that holds the case mapping API</inlineHelpText>
@@ -74,6 +93,7 @@
     </fields>
     <fields>
         <fullName>Case_Mapping_Label__c</fullName>
+        <caseSensitive>false</caseSensitive>
         <description>String that holds the case mapping labels</description>
         <externalId>false</externalId>
         <inlineHelpText>String that holds the case mapping labels</inlineHelpText>
@@ -82,6 +102,27 @@
         <required>false</required>
         <type>Text</type>
         <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Check_CSP_Channel__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Check_CSP_Channel</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Check_PKB_Channel__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Check_PKB_Channel</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Check_PRM_Channel__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Check_PRM_Channel</label>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Data_Category_Group_Filter__c</fullName>
@@ -117,6 +158,20 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Insert_KB_Article_Content__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Insert_KB_Article_Content</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Languages_Selected__c</fullName>
+        <externalId>false</externalId>
+        <label>Languages Selected</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Manual_Submission_Of_Drafts__c</fullName>
         <defaultValue>false</defaultValue>
         <description>HVEM config setting which allows the manual submission of drafts.</description>
@@ -124,6 +179,24 @@
         <inlineHelpText>HVEM config setting which allows the manual submission of drafts.</inlineHelpText>
         <label>Allow Manual Submission Of Drafts</label>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>PKB_Channel_Available__c</fullName>
+        <externalId>false</externalId>
+        <label>PKB_Channel_Available</label>
+        <length>25</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PRM_Channel_Available__c</fullName>
+        <externalId>false</externalId>
+        <label>PRM_Channel_Available</label>
+        <length>25</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Public_Groups_With_No_Approval_Extended__c</fullName>

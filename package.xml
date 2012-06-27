@@ -55,6 +55,8 @@
    <types>
       <members>DraftEmailMessage__c</members>
       <members>HVEM_Config_Options__c</members>
+	  <members>HVEM_Email_Routing_Address__c</members>
+	  <members>HVEM_Email_Routing_Mapping__c</members>
       <members>User</members>
       <name>CustomObject</name>
    </types>

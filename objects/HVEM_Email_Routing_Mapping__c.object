@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>This Custom settings will be used to store mapping created between Case picklist values and corresponding reply to address</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Case_API_and_Label__c</fullName>
+        <description>This field will store case API and Label values</description>
+        <externalId>false</externalId>
+        <label>Case API and Label</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email_Routing_Address__c</fullName>
+        <description>This will store email routing address corresponding to case picklist values</description>
+        <externalId>false</externalId>
+        <label>Email Routing Address</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>HVEM Email Routing Mapping</label>
+</CustomObject>

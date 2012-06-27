@@ -79,8 +79,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
 		 loggedInUserQueueMap = new Map<Id,GroupMember>();
 		 caseCountQueue = new List<AggregateResult>();
 		 queueCountList = new List<QueueCount>();
-		 //new chnage
-		 draftsEmailList = new List<DraftEmailMessage__c>();
+         draftsEmailList = new List<DraftEmailMessage__c>();
 		 cloneLoggedInCaseList = new  List<Case>();
 		 loggedUserCaseInnerList = new List<AssignedCaseList>();
 		 caseListErrorMessage = '';
@@ -282,46 +281,44 @@ public with Sharing class HVEMCaseListDetailsCtrl {
             }
 		}
 
+        if(loggedInUserCaseList.size() > 0){
 
-		if(loggedInUserCaseList.size() > 0){
+            /*
+             * Populate the recently visited case
+             */
+            selectedCase = loggedInUserCaseList[0];
 
-			/*
-			 * Populate the recently visited case
-			 */
-			selectedCase = loggedInUserCaseList[0];
-
-		}else{
-			if(isDrafts == false){
-				caseListErrorMessage = Label.No_Case_Assigned_Error_Message;
-			}
-		}
-		/**
-		 *  Populate previous case logic for refresh link click
-		 */
-		List<EmailMessage> latestEmailSentList =  new List<EmailMessage>();
-		List<DraftEmailMessage__c> latestDraftApprovalList = new List<DraftEmailMessage__c>();             
-		latestEmailSentList = [SELECT Subject,SystemModstamp,parent.Status,parent.Owner.Name, parent.caseNumber, parent.Contact.Name,parent.IsEscalated, parent.Subject FROM EmailMessage WHERE parent.OwnerId =: loggedUserInstance.Id AND Incoming = false ORDER BY SystemModstamp DESC NULLS LAST LIMIT 1];
-		latestDraftApprovalList = [SELECT case__r.caseNumber,SystemModstamp from DraftEmailMessage__c where status__c = 'Approval' ORDER BY SystemModstamp DESC NULLS LAST LIMIT 1];           
-		if(configOptions != null && configOptions.Allow_Draft_Approval__c == true ){
-			if(latestDraftApprovalList.size() > 0){
-				DraftEmailMessage__c DEMInstance = new DraftEmailMessage__c();
-				DEMInstance = latestDraftApprovalList[0];
-				if(latestEmailSentList != null && latestEmailSentList.size() > 0){
-					EmailMessage latestEmailSent = latestEmailSentList.get(0);                     
-					//previousCase = (Case)latestEmailSent.parent;
-					if(latestEmailSent.SystemModstamp < DEMInstance.SystemModstamp){
-						previousCase = [select Status,caseNumber,Owner.Name,Contact.Name,IsEscalated, Subject from Case where id=:DEMInstance.case__c];
-						previousCaseErrorMessage = 'Your Email Message for Case Number ' + DEMInstance.case__r.caseNumber + ' is under Approval ';
+        }else{
+            if(isDrafts == false){
+                caseListErrorMessage = Label.No_Case_Assigned_Error_Message;
+            }
+        }
+        /**
+         *  Populate previous case logic for refresh link click
+         */
+        List<EmailMessage> latestEmailSentList =  new List<EmailMessage>();
+        List<DraftEmailMessage__c> latestDraftApprovalList = new List<DraftEmailMessage__c>();             
+        latestEmailSentList = [SELECT Subject,SystemModstamp,parent.Status,parent.Owner.Name, parent.caseNumber, parent.Contact.Name,parent.IsEscalated, parent.Subject FROM EmailMessage WHERE parent.OwnerId =: loggedUserInstance.Id AND Incoming = false ORDER BY SystemModstamp DESC NULLS LAST LIMIT 1];
+        latestDraftApprovalList = [SELECT case__r.caseNumber,SystemModstamp from DraftEmailMessage__c where status__c = 'Approval' ORDER BY SystemModstamp DESC NULLS LAST LIMIT 1];           
+        if(configOptions != null && configOptions.Allow_Draft_Approval__c == true ){
+            if(latestDraftApprovalList.size() > 0){
+                DraftEmailMessage__c DEMInstance = new DraftEmailMessage__c();
+                DEMInstance = latestDraftApprovalList[0];
+                if(latestEmailSentList != null && latestEmailSentList.size() > 0){
+                    EmailMessage latestEmailSent = latestEmailSentList.get(0);                     
+                    if(latestEmailSent.SystemModstamp < DEMInstance.SystemModstamp){
+                        previousCase = [select Status,caseNumber,Owner.Name,Contact.Name,IsEscalated, Subject from Case where id=:DEMInstance.case__c];
+                        previousCaseErrorMessage = Label.Error_emailMessage  + DEMInstance.case__r.caseNumber + Label.Email_underApproval ;
 						isPreviousCasePresent = true; 
 					}else{
 						previousCase = (Case)latestEmailSent.parent;
-						previousCaseErrorMessage = 'Your Email Message for  Case Number ' + previousCase.CaseNumber + ' has been sent';
+                        previousCaseErrorMessage = Label.Error_emailMessage  + previousCase.CaseNumber +  Label.Error_email;
 						isPreviousCasePresent = true; 
 					}                   
 
 				}else{
 					previousCase = [select Status,caseNumber,Owner.Name,Contact.Name,IsEscalated, Subject from Case where id=:DEMInstance.case__c];
-					previousCaseErrorMessage = 'Your Email Message for Case Number ' + DEMInstance.case__r.caseNumber + ' is under Approval ';
+                    previousCaseErrorMessage = Label.Error_emailMessage + DEMInstance.case__r.caseNumber + Label.Email_underApproval ;
 					isPreviousCasePresent = true;
 				}
 			}
@@ -329,7 +326,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
 				if(latestEmailSentList.size() > 0 && latestEmailSentList != null){
 					EmailMessage latestEmailSent = latestEmailSentList.get(0);                     
 					previousCase = (Case)latestEmailSent.parent;
-					previousCaseErrorMessage = 'Your Email Message for  Case Number ' + previousCase.CaseNumber + ' has been sent';
+                    previousCaseErrorMessage = Label.Error_emailMessage + previousCase.CaseNumber +  Label.Error_email;
 					isPreviousCasePresent = true;                                                
 				}else{
 					previousCaseErrorMessage = 'Hello, ' + loggedUserInstance.Name;
@@ -343,7 +340,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
 				previousCase = (Case)latestEmailSent.parent;
 				if(System.now() > latestEmailSent.SystemModstamp.addMinutes(1)){}
 				else{                        
-					previousCaseErrorMessage = 'Your Email Message for  Case Number ' + previousCase.CaseNumber + ' has been sent';
+                    previousCaseErrorMessage = Label.Error_emailMessage + previousCase.CaseNumber + Label.Error_email;
 					isPreviousCasePresent = true;                                                
 				}
 			}else{
@@ -378,9 +375,11 @@ public with Sharing class HVEMCaseListDetailsCtrl {
         }
     }
     
-
-    public void draftsCaseListFunc()
-    {
+    
+    /**
+     * Function to populate cases saved as a draft.
+     */
+    public void draftsCaseListFunc(){
         if(isDrafts == false){
             refreshCaseQueueList();
         }else{

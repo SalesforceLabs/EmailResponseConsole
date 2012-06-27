@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Protected</customSettingsVisibility>
+    <description>this settings will store all email routing address entered by admin in ERC settings</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Email_Address__c</fullName>
+        <description>Value of a single routing email address entered.</description>
+        <externalId>false</externalId>
+        <label>Email Address</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>HVEM Email Routing Address</label>
+</CustomObject>

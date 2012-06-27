@@ -25,6 +25,14 @@
         <value>Add Cc</value>
     </labels>
     <labels>
+        <fullName>Add_Email_Routing_Address</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Add Email Routing Address</shortDescription>
+        <value>Add Email Routing Address</value>
+    </labels>
+    <labels>
         <fullName>AdditionalTo_Recipients</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -49,12 +57,36 @@
         <value>Adds the contents for filtering</value>
     </labels>
     <labels>
+        <fullName>Adds_the_contents_for_mapping</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Adds the contents for mapping</shortDescription>
+        <value>Adds the contents for mapping</value>
+    </labels>
+    <labels>
         <fullName>All</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>All</shortDescription>
         <value>All</value>
+    </labels>
+    <labels>
+        <fullName>Allow_Case_Edit</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Allow Case Edit</shortDescription>
+        <value>Allow Case Edit</value>
+    </labels>
+    <labels>
+        <fullName>Allow_changing_case_status</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Allow changing case status</shortDescription>
+        <value>Allow changing case status without sending an email</value>
     </labels>
     <labels>
         <fullName>ArticleTypes_filter</fullName>
@@ -89,6 +121,22 @@
         <value>Article Links Options</value>
     </labels>
     <labels>
+        <fullName>Article_query_conditions</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Article query conditions</shortDescription>
+        <value>Article query conditions</value>
+    </labels>
+    <labels>
+        <fullName>Assigned_Case_List</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assigned_ Case_ List</shortDescription>
+        <value>My Assigned Case List</value>
+    </labels>
+    <labels>
         <fullName>Attach</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -105,6 +153,14 @@
         <value>Auto Populate the &quot;TO&quot; Field From the Case Contact</value>
     </labels>
     <labels>
+        <fullName>Available_Languages</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Available Languages</shortDescription>
+        <value>Available Languages</value>
+    </labels>
+    <labels>
         <fullName>BCC_Recipients</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -119,6 +175,14 @@
         <protected>true</protected>
         <shortDescription>Back to List : Cases</shortDescription>
         <value>Back to List : Cases</value>
+    </labels>
+    <labels>
+        <fullName>Base_Url_Regex</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Base_Url_Regex</shortDescription>
+        <value>^(http(?:s)?\\:\\/\\/[a-zA-Z0-9\\-]+(?:\\.[a-zA-Z0-9\\-]+)*\\.[a-zA-Z]{2,6}(?:\\/?|(?:\\/[\\w\\-]+)*)(?:\\/?|\\/\\w+\\.[a-zA-Z]{2,4}(?:\\?[\\w]+\\=[\\w\\-]+)?)?(?:\\&amp;[\\w]+\\=[\\w\\-]+)*)$</value>
     </labels>
     <labels>
         <fullName>Body</fullName>
@@ -145,6 +209,22 @@
         <value>Cancel</value>
     </labels>
     <labels>
+        <fullName>Case_Attribute_to_Routing_Email_Mapping</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Attribute to Routing Email Mapping</shortDescription>
+        <value>Case Attribute to Routing Email Mapping</value>
+    </labels>
+    <labels>
+        <fullName>Case_Attributes_Filter_Mapping_Error</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Attributes Filter Mapping Error</shortDescription>
+        <value>Case Attributes Filter Mapping Error</value>
+    </labels>
+    <labels>
         <fullName>Case_Attributes_to_filter_mapping</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -153,12 +233,28 @@
         <value>Case Attributes to Filter Mapping</value>
     </labels>
     <labels>
+        <fullName>Case_Field</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case Field</shortDescription>
+        <value>Case Field</value>
+    </labels>
+    <labels>
         <fullName>Case_Filter_Mapping_Error</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Case Filter Mapping Error</shortDescription>
         <value>Duplicate combination for Case Attribute to filter mapping</value>
+    </labels>
+    <labels>
+        <fullName>Case_Map</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case_Map</shortDescription>
+        <value>CaseMap</value>
     </labels>
     <labels>
         <fullName>Case_Number</fullName>
@@ -185,12 +281,36 @@
         <value>Case Owner Changed</value>
     </labels>
     <labels>
+        <fullName>Case_Status_Changed</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case_Status_Changed</shortDescription>
+        <value>Case Status Changed</value>
+    </labels>
+    <labels>
         <fullName>Case_Subject</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Case Subject</shortDescription>
         <value>Case Subject</value>
+    </labels>
+    <labels>
+        <fullName>Case_draft_email</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case_draft_email</shortDescription>
+        <value>This case has a draft Email</value>
+    </labels>
+    <labels>
+        <fullName>Case_rejected_email</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Case_rejected_email</shortDescription>
+        <value>&quot;This case has a rejected Email</value>
     </labels>
     <labels>
         <fullName>CategoryGroups_Error_Message</fullName>
@@ -201,12 +321,76 @@
         <value>Select minimum ONE and maximum THREE Category Groups in the filters</value>
     </labels>
     <labels>
+        <fullName>Category_Group</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Category Group</shortDescription>
+        <value>Category Group</value>
+    </labels>
+    <labels>
         <fullName>Change_Case_Status_to</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Change Case Status to</shortDescription>
         <value>Status</value>
+    </labels>
+    <labels>
+        <fullName>Change_status</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Change status</shortDescription>
+        <value>Change Case status</value>
+    </labels>
+    <labels>
+        <fullName>ChannelAvailable</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CSPChannelAvailable</shortDescription>
+        <value>CSPChannelAvailable</value>
+    </labels>
+    <labels>
+        <fullName>Channel_Available</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Channel_Available</shortDescription>
+        <value>Available</value>
+    </labels>
+    <labels>
+        <fullName>Channel_Not_Available</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Channel_Not_Available</shortDescription>
+        <value>NotAvailable</value>
+    </labels>
+    <labels>
+        <fullName>Check_CSP_channel</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Check CSP channel</shortDescription>
+        <value>Check CSP channel</value>
+    </labels>
+    <labels>
+        <fullName>Check_PKB_channel</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Check PKB channel</shortDescription>
+        <value>Check PKB channel</value>
+    </labels>
+    <labels>
+        <fullName>Check_PRM_channel</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Check PRM channel</shortDescription>
+        <value>Check PRM channel</value>
     </labels>
     <labels>
         <fullName>Close_Tab</fullName>
@@ -247,6 +431,14 @@
         <protected>true</protected>
         <shortDescription>Data Category Group filter</shortDescription>
         <value>Data Category Group Filter</value>
+    </labels>
+    <labels>
+        <fullName>Data_category</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Data_category</shortDescription>
+        <value>WITH DATA CATEGORY</value>
     </labels>
     <labels>
         <fullName>Default_Reply_To_address</fullName>
@@ -321,12 +513,28 @@
         <value>Email Publisher Options</value>
     </labels>
     <labels>
+        <fullName>Email_Routing_Map_Error</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email Routing Map Error</shortDescription>
+        <value>Email Routing Map Error</value>
+    </labels>
+    <labels>
         <fullName>Email_Sent_Title</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Email Sent Title</shortDescription>
         <value>Email Sent</value>
+    </labels>
+    <labels>
+        <fullName>Email_draft_approval</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email_draft_approval</shortDescription>
+        <value>Email Draft Submitted for approval.</value>
     </labels>
     <labels>
         <fullName>Email_for_Case_has_been_Rejected</fullName>
@@ -353,6 +561,14 @@
         <value>Email has been Sent</value>
     </labels>
     <labels>
+        <fullName>Email_underApproval</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email_underApproval</shortDescription>
+        <value>is under Approval</value>
+    </labels>
+    <labels>
         <fullName>Enable_Approval_process</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -375,6 +591,22 @@
         <protected>true</protected>
         <shortDescription>Error Message</shortDescription>
         <value>Error Message</value>
+    </labels>
+    <labels>
+        <fullName>Error_email</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error_email</shortDescription>
+        <value>has been sent</value>
+    </labels>
+    <labels>
+        <fullName>Error_emailMessage</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error_emailMessage</shortDescription>
+        <value>Your Email Message for  Case Number</value>
     </labels>
     <labels>
         <fullName>Find</fullName>
@@ -425,6 +657,22 @@
         <value>Hide Filters</value>
     </labels>
     <labels>
+        <fullName>Include_Thread</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Include_Thread</shortDescription>
+        <value>Include Thread</value>
+    </labels>
+    <labels>
+        <fullName>Insert_Article_Content</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Insert_Article_Content</shortDescription>
+        <value>Insert Knowledge article content instead of a link to the article</value>
+    </labels>
+    <labels>
         <fullName>Insert_url</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -439,6 +687,14 @@
         <protected>true</protected>
         <shortDescription>&quot;Invalid Email Address</shortDescription>
         <value>&quot;Invalid Email Address</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_Routing_Email_address_entered</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid Routing Email address entered</shortDescription>
+        <value>Invalid Routing Email address entered</value>
     </labels>
     <labels>
         <fullName>Invalid_URL</fullName>
@@ -505,12 +761,36 @@
         <value>Invalid cc address specified</value>
     </labels>
     <labels>
+        <fullName>Invalid_email</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid_email</shortDescription>
+        <value>Invalid Email Address Specified</value>
+    </labels>
+    <labels>
         <fullName>Invalid_email_Address_in_reply_to</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Invalid email Address in reply to</shortDescription>
         <value>Invalid email Address in reply to</value>
+    </labels>
+    <labels>
+        <fullName>KNOWLEDGE_ARTICLES</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>KNOWLEDGE_ARTICLES</shortDescription>
+        <value>KnowledgeArticleVersion</value>
+    </labels>
+    <labels>
+        <fullName>Knowledge_settings</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Knowledge settings</shortDescription>
+        <value>Knowledge settings</value>
     </labels>
     <labels>
         <fullName>Last_Published_on</fullName>
@@ -577,6 +857,38 @@
         <value>Maximum Public Group selection limit exceeded</value>
     </labels>
     <labels>
+        <fullName>Move_Bottom</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Move Bottom</shortDescription>
+        <value>Move Bottom</value>
+    </labels>
+    <labels>
+        <fullName>Move_Down</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Move Down</shortDescription>
+        <value>Move Down</value>
+    </labels>
+    <labels>
+        <fullName>Move_Top</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Move Top</shortDescription>
+        <value>Move Top</value>
+    </labels>
+    <labels>
+        <fullName>Move_Up</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Move Up</shortDescription>
+        <value>Move Up</value>
+    </labels>
+    <labels>
         <fullName>My_Assigned_Cases</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -599,6 +911,14 @@
         <protected>true</protected>
         <shortDescription>New case status when sending an email to approval</shortDescription>
         <value>New case status when sending an email to approval</value>
+    </labels>
+    <labels>
+        <fullName>Next_Case</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Case</shortDescription>
+        <value>Choose Next Case</value>
     </labels>
     <labels>
         <fullName>No_Case_Assigned_Error_Message</fullName>
@@ -657,6 +977,14 @@
         <value>No Drafts/Rejected Cases found</value>
     </labels>
     <labels>
+        <fullName>No_Filter</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No_Filter</shortDescription>
+        <value>No Filter</value>
+    </labels>
+    <labels>
         <fullName>No_Open_Case_Available_in_Selected_Queue</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -681,12 +1009,76 @@
         <value>No Queue assigned to current User</value>
     </labels>
     <labels>
+        <fullName>No_Search_Results_Found</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No_Search_Results_Found</shortDescription>
+        <value>No Search Results Found</value>
+    </labels>
+    <labels>
         <fullName>Only_contacts_or_co_workers_with_stored_email_addresses_are_displayed_in_the_box</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Only contacts or co-workers with stored email addresses are displayed in the box</shortDescription>
         <value>Only contacts or co-workers with stored email addresses are displayed in the box below</value>
+    </labels>
+    <labels>
+        <fullName>PKBChannelAvailable</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PKBChannelAvailable</shortDescription>
+        <value>PKBChannelAvailable</value>
+    </labels>
+    <labels>
+        <fullName>PRMChannelAvailable</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PRMChannelAvailable</shortDescription>
+        <value>PRMChannelAvailable</value>
+    </labels>
+    <labels>
+        <fullName>Please_Select_Language</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Please_Select_Language</shortDescription>
+        <value>Please Select Language</value>
+    </labels>
+    <labels>
+        <fullName>Please_enter_at_least_one_routing_address</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Please enter at least one routing address</shortDescription>
+        <value>Please enter at least one routing address</value>
+    </labels>
+    <labels>
+        <fullName>Please_make_sure_that_selected_languages_have_been_configured_in</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Please make sure that selected languages have been configured in</shortDescription>
+        <value>Please make sure that selected languages have been configured in</value>
+    </labels>
+    <labels>
+        <fullName>Please_select_atleast_one_language</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Please select atleast one language</shortDescription>
+        <value>Please select atleast one language</value>
+    </labels>
+    <labels>
+        <fullName>Please_verify_routing_Email_address_and_correct_it</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Please verify routing Email address and correct it</shortDescription>
+        <value>Please verify routing Email address and correct it</value>
     </labels>
     <labels>
         <fullName>Previous_Case_Label</fullName>
@@ -713,12 +1105,52 @@
         <value>Removes the contents from filtering</value>
     </labels>
     <labels>
+        <fullName>Removes_the_contents_from_mapping</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Removes the contents from mapping</shortDescription>
+        <value>Removes the contents from mapping</value>
+    </labels>
+    <labels>
         <fullName>Required_field_Missing</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Required field Missing</shortDescription>
         <value>Required field missing</value>
+    </labels>
+    <labels>
+        <fullName>RoutingEmail</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RoutingEmail</shortDescription>
+        <value>RoutingEmail</value>
+    </labels>
+    <labels>
+        <fullName>Routing_Address_Error</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Routing Address Error</shortDescription>
+        <value>Routing Address Error</value>
+    </labels>
+    <labels>
+        <fullName>Routing_Address_already_entered</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Routing_Address_already_entered</shortDescription>
+        <value>Routing Address already entered. Please enter different Routing Address</value>
+    </labels>
+    <labels>
+        <fullName>Routing_Address_already_present_Please_verify_and_reenter</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Routing Address already present. Please verify and reenter</shortDescription>
+        <value>Routing Address already present. Please verify and reenter</value>
     </labels>
     <labels>
         <fullName>Save</fullName>
@@ -753,6 +1185,30 @@
         <value>Search for public Groups</value>
     </labels>
     <labels>
+        <fullName>Select_Language</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select Language</shortDescription>
+        <value>Select Language</value>
+    </labels>
+    <labels>
+        <fullName>Selected_Field_s_values</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Selected Field&apos;s values</shortDescription>
+        <value>Selected Field&apos;s values</value>
+    </labels>
+    <labels>
+        <fullName>Selected_Languages</fullName>
+        <categories>hvem</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Selected Languages</shortDescription>
+        <value>Selected Languages</value>
+    </labels>
+    <labels>
         <fullName>Send_and_Next_Case</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -781,8 +1237,16 @@
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Show Filters</shortDescription>
+        <shortDescription>Show_Filters</shortDescription>
         <value>Show Filters</value>
+    </labels>
+    <labels>
+        <fullName>Show_cases_saved</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Show_cases_saved</shortDescription>
+        <value>Click to show Cases saved as Draft</value>
     </labels>
     <labels>
         <fullName>Subject</fullName>
@@ -833,6 +1297,22 @@
         <value>Template Folder</value>
     </labels>
     <labels>
+        <fullName>Template_folder_option</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template_folder_option</shortDescription>
+        <value>Please select a template folder</value>
+    </labels>
+    <labels>
+        <fullName>Template_name</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template_name</shortDescription>
+        <value>Please select a template</value>
+    </labels>
+    <labels>
         <fullName>To</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -881,11 +1361,35 @@
         <value>Select minimum ONE and maximum FOUR Article Types in the filters</value>
     </labels>
     <labels>
+        <fullName>case_status_have_been_changed</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>case_status_have_been_changed</shortDescription>
+        <value>case status have been changed</value>
+    </labels>
+    <labels>
+        <fullName>personal_email_templates</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>personal_email_templates</shortDescription>
+        <value>My personnel Email Templates</value>
+    </labels>
+    <labels>
         <fullName>settings_for_HVEM_have_been_saved</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>settings for HVEM have been saved</shortDescription>
         <value>Settings for ERC have been saved</value>
+    </labels>
+    <labels>
+        <fullName>workers_in_company</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>workers_in_company</shortDescription>
+        <value>All Co-Workers in Company&apos;</value>
     </labels>
 </CustomLabels>

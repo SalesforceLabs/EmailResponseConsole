@@ -57,10 +57,6 @@ private class HVEMEmailEditorCompCtrlTestClass {
     static GroupMember groupMemberObj;
     static Folder folderObj;
     static EmailTemplate emailTempTest;
-    static List<HVEM_Email_Routing_Address__c> routingConfigOptions;
-    static List<HVEM_Email_Routing_Mapping__c> routingMappingConfigOptions; 
-    static HVEM_Email_Routing_Address__c routingConfigOptionsInstance;
-    static HVEM_Email_Routing_Mapping__c routingMappingConfigOptionsInstance;
     
     public static void setupDataInit() {        
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
@@ -78,7 +74,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
             insert selectedEmailTemplate;
         }
         if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id,Allow_Draft_Approval__c = false,Default_Email_Folder__c='None',Auto_Populate_To_Field_From_Case_Contact__c=false);
+            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id,Allow_Draft_Approval__c = false,Default_Email_Folder__c='None');
             insert configOptions;
         }
         else{
@@ -157,11 +153,8 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.configOptions.Allow_Draft_Approval__c = true;
         emailEditor.configOptions.Name = 'Test Config1';
         emailEditor.configOptions.Public_Groups_With_No_Approval__c = testgrpId.Id;
-        emailEditor.configOptions.Allow_Drafts__c = true;
         upsert emailEditor.configOptions;
         selectedEmailTemplate = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body');
-           
-    
     }
 
     public static void setupDataSendAndNextPositive(){
@@ -191,7 +184,6 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.configOptions = new HVEM_Config_Options__c();
         emailEditor.configOptions.Allow_Draft_Approval__c = false;
         emailEditor.configOptions.Name = 'Test Config';
-        emailEditor.configOptions.Allow_Drafts__c = true;
         upsert emailEditor.configOptions;
         emailEditor.caseStatus='Escalated'; 
         GroupMember groupMemberIns = new GroupMember(GroupID=testQueue.id,UserOrGroupId=u.id); 
@@ -205,7 +197,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
             insert queuesObjectIns;    
             insert selectedEmailTemplate;
         }   
-         emailEditor.selectedTemplate = selectedEmailTemplate .Id;
+            
     }
 
     public static void setupDataPopulateEditor() {  
@@ -229,14 +221,14 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.selectedTemplate = emailTempTest.Id;
     }
 
-    public  static testMethod void getCaseStatusFieldValuesTest(){
+    public static testMethod void getCaseStatusFieldValuesTest(){
         setupData(); 
         Test.startTest(); 
         List<SelectOption> selectOptionList = emailEditor.getCaseStatusFieldValues();       
         Test.stopTest();
         System.assertEquals(true,selectOptionList.size() > 0);
     }
-    public static testMethod void sendAndNextActionTest(){
+    static testMethod void sendAndNextActionTest(){
         setupDataSendAndNext(); 
         Test.startTest(); 
         emailEditor.sendAndNextAction();
@@ -245,16 +237,18 @@ private class HVEMEmailEditorCompCtrlTestClass {
 
     }
 
-    public static testMethod void sendAndNextActionPositiveTest(){
+    static testMethod void sendAndNextActionPositiveTest(){
         setupDataSendAndNextPositive(); 
         Test.startTest(); 
         emailEditor.sendAndNextAction();
+        Task taskIns = new Task();
+        taskIns = [Select WhatId from Task where WhatId =:caseInstance.id];
         emailEditor.selectedEmailTemplate = selectedEmailTemplate;
         emailEditor.sendAndNextAction();
         Test.stopTest();
-        System.assertNotEquals(null, emailEditor.emailBody);
+        System.assertNotEquals(null,taskIns);
     }
-    public static testMethod void getEmailTemplatesTest(){
+    static testMethod void getEmailTemplatesTest(){
         setupData(); 
         Test.startTest(); 
         List<SelectOption> emailTemplateList1 = emailEditor.getEmailTemplates();       
@@ -262,7 +256,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         System.assertEquals(true,emailTemplateList1.size() > 0);
     }
 
-    public static testMethod void populateEditorTest(){
+    static testMethod void populateEditorTest(){
         setupDataPopulateEditor(); 
         Test.startTest(); 
         emailEditor.populateEditor();
@@ -273,15 +267,20 @@ private class HVEMEmailEditorCompCtrlTestClass {
       
     }
 
-    public static testMethod void testdiscardDraft(){
+    static testMethod void testdiscardDraft(){
         setupDataInit();
         Test.startTest();
+        configOptions.Auto_Populate_To_Field_From_Case_Contact__c=false;
+        String templateType = 'Text';
+        emailEditor.selectedTemplate = String.valueOf(selectedEmailTemplate.Id);
+        emailEditor.discardDraft();
+        configOptions.Default_Email_Template__c = selectedEmailTemplate.Id;
         emailEditor.discardDraft();
         System.assertEquals(true,configOptions!=null);
         Test.stopTest();
     }
   
-    public static testMethod void testExtractContent(){
+    static testMethod void testExtractContent(){
         setupDataInit();
         Test.startTest();
         List<String> contentList=new List<String>();
@@ -295,7 +294,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         Test.stopTest();
     }
     
-    public static testMethod void testControllerElsePart(){
+    static testMethod void testControllerElsePart(){
         setupDataInit();
         Test.startTest();
         configOptions.Allow_Draft_Approval__c = true;       
@@ -305,7 +304,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         Test.stopTest();
 
     }
-    public static testMethod void setupDataInitNegative(){        
+    static testMethod void setupDataInitNegative(){        
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         contactInstance = new Contact(LastName='TestClass');
         insert contactInstance;
@@ -364,7 +363,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
 
     }
 
-    public static testMethod void testconstructorNegativePart(){
+    static testMethod void testconstructorNegativePart(){
         setupDataInitNegative();
         Test.startTest();
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
@@ -404,7 +403,6 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.configOptions = new HVEM_Config_Options__c();
         emailEditor.configOptions.Allow_Draft_Approval__c = false;
         emailEditor.configOptions.Name = 'Test Config';
-        emailEditor.configOptions.Under_Approval_Case_Status__c='New';
         upsert emailEditor.configOptions;
         emailEditor.caseStatus='Escalated'; 
         GroupMember groupMemberIns = new GroupMember(GroupID=testQueue1.id,UserOrGroupId=u.id); 
@@ -423,7 +421,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.isSuperUser = true;
     }
 
-    public static testMethod void testSendAndNextElse(){
+    static testMethod void testSendAndNextElse(){
         setupDataSendAndNextElsePart();
         Test.startTest(); 
         emailEditor.sendAndNextAction();
@@ -486,7 +484,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.selectedTemplate = 'none';      
     }  
 
-    public static testMethod void testConstructorElseForCustomType(){
+    static testMethod void testConstructorElseForCustomType(){
         setUpDataForConstructorElse();
         Test.startTest();
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
@@ -495,7 +493,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         Test.stopTest();
 
     }  
-    public static void setUpDataForSelectedTempNull(){
+   static void setUpDataForSelectedTempNull(){
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         u.HVEM_User__c = true;
         update u;
@@ -542,7 +540,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.selectedTemplate = 'none';      
     }  
 
-    public static testMethod void testConstructorForSelectTempNull(){
+    static testMethod void testConstructorForSelectTempNull(){
         setUpDataForSelectedTempNull();
         Test.startTest();
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
@@ -555,7 +553,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         Test.stopTest();
 
     }    
-    public static testMethod void testTemplateNavigationMethods(){
+    static testMethod void testTemplateNavigationMethods(){
          setupDataInit();
          Test.startTest();
          emailEditor.initializeEmailTemplate();
@@ -573,8 +571,8 @@ private class HVEMEmailEditorCompCtrlTestClass {
          emailEditor.getEmailTemplatesList();
          System.assertEquals(true,emailEditor.folders!=null);
          Test.stopTest();
-   }
-   public static void setUpDataConfigNullInConstructor(){
+     }
+   static void setUpDataConfigNullInConstructor(){
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         u.HVEM_User__c = true;
         update u;
@@ -614,9 +612,9 @@ private class HVEMEmailEditorCompCtrlTestClass {
         List<DraftEmailMessage__c> currentDraft = new List<DraftEmailMessage__c>();
         currentDraft.add(draftInstance);    
         emailEditor.selectedTemplate = configOptions.Default_Email_Template__c;    
-    }
+         }
     
-    public static testMethod void testConfigNullInConstructor(){
+    static testMethod void testConfigNullInConstructor(){
         setupDataInit();
         Test.startTest();
         configOptions.Auto_Populate_To_Field_From_Case_Contact__c=false;
@@ -627,15 +625,15 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor = new HVEMEmailEditorCompCtrl();
         System.assertEquals(true,configOptions!=null);
         Test.stopTest();
-    }
-    public static testMethod void testselectTemplateConstructor(){
+     }
+   static testMethod void testselectTemplateConstructor(){
        setUpDataConfigNullInConstructor();
        Test.startTest();
        emailEditor = new HVEMEmailEditorCompCtrl();
        System.assertEquals('abcd@xyz.com',contactInstance.Email);
        Test.stopTest();
-    }
-    public static void setUpDataForConstructor(){
+     }
+   static void setUpDataForConstructor(){
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         u.HVEM_User__c = true;
         update u;
@@ -670,8 +668,8 @@ private class HVEMEmailEditorCompCtrlTestClass {
         ApexPages.currentPage().getParameters().put('isdtp','vw');
         emailEditor = new HVEMEmailEditorCompCtrl(); 
       
-    }
-    public static testMethod void testElseConstructor(){ 
+         }
+     static testMethod void testElseConstructor(){ 
            setUpDataForConstructor();
            Test.startTest();
            emailEditor = new HVEMEmailEditorCompCtrl();
@@ -679,9 +677,9 @@ private class HVEMEmailEditorCompCtrlTestClass {
            System.assertEquals(true,configOptions!=null);
            emailEditor.sendAndNextAction();
            Test.stopTest();
-    }
+     }
       
-    public static void dataForNullTextBody(){
+   static void dataForNullTextBody(){
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         u.HVEM_User__c = true;
         update u;
@@ -706,12 +704,13 @@ private class HVEMEmailEditorCompCtrlTestClass {
         else{
             configOptions = HVEM_Config_Options__c.getInstance('HVEM');
         }
+         
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
         ApexPages.currentPage().getParameters().put('isdtp','vw');
         emailEditor = new HVEMEmailEditorCompCtrl(); 
        }
     
-    public static testMethod void testNullTextBody(){
+    static testMethod void testNullTextBody(){
         dataForNullTextBody();
         Test.startTest();
         emailEditor = new HVEMEmailEditorCompCtrl();
@@ -719,7 +718,8 @@ private class HVEMEmailEditorCompCtrlTestClass {
         Test.stopTest();
         }
    
-    public static void dataForHtmlBodyNotNull(){
+   static void dataForHtmlBodyNotNull(){
+    
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         u.HVEM_User__c = true;
         update u;
@@ -748,16 +748,17 @@ private class HVEMEmailEditorCompCtrlTestClass {
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
         ApexPages.currentPage().getParameters().put('isdtp','vw');
         emailEditor = new HVEMEmailEditorCompCtrl(); 
-    }
+
+       }
     
-    public static testMethod void testNotNullHtmlBody(){
+    static testMethod void testNotNullHtmlBody(){
         dataForHtmlBodyNotNull();
         Test.startTest();
         emailEditor = new HVEMEmailEditorCompCtrl();
         System.assertEquals(true,draftInstance.HtmlBody__c!=null);
         Test.stopTest();
-    } 
-    public static void dataForCustomTemplateType(){
+        } 
+   static void dataForCustomTemplateType(){
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         u.HVEM_User__c = true;
         update u;
@@ -775,7 +776,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         draftInstance = new DraftEmailMessage__c(Status__c='Draft',ToAddress__c='abcd@xyz.com;',BccAddress__c='abc@xyz.com',Case__c = caseInstance.Id,CcAddress__c='abc@xyz.com',TextBody__c ='hello',HtmlBody__c='',TemplateId__c =selectedEmailTemplate.Id);          
         upsert draftInstance; 
         if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id ,Allow_Draft_Approval__c = false, Under_Approval_Case_Status__c='New');
+            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id ,Allow_Draft_Approval__c = false);
             upsert configOptions;
         }
         else{
@@ -792,9 +793,9 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailMessageList.add(emailmsg);
         emailEditor.emailSubject = '';
         emailEditor.emailBody='this is a email text body';
-     }
+       }
     
-     public static testMethod void testCustomTemplateType(){
+    static testMethod void testCustomTemplateType(){
         dataForCustomTemplateType();
         Test.startTest();
         emailEditor = new HVEMEmailEditorCompCtrl();
@@ -806,220 +807,6 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.emailBody='this is a email text body';
         emailEditor.sendAndNextAction();
         Test.stopTest();
-    }   
-    public static void setDataForChangeStatus(){
-        User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
-        u.HVEM_User__c = true;
-        update u;
-        contactInstance = new Contact(LastName='TestClass', Email = 'testclasses@persistent.co.i');
-        insert contactInstance;
-        caseInstance = new Case(status='New',Origin='Phone',contactId=contactInstance.id);
-        insert caseInstance; 
-        selectedEmailTemplate = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body',isActive=true);
-        System.runAs(u){
-            insert selectedEmailTemplate;
-        }
-        if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id,Allow_Draft_Approval__c = true,Default_Email_Folder__c='None',Allow_changing_case_status__c=true,Allow_Drafts__c=true);
-            insert configOptions;
-        }
-        else{
-            configOptions = HVEM_Config_Options__c.getInstance('HVEM');
-        }
-        ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
-        ApexPages.currentPage().getParameters().put('isdtp','vw');
-        emailEditor = new HVEMEmailEditorCompCtrl();
-     }    
-     public static testMethod void testChangeCaseStatus(){
-        setDataForChangeStatus();
-        Test.startTest();
-        emailEditor.changeCaseStatus();
-        System.assertEquals(true,configOptions!=null);
-        emailEditor.enableChangeCaseStatus = false;
-        emailEditor.changeCaseStatus();
-        Test.stopTest();
-     }
-    
-     public static void setDataReplyToAddressToUse(){
-        User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];        
-        contactInstance = new Contact(LastName='TestClass', Email = 'testclasses@persistent.co.in');
-        insert contactInstance;
-        caseInstance = new Case(status='New',Origin='Phone',contactId=contactInstance.id);
-        insert caseInstance;
-        apexPages.currentPage().getParameters().put('Id',caseInstance.Id);
-        apexPages.currentPage().getParameters().put('isdtp','vw');
-        emailEditor = new HVEMEmailEditorCompCtrl();     
-        emailEditor.emailBody = 'Hello This is test Email body';
-        emailEditor.additionalToAddress = 'abc@xyz.com;';
-        emailEditor.ccAddress= 'abc@xyz.com;';
-        emailEditor.bccAddress= 'abc@xyz.com;';
-        routingConfigOptions = new List<HVEM_Email_Routing_Address__c>();
-        routingMappingConfigOptions = new List<HVEM_Email_Routing_Mapping__c>(); 
-        routingConfigOptionsInstance =  new HVEM_Email_Routing_Address__c(Name='1RoutingEmailTest',Email_Address__c = 'abcd@xyz.com');
-        insert routingConfigOptionsInstance;
-        routingConfigOptions.add(routingConfigOptionsInstance); 
-       
-        routingMappingConfigOptionsInstance = new HVEM_Email_Routing_Mapping__c(Case_API_and_Label__c = 'Reason||Case Reason:Installation||Reason ',Email_Routing_Address__c= 'test@app.com',name='EmailAddress');
-        insert routingMappingConfigOptionsInstance;
-        routingMappingConfigOptions.add(routingMappingConfigOptionsInstance);
-     }
-     public static testMethod void testReplyToAddressToUse(){
-         setDataReplyToAddressToUse();
-         Test.startTest();
-         emailEditor.replyToAddressToUse();
-         System.assertEquals(true,routingConfigOptions.size()>0);
-         Test.stopTest();
-     }
-     public static void setDatacheckNextCasePresent(){
-        User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
-        u.HVEM_User__c = true;
-        update u;
-        contactInstance = new Contact(LastName='TestClass', Email = 'testclasses@persistent.co.i');
-        insert contactInstance;
-        caseInstance = new Case(OwnerId = u.id,status='New',Origin='Phone',contactId=contactInstance.id);
-        insert caseInstance; 
-                
-        selectedEmailTemplate = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body',isActive=true);
-        System.runAs(u){
-            insert selectedEmailTemplate;
-        }
-                
-        if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id,Allow_Draft_Approval__c = true,Default_Email_Folder__c='None',Allow_changing_case_status__c=true,Allow_Drafts__c=true);
-            insert configOptions;
-        }
-        else{
-            configOptions = HVEM_Config_Options__c.getInstance('HVEM');
-        }
-        
-        Group testQueue = new Group(Name = 'Test Queue', Type = 'Queue');
-        insert testQueue;
-        QueuesObject queuesObjectIns = new QueuesObject(QueueId=testQueue.id,SobjectType='Case'); 
-        System.runAs(u){
-           insert queuesObjectIns;  
-          
-       } 
-        GroupMember groupMemberIns = new GroupMember(GroupID=testQueue.id,UserOrGroupId=u.id); 
-        System.runAs(u){
-            insert groupMemberIns;
-       }
-        ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
-        ApexPages.currentPage().getParameters().put('isdtp','vw');
-        emailEditor = new HVEMEmailEditorCompCtrl();
-    }    
-    public static testMethod void testCheckNextCasePresent(){
-        setDatacheckNextCasePresent();
-        Test.startTest();
-        emailEditor.changeCaseStatus();
-        System.assertEquals(true,configOptions!=null);
-        Test.stopTest();
-    }
-    public static void setDataSendAndNextNegative(){
-        User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
-        u.HVEM_User__c = true;
-        update u;
-        contactInstance = new Contact(LastName='TestClass', Email = 'abcd@xyz.com');
-        insert contactInstance;
-
-        caseInstance = new Case(status='New',Origin='Phone',contactId=contactInstance.Id);
-        insert caseInstance;
-                     
-        selectedEmailTemplate = new EmailTemplate(FolderId = u.Id,TemplateType = 'custom',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body',isActive=true);
-        
-        System.runAs(u){
-           insert selectedEmailTemplate;
-        }
-        draftInstance = new DraftEmailMessage__c(Status__c='Draft',ToAddress__c='abcd@xyz.com;',BccAddress__c='abc@xyz.com;',Case__c = caseInstance.Id,CcAddress__c='abc@xyz.com;',TextBody__c ='hello',Reply_To_Address__c = 'abcd@xyz.com',TemplateId__c =selectedEmailTemplate.Id);          
-        insert draftInstance; 
-        List<HVEM_Config_Options__c> configList = [select Id from HVEM_Config_Options__c];
-        delete configList;
-        if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id ,Allow_Draft_Approval__c = false , Under_Approval_Case_Status__c='New');
-            insert configOptions;
-        }
-        else{
-            configOptions = HVEM_Config_Options__c.getInstance('HVEM');
-        }
-        
-        ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
-        ApexPages.currentPage().getParameters().put('isdtp','vw');
-        emailEditor = new HVEMEmailEditorCompCtrl(); 
-        EmailMessage emailmsg = new EmailMessage(ParentId=caseInstance.Id,HtmlBody ='This is HTML Body',CcAddress='abcg@bb.com',ToAddress='defg@cc.com',Subject='test',FromAddress='xyz@aa.com');
-        insert emailmsg;
-        
-        emailEditor.includeThread = true;
-        emailMessageList =  new List<EmailMessage>();
-        emailMessageList.add(emailmsg);
-        emailEditor.emailSubject = '';
-        emailEditor.caseStatus = 'Approval';
-        emailEditor.emailBody='this is a email text body';
-        emailEditor.enableDraftEmails = true;
-        routingConfigOptions = new List<HVEM_Email_Routing_Address__c>();
-        routingMappingConfigOptions = new List<HVEM_Email_Routing_Mapping__c>(); 
-        routingConfigOptionsInstance =  new HVEM_Email_Routing_Address__c(Name='RoutingEmail',Email_Address__c = 'abcd@xyz.com');
-        System.runAs(u){
-            insert routingConfigOptionsInstance;
-        }
-        routingConfigOptions.add(routingConfigOptionsInstance); 
-        
-    }
-    public static testMethod void testSendAndNextNegative(){
-        setDataSendAndNextNegative();
-        Test.startTest();
-        emailEditor.sendAndNextAction();
-        System.assertEquals('custom',selectedEmailTemplate.TemplateType);
-        Test.stopTest();
-    
-    }
-    public static testMethod void testSaveDraft(){
-        setDataSendAndNextNegative();
-        Test.startTest();
-        emailEditor.saveDraft();
-        System.assertNotEquals('New',emailEditor.caseStatus);
-        Test.stopTest();
-    }
-    public static void setDataSAveDraftElse(){
-        User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
-        u.HVEM_User__c = true;
-        update u;
-        contactInstance = new Contact(LastName='TestClass', Email = 'abcd@xyz.com');
-        insert contactInstance;
-        caseInstance = new Case(status='New',Origin='Phone',contactId=contactInstance.Id);
-        insert caseInstance;
-                     
-        selectedEmailTemplate = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body',isActive=true);
-        
-        System.runAs(u){
-           insert selectedEmailTemplate;
-        }
-        
-        List<HVEM_Config_Options__c> configList = [select Id from HVEM_Config_Options__c];
-        delete configList;
-        if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id ,Allow_Draft_Approval__c = false , Under_Approval_Case_Status__c='New',Default_Email_Folder__c='None');
-            insert configOptions;
-        }
-        else{
-            configOptions = HVEM_Config_Options__c.getInstance('HVEM');
-        }
-        draftInstance = new DraftEmailMessage__c(Status__c='Approved',ToAddress__c='abcd@xyz.com;',BccAddress__c='abc@xyz.com;',Case__c = caseInstance.Id,CcAddress__c='abc@xyz.com;',TextBody__c ='hello',Reply_To_Address__c = 'abcd@xyz.com',TemplateId__c =selectedEmailTemplate.Id,Include_Thread__c=true);          
-        insert draftInstance; 
-        ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
-        ApexPages.currentPage().getParameters().put('isdtp','vw');
-        emailEditor = new HVEMEmailEditorCompCtrl(); 
-        EmailMessage emailmsg = new EmailMessage(ParentId=caseInstance.Id,HtmlBody ='This is HTML Body',CcAddress='abcg@bb.com',ToAddress='defg@cc.com',Subject='test',FromAddress='xyz@aa.com');
-        insert emailmsg;
-        emailEditor.emailSubject = '';
-        emailEditor.caseStatus = 'Approval';
-        emailEditor.emailBody='this is a email text body';
-        emailEditor.enableDraftEmails = true;
-        emailEditor.includeThread = true;
-     }
-     public static testMethod void testSaveDraftElse(){
-         setDataSAveDraftElse();
-         Test.startTest();
-         emailEditor.saveDraft();
-         System.assertEquals('text',selectedEmailTemplate.TemplateType);
-         Test.stopTest();
-     }
+        }   
+   
   }

@@ -213,7 +213,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
                     <apex:pageBlock >
 
-                        <apex:pageblockTable title="{!$Label.Assigned_Case_List}"
+                        <apex:pageblockTable title="My Assigned Case List"
                             value="{!loggedUserCaseInnerList}" var="loggedInUserCaseVar">
 
                             <apex:column >
@@ -224,7 +224,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                     <apex:outputPanel rendered="{!isDraftsAllowed}">
                                             <apex:inputCheckbox style="cursor: pointer;right:47%;"
                                                 id="checkId" value="{!isDrafts}"
-                                                title="{!$Label.Show_cases_saved}"
+                                                title="Click to show Cases saved as Draft"
                                                 styleClass="draftOnlyClass"
                                                 onclick="showDraftsOnlyCaseListAF(this.checked);" />
                                             <label for="Drafts" style="right: 40%;"
@@ -241,8 +241,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                     value="{!loggedInUserCaseVar.loggedUserCase.CaseNumber} - " /> <strong><apex:outputLabel style="cursor:pointer;text-decoration:underline;"
                                     value="{!If(loggedInUserCaseVar.loggedUserCase.IsEscalated,'Escalated',loggedInUserCaseVar.loggedUserCase.Status)}" /></strong>
                                 </a> 
-                                <apex:image rendered="{!loggedInUserCaseVar.isRejected}" style="float:right;" title="{!$Label.Case_rejected_email}" value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/RejectedDraft.png')}" width="20px" height="18px"/>
-                                <apex:image rendered="{!loggedInUserCaseVar.isDraft}" style="float:right;" title="{!$Label.Case_draft_email}" value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/DraftCase.png')}" width="16px" height="14px"/>
+                                <apex:image rendered="{!loggedInUserCaseVar.isRejected}" style="float:right;" title="This case has a rejected Email" value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/RejectedDraft.png')}" width="20px" height="18px"/>
+                                <apex:image rendered="{!loggedInUserCaseVar.isDraft}" style="float:right;" title="This case has a draft Email" value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/DraftCase.png')}" width="16px" height="14px"/>
                                 
                                 <em><apex:outputLabel value="{!loggedInUserCaseVar.loggedUserCase.Contact.Name}" /></em>
                                 <p><apex:outputLabel value="{!loggedInUserCaseVar.loggedUserCase.Subject}"

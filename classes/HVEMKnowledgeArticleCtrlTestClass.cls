@@ -35,14 +35,13 @@ private class HVEMKnowledgeArticleCtrlTestClass {
     static EmailTemplate selectedEmailTemplate;
     static HVEM_Config_Options__c configOptions;
     static String prepareWithDataCategoryString;
-    static HVEM_Config_Options__c configIns; 
-     
-    public static testMethod void setupDataInitPositive(){
-        configIns = new HVEM_Config_Options__c();
+  
+    static testMethod void setupDataInitPositive(){
+
+        HVEM_Config_Options__c configIns = new HVEM_Config_Options__c();
         configIns.name = 'Case Mapping';        
         configIns.Case_Mappin_API__c = 'Status:New >> CategoryTest:All' ;
-        configIns.Case_Mapping_Label__c = 'Status:New >> CategoryTest:All' ;
-        configIns.Languages_Selected__c = 'English,en_US';
+        configIns.Case_Mapping_Label__c = 'Status:New >> CategoryTest:All' ; 
         insert configIns;  
         String apiName = 'Status:New >> Category1:A;;';
         caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
@@ -51,15 +50,9 @@ private class HVEMKnowledgeArticleCtrlTestClass {
         HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
         HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
         System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
-        HVEMKnowledgeArticleCtrlInstance.IsVisiblePKB = true;
-        HVEMKnowledgeArticleCtrlInstance.IsVisiblePRM  = true; 
-        HVEMKnowledgeArticleCtrlInstance.IsVisibleCSP  = true;
-        HVEMKnowledgeArticleCtrlInstance.PKBChannelVisible = 'Available';
-        HVEMKnowledgeArticleCtrlInstance.PRMChannelVisible = 'Available';
-        HVEMKnowledgeArticleCtrlInstance.CSPChannelVisible = 'Available';
     }
 
-    public static testMethod void setupDataInit(){
+    static testMethod void setupDataInit(){
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
         caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
         insert caseInstance;
@@ -71,46 +64,41 @@ private class HVEMKnowledgeArticleCtrlTestClass {
             insert testTemp;
         }
         if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id, Data_Category_Group_Filter__c = 'ABC , DEF', Article_Types_Filter__c = 'FAQ__kav',Languages_Selected__c='English,en_US');
+            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id, Data_Category_Group_Filter__c = 'ABC , DEF', Article_Types_Filter__c = 'FAQ , TEST');
             insert configOptions;
         }
         else{
             configOptions = HVEM_Config_Options__c.getInstance('HVEM');
         }
 
+
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
         HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
         System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
         HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
-     }
-     public static testMethod void testchannelVisibility(){
-        setupDataInitPositive();
-        Test.startTest();
-        HVEMKnowledgeArticleCtrlInstance.channelVisibility();
-        System.assertEquals(true,HVEMKnowledgeArticleCtrlInstance.IsVisiblePKB); 
-        HVEMKnowledgeArticleCtrlInstance.PKBChannelVisible = 'NotAvailable';
-        HVEMKnowledgeArticleCtrlInstance.PRMChannelVisible = 'NotAvailable';
-        HVEMKnowledgeArticleCtrlInstance.CSPChannelVisible = 'NotAvailable';
-        HVEMKnowledgeArticleCtrlInstance.channelVisibility();
-        Test.stopTest();
-     }
-     public static testMEthod void testControllerElse(){
-        setupDataInit();
-        Test.startTest();
-        HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
-        System.assertEquals(true,configOptions!=null); 
-        List<HVEM_Config_Options__c> configInsLst = new List<HVEM_Config_Options__c>();
-        configInsLst = [select Id from HVEM_Config_Options__c];
-        delete configInsLst;
-        HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
-        Test.stopTest();
-     }
-     public static void setDatafilterArticleList(){
+    }
+
+    /*static testMethod void setupDataInitNegative(){
+        caseInstance = new Case(status='New',Origin='Phone');
+        insert caseInstance;
+        //ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
+       // HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
+       // System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
+        HVEMKnowledgeArticleCtrlInstance.attachArticle();
+    }*/
+    /*static void setupDataForAttachArticle(){
         User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
-        caseInstance = new Case(status='New',Origin='Phone',Subject = '');
-        upsert caseInstance;
+        caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
+        insert caseInstance;
+        EmailMessage emailmsg = new EmailMessage(ParentId=caseInstance.Id,HtmlBody ='This is HTML Body');
+        insert emailmsg;
+        EmailTemplate testTemp = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body');
+        selectedEmailTemplate = testTemp;
+        System.runAs(u){
+            insert testTemp;
+        }
         if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Data_Category_Group_Filter__c = 'CategoryTest , DEF', Article_Types_Filter__c = 'FAQ , TEST');
+            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id, Data_Category_Group_Filter__c = 'ABC , DEF', Article_Types_Filter__c = 'FAQ , TEST');
             insert configOptions;
         }
         else{
@@ -120,30 +108,18 @@ private class HVEMKnowledgeArticleCtrlTestClass {
         
         ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
         HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
-     }
-     public static testMethod void testfilterArticleList(){ 
-        setDatafilterArticleList();
+        
+        
+    }
+   static testMethod void  testAttachArticle(){
+        setupDataForAttachArticle();
         Test.startTest();
-        HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
-        System.assertEquals(null,HVEMKnowledgeArticleCtrlInstance.subjectFilter);
+        
+        HVEMKnowledgeArticleCtrlInstance.filterArticleList();
+        //assertEquals(true,KnowledgeArticlesList.size()>0); 
+        
         Test.stopTest();
-     } 
-     public static testMethod void testUserLanguagesList(){
-        setupDataInit();
-        Test.startTest();
-        List<SelectOption> selectOptionList = HVEMKnowledgeArticleCtrlInstance.getUserLanguagesList();
-        System.assertEquals(true,selectOptionList.size()>0); 
-        System.assertEquals(true,configOptions!=null); 
-        Test.stopTest();
-     }
-     public static testMethod void testUserLanguagesListElse(){
-        setupDataInit();
-        Test.startTest();
-        List<HVEM_Config_Options__c> configInsLst = new List<HVEM_Config_Options__c>();
-        configInsLst = [select Id from HVEM_Config_Options__c];
-        delete configInsLst; 
-        List<SelectOption> selectOptionList =  HVEMKnowledgeArticleCtrlInstance.getUserLanguagesList();
-        System.assertEquals(true,configOptions!=null); 
-        Test.stopTest();
-     } 
+    
+    }*/
+
 }

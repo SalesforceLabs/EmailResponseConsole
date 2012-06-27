@@ -34,8 +34,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 public with Sharing class HVEMSettingsCtrl{
 
 	public HVEM_Config_Options__c configOptions{get;set;}
-    public List<HVEM_Email_Routing_Address__c> routingConfigOptions {get; set;}
-    public List<HVEM_Email_Routing_Mapping__c> routingMappingConfigOptions {get; set;}
 	public EmailTemplate emailtemplate{get;set;}
 
     public List<folder>folderList{get;set;}
@@ -45,11 +43,9 @@ public with Sharing class HVEMSettingsCtrl{
     public List<String> specifiedCategoryGroupsList{get;set;}
     public List<String> selectedPubliGroupsList{get;set;}
     public List<String> saveGroupList{get;set;}
-    public List<String> availableRoutingAddressList {get; set;}
-    public List<String> selectedRoutingAddressList {get; set;}
 
     private static final String NON_BREAKING_SPACE = '&nbsp;&nbsp;';
-    private final String KNOWLEDGEARTICLES = Label.KNOWLEDGE_ARTICLES;
+    private final String KNOWLEDGEARTICLES = 'KnowledgeArticleVersion';
     public String articleTypes{get;set;}
     public String folders{get;set;}
     public String templates{get;set;}
@@ -73,20 +69,9 @@ public with Sharing class HVEMSettingsCtrl{
     public String dataCategory{get;set;}
     public String baseURL{get;set;}
     public String caseMapSelected {get; set;}
+    public String replyToAddress {get; set;}
     public String availableCategoryGroups {get; set;}
     public String chosenCategoryGroups {get; set;}
-    public String selectedLanguages{get; set;}
-    public Integer templateCount {get; set;}
-    public String routingEmailInput {get; set;}
-    public String selectedRoutingEmailAddress {get; set;}
-    public String selectedCaseFieldReplyTo {get; set;}
-    public String selectedCasePicklistReplyTo {get; set;}
-    public String mappedReplyToAddress{get; set;}
-    public String[] caseReplyToMapSelected {get; set;}
-    public String caseRoutingAddressmappings {get; set;}
-    public String toRemoveRoutingAddress{get; set;}
-    public String caseMapRoutingAdd {get; set;}
-    public String toRemoveRoutingMapAddress {get; set;}
 
     public boolean saveCS{get;set;}
     public boolean articleTypesError{get;set;}
@@ -96,24 +81,7 @@ public with Sharing class HVEMSettingsCtrl{
     public boolean replyToBlankError{get;set;}
     public boolean baseURLBlankError{get;set;}
     public boolean PublicGroupError{get;set;}
-    public boolean enableChangeCaseStatus{get;set;}
-    public boolean userLanguageError {get; set;}
 
-   //KB article 
-    public boolean IsVisibleInPKB{get;set;}
-    public boolean IsVisibleInPRM{get;set;}
-    public boolean IsVisibleInCSP{get;set;}
-    public boolean InsertArticleContent{get;set;}
-    
-    public String CSPChannelVisible{get;set;}
-    public String PKBChannelVisible{get;set;}
-    public String PRMChannelVisible{get;set;}
-    
-    
-    public Boolean isInvalidRoutingEmail{get; set;}
-    public Boolean isroutingAddressPresent {get; set;}
-    public Boolean isroutingAddressAlreadyPresent {get; set;}
-    public Boolean isroutingMappingAlreadyPresent {get; set;}
     private Map<String, String> caseApiLabelMap {get;set;}
     private Map<String, Schema.SObjectField> fieldMap {get; set;}
     private Map<String, String> categoryGroupApiLabelMap{get; set;}
@@ -128,16 +96,7 @@ public with Sharing class HVEMSettingsCtrl{
         categoryGroupApiLabelMap = new Map<String, String>();
         dataCategoryApiLabelMap = new Map<String, String>();
         apiLabelFilterMap = new Map<String, String>();        
-        availableRoutingAddressList = new List<String>();
-        selectedRoutingAddressList= new List<String>();
-             
         configOptions = HVEM_Config_Options__c.getInstance('HVEM');
-        routingConfigOptions = [SELECT Email_Address__c FROM HVEM_Email_Routing_Address__c];
-        routingMappingConfigOptions = [SELECT Case_API_and_Label__c,Email_Routing_Address__c,name FROM HVEM_Email_Routing_Mapping__c];
-        for(HVEM_Email_Routing_Address__c routingMapinstance : routingConfigOptions){
-            availableRoutingAddressList.add(routingMapinstance.Email_Address__c);
-            selectedRoutingAddressList.add(routingMapinstance.Email_Address__c); 
-        }
         fieldMap = Schema.SObjectType.Case.fields.getMap();
         folderList = new List<folder>();
         templateList = new List<EmailTemplate>();
@@ -148,16 +107,11 @@ public with Sharing class HVEMSettingsCtrl{
         autoPopulate=true;
         enableDraftEmails=false;
         enableApprovalProcess = false;
-        enableChangeCaseStatus = false;
         caseStatusUnderApproval='';
         strChosenCategoryGroups = '';
-        routingEmailInput  = '';
         strChosenArticleTypes=null;
-        caseRoutingAddressmappings = '';
         baseURL='';
-        toRemoveRoutingAddress = '';
-        caseMapRoutingAdd = '';
-        toRemoveRoutingMapAddress = '';
+        replyToAddress = '';
         availableCategoryGroups = '';
         saveCS=false; 
         caseFilterMappingAPIStr=null;
@@ -176,16 +130,6 @@ public with Sharing class HVEMSettingsCtrl{
         toSaveList = new List<String>();               
         selectedCategoryGroups = null;
         dataCategory='';
-        
-        IsVisibleInPKB = true;
-        IsVisibleInPRM = false;
-        IsVisibleInCSP = false;
-        InsertArticleContent = false;
-        PRMChannelVisible = Label.Channel_Available;
-        PKBChannelVisible = Label.Channel_Available;
-        CSPChannelVisible = Label.Channel_Available;
-        isroutingMappingAlreadyPresent = false;
-        isroutingAddressAlreadyPresent = false;
         List<HVEM_Config_Options__c> HVEMConfigOptionList = new List<HVEM_Config_Options__c>();
 
         HVEMConfigOptionList =  [SELECT name,Case_Mappin_API__c,Case_Mapping_Label__c FROM HVEM_Config_Options__c WHERE name != 'HVEM'];
@@ -231,6 +175,7 @@ public with Sharing class HVEMSettingsCtrl{
       * Filter the contents on click of Find Button.
       */
      public void filterGroups(){
+         //String groupQuery = 'Select Type, Name, Id From Group where type=\'regular\' AND name LIKE \'%'+searchGroupText+'%\'';
          String notInString = '';
          for(String singlrID : toSaveList){
              notInString += '\''+singlrID+'\',';
@@ -289,7 +234,6 @@ public with Sharing class HVEMSettingsCtrl{
          return options;          
      }
 
-            
      /**
       * Function to initialize the dependent picklist at load time  
       */
@@ -321,16 +265,6 @@ public with Sharing class HVEMSettingsCtrl{
          return options;        
      }
 
-     /**
-      *Function to add options to the RadioButtons 
-      */
-      public List<SelectOption> getChannelsVisible() {
-        List<SelectOption> options = new List<SelectOption>(); 
-        options.add(new SelectOption(Label.Channel_Available,Label.Channel_Available)); 
-        options.add(new SelectOption(Label.Channel_Not_Available,Label.Channel_Not_Available)); 
-        return options; 
-    }
-           
      /**
       * Function to validate before insertion
       */
@@ -366,16 +300,6 @@ public with Sharing class HVEMSettingsCtrl{
              boolean isDuplicate = false;
              String apiString = '' ;
              String labelString = '';
-             //changes
-                baseURLBlankError = false;
-                userLanguageError = false;
-                PublicGroupError = false;
-                replyToBlankError = false;
-                categoryGroupsError = false;
-                articleTypesError = false;
-                isroutingAddressPresent = false;
-                isInvalidRoutingEmail = false;
-                isroutingMappingAlreadyPresent = false;
 
              if(dataCategoryAPILabelList.size() == 2){
                  apiString = assembleString(selectedPickListCaseField , selectedPickListCaseValue , selectedCategoryGroups , dataCategoryAPILabelList[0]);
@@ -384,7 +308,7 @@ public with Sharing class HVEMSettingsCtrl{
                  if(isDuplicate == false){                  
                      apiLabelFilterMap.put(apiString,labelString);                
                      caseFilterError = false;
-                    
+                     //getCaseFilterMapEntry();
                  }
                  else{                       
                      caseFilterError = true;
@@ -399,7 +323,7 @@ public with Sharing class HVEMSettingsCtrl{
      public void removeMapping() {       
          if(apiLabelFilterMap.size() > 0){
              apiLabelFilterMap.remove(caseMapSelected);
-             
+             //getCaseFilterMapEntry();
          }
          saveCS=false;
          caseFilterError = false;
@@ -475,26 +399,17 @@ public with Sharing class HVEMSettingsCtrl{
      public void setupHVEMSettings(){
 
          baseURL = configOptions.Article_Link_Base_URL__c;
+         replyToAddress = configOptions.Reply_To_Mail__c;
          autoPopulate = configOptions.Auto_Populate_To_Field_From_Case_Contact__c ;
          templates = configOptions.Default_Email_Template__c; 
          folders = configOptions.Default_Email_Folder__c;       
          strChosenCategoryGroups = configOptions.Data_Category_Group_Filter__c;
          availableCategoryGroups = configOptions.Available_Data_Category_Group_Filter__c;
          strChosenArticleTypes = configOptions.Article_Types_Filter__c;        
-         selectedLanguages =  configOptions.Languages_Selected__c;  
          chosenCategoryGroups = strChosenCategoryGroups;
          enableDraftEmails = configOptions.Allow_Drafts__c; 
          enableApprovalProcess = configOptions.Allow_Draft_Approval__c;
          caseStatusUnderApproval = configOptions.Under_Approval_Case_Status__c; 
-         enableChangeCaseStatus = configOptions.Allow_changing_case_status__c;
-         IsVisibleInPRM = configOptions.Check_PRM_Channel__c;
-         IsVisibleInPKB = configOptions.Check_PKB_Channel__c;
-         IsVisibleInCSP = configOptions.Check_CSP_Channel__c;
-         InsertArticleContent = configOptions.Insert_KB_Article_Content__c;
-         PRMChannelVisible = configOptions.PRM_Channel_Available__c;
-         PKBChannelVisible  = configOptions.PKB_Channel_Available__c;
-         CSPChannelVisible = configOptions.CSP_Channel_Available__c;
-         
          if(configOptions.Public_Groups_With_No_Approval__c != null && configOptions.Public_Groups_With_No_Approval__c != ''){
              selectedPublicGroups = configOptions.Public_Groups_With_No_Approval__c ; 
              if(configOptions.Public_Groups_With_No_Approval_Extended__c != null && configOptions.Public_Groups_With_No_Approval_Extended__c != ''){
@@ -508,6 +423,15 @@ public with Sharing class HVEMSettingsCtrl{
                 folders = configOptions.Default_Email_Folder__c;
                }
          
+             /*if(templates !='None'){
+                 //emailtemplate = [select FolderId from EmailTemplate where id=:templates];
+                 //folders = emailtemplate.FolderId;
+                 folders = configOptions.Default_Email_Folder__c;
+             }
+            else{
+               //  folders='None';
+               folders = configOptions.Default_Email_Folder__c;
+             } */ 
          }
          catch(Exception e){
              folders='None';
@@ -535,27 +459,17 @@ public with Sharing class HVEMSettingsCtrl{
       */
      public void saveTOCustomSettings(){
          saveCS=false;
-         PublicGroupError = false;
-         replyToBlankError = false;
-         
-         categoryGroupsError = false;
          articleTypesError = false;
+         categoryGroupsError = false;
          caseFilterError = false;
          replyToBlankError = false;
          baseURLBlankError = false;
          PublicGroupError = false;
-         userLanguageError = FALSE;
-         baseURLBlankError = false;
-         isroutingAddressPresent = false;
-         isInvalidRoutingEmail = false;
-         isroutingAddressAlreadyPresent = false;
-         isroutingMappingAlreadyPresent = false;
          selectedPublicGroups = '';
          selectedPublicGroupsExtended = '';
 
          List<String> categoryGroups = new List<String>();
          List<String> articleTypes= new List<String>();
-         List<String> selectedLanguagesList = new List<String>();
 
          configOptions = HVEM_Config_Options__c.getInstance('HVEM');
          if(strChosenCategoryGroups != null && strChosenCategoryGroups != '')
@@ -564,8 +478,6 @@ public with Sharing class HVEMSettingsCtrl{
          if(strChosenArticleTypes !=null && strChosenArticleTypes != '')
              articleTypes= strChosenArticleTypes.split(',');
 
-         if(selectedLanguages != null && selectedLanguages != '')
-             selectedLanguagesList = selectedLanguages.split(',');
 
          if(categoryGroups.size() > 0){   
              if(categoryGroups[0] == ''){
@@ -578,8 +490,6 @@ public with Sharing class HVEMSettingsCtrl{
          }
          Integer categoryGroupsLength = categoryGroups.size();
          Integer articleTypesLength = articleTypes.size();
-         Integer userLanguagesLength = selectedLanguagesList.size();
-         
          for(String singleGroup : toSaveList){
              if(selectedPublicGroups.length() < 240){
                  selectedPublicGroups += singleGroup.subString(0,15) +',';
@@ -591,18 +501,27 @@ public with Sharing class HVEMSettingsCtrl{
                  PublicGroupError = true;
              }                    
          } 
+         if((replyToAddress == null) || (replyToAddress.length() == 0)){
+             replyToBlankError = true;    
+         }else{
+             if(replyToAddress.split('@',-1).size() > 2){
+                 replyToBlankError = true;
+             }else{
+                 Boolean isValid = HVEMUtil.validateEmail(new String[]{replyToAddress});
+                 if(!isValid){
+                     replyToBlankError = true; 
+                 }
+             }
+         }
+         if(!replyToBlankError){
              if((categoryGroupsLength == 0)||(categoryGroupsLength >= 4)){            
                  categoryGroupsError = true;            
              }
              else if((articleTypesLength == 0)||(articleTypesLength >= 5)){           
                  articleTypesError = true;            
-             }else if(userLanguagesLength == 0){
-                 userLanguageError = true;
              }                
              else if((baseURL == null) || (baseURL.length() == 0) || (verifyBaseURL() == true)){
                  baseURLBlankError = true;    
-             }else if(selectedRoutingEmailAddress == null || selectedRoutingEmailAddress == ''){
-                 isroutingAddressPresent = true;
              }
              else if(!PublicGroupError){  
                  
@@ -610,9 +529,9 @@ public with Sharing class HVEMSettingsCtrl{
                      configOptions = [SELECT name,id FROM HVEM_Config_Options__c WHERE Id = : configOptions.id];
                      configOptions.Article_Types_Filter__c=strChosenArticleTypes;
                      configOptions.Data_Category_Group_Filter__c=strChosenCategoryGroups;
-                     configOptions.Languages_Selected__c = selectedLanguages;
                      configOptions.Available_Data_Category_Group_Filter__c=availableCategoryGroups;
                      configOptions.Article_Link_Base_URL__c=baseURL;
+                     configOptions.Reply_To_Mail__c=replyToAddress;
                      configOptions.Auto_Populate_To_Field_From_Case_Contact__c=autoPopulate;
                      configOptions.Default_Email_Template__c=templates;
                      configOptions.Default_Email_Folder__c=folders;
@@ -621,29 +540,19 @@ public with Sharing class HVEMSettingsCtrl{
                      configOptions.Under_Approval_Case_Status__c = caseStatusUnderApproval;                              
                      configOptions.Public_Groups_With_No_Approval__c = selectedPublicGroups;
                      configOptions.Public_Groups_With_No_Approval_Extended__c = selectedPublicGroupsExtended;
-                     configOptions.Allow_changing_case_status__c = enableChangeCaseStatus;
-                     configOptions.Insert_KB_Article_Content__c =InsertArticleContent;
-                     configOptions.PRM_Channel_Available__c = PRMChannelVisible ;
-                     configOptions.PKB_Channel_Available__c = PKBChannelVisible ;
-                     configOptions.CSP_Channel_Available__c = CSPChannelVisible ;
-                     configOptions.Check_PKB_Channel__c = IsVisibleInPKB;
-                     configOptions.Check_CSP_Channel__c = IsVisibleInCSP;
-                     configOptions.Check_PRM_Channel__c = IsVisibleInPRM;
-                    
                      update configOptions ;
                      caseFilterError = false;
-                     isInvalidRoutingEmail = false;
-                     isroutingAddressAlreadyPresent = false;
                      saveCS=true; 
-                 }else{
+                 }
+                 else{
                      configOptions =new HVEM_Config_Options__c();
                      configOptions.name='HVEM';
                      configOptions.Available_Data_Category_Group_Filter__c = availableCategoryGroups;
                      configOptions.Article_Types_Filter__c=strChosenArticleTypes;
                      configOptions.Data_Category_Group_Filter__c=strChosenCategoryGroups;
                      configOptions.Article_Link_Base_URL__c=baseURL;
-                     configOptions.Languages_Selected__c = selectedLanguages;
                      configOptions.Auto_Populate_To_Field_From_Case_Contact__c=autoPopulate; 
+                     configOptions.Reply_To_Mail__c = replyToAddress; 
                      configOptions.Default_Email_Template__c=templates;
                      configOptions.Default_Email_Folder__c=folders;
                      configOptions.Allow_Drafts__c = enableDraftEmails;
@@ -651,56 +560,9 @@ public with Sharing class HVEMSettingsCtrl{
                      configOptions.Under_Approval_Case_Status__c = caseStatusUnderApproval;             
                      configOptions.Public_Groups_With_No_Approval__c = selectedPublicGroups;
                      configOptions.Public_Groups_With_No_Approval_Extended__c = selectedPublicGroupsExtended;                
-                     configOptions.Allow_changing_case_status__c = enableChangeCaseStatus;  
-                     configOptions.PRM_Channel_Available__c = PRMChannelVisible ;
-                     configOptions.PKB_Channel_Available__c = PKBChannelVisible ;
-                     configOptions.CSP_Channel_Available__c = CSPChannelVisible ;
-                     configOptions.Check_PKB_Channel__c = IsVisibleInPKB;       
-                     configOptions.Check_CSP_Channel__c = IsVisibleInCSP;
-                     configOptions.Check_PRM_Channel__c = IsVisibleInPRM;
-                     configOptions.Insert_KB_Article_Content__c =InsertArticleContent;
                      insert configOptions;
                      caseFilterError = false;
-                     isInvalidRoutingEmail = false;
-                     isroutingAddressAlreadyPresent = false;
                      saveCS=true;
-                 }
-                 
-                 /**
-                 * code to save entered email routing address in new Custom settings
-                 **/
-                 
-                 delete [SELECT Id FROM HVEM_Email_Routing_Address__c];
-                 routingConfigOptions = new List<HVEM_Email_Routing_Address__c>();
-                 Integer counter = 0;
-                 
-                 for(String emailAddress : selectedRoutingEmailAddress.split(',',0)){
-                     counter++;
-                     HVEM_Email_Routing_Address__c routingConfigOptionsInstance = new HVEM_Email_Routing_Address__c();
-                     routingConfigOptionsInstance.Name = counter + Label.RoutingEmail;
-                     routingConfigOptionsInstance.Email_Address__c = emailAddress;
-                     routingConfigOptions.add(routingConfigOptionsInstance);
-                     
-                 }
-                 counter = 0;
-                 insert routingConfigOptions;
-                 
-                 /**
-                 * code to insert mappings in Config options
-                 **/
-                if(caseRoutingAddressmappings != null){
-                     delete [SELECT Case_API_and_Label__c,Email_Routing_Address__c FROM HVEM_Email_Routing_Mapping__c];
-                     List<HVEM_Email_Routing_Mapping__c> tempRoutingMap = new List<HVEM_Email_Routing_Mapping__c>();
-                     
-                     for(HVEM_Email_Routing_Mapping__c routingConfigOptionsMappingInstance : routingMappingConfigOptions){
-                        HVEM_Email_Routing_Mapping__c tempRoutingMapInstance = new HVEM_Email_Routing_Mapping__c();
-                        tempRoutingMapInstance.Case_API_and_Label__c = routingConfigOptionsMappingInstance.Case_API_and_Label__c;
-                        tempRoutingMapInstance.Email_Routing_Address__c = routingConfigOptionsMappingInstance.Email_Routing_Address__c;
-                        tempRoutingMapInstance.name = routingConfigOptionsMappingInstance.name;
-                        tempRoutingMap.add(tempRoutingMapInstance);
-                     }
-                     insert tempRoutingMap;
-                    
                  }
              }
 
@@ -713,12 +575,14 @@ public with Sharing class HVEMSettingsCtrl{
          
              for(String apiString : apiLabelFilterMap.keySet()){
                  configOptions = new HVEM_Config_Options__c();               
-                 configOptions.Name = System.now().getTime() + Label.Case_Map;
+                 configOptions.Name = System.now().getTime() + 'CaseMap';
                  configOptions.Case_Mappin_API__c = apiString;
                  configOptions.Case_Mapping_Label__c = apiLabelFilterMap.get(apiString);                                
+                 //if(!apiStringSet.contains(apiString)){
                  insert configOptions; 
+                 //}                                                   
+             }  
          }
-         
      }
 
      /**
@@ -734,8 +598,7 @@ public with Sharing class HVEMSettingsCtrl{
       */
      public List<SelectOption> getEmailFolders() {
          List<SelectOption> options = new List<SelectOption>();
-         options.add(new SelectOption('None',Label.Template_folder_option));
-         options.add(new SelectOption(userInfo.getUserId(),Label.personal_email_templates));
+         options.add(new SelectOption('None','Please select a template folder'));
          for(folder f : folderList){
              options.add(new SelectOption(f.Id,f.Name));
          }
@@ -747,7 +610,7 @@ public with Sharing class HVEMSettingsCtrl{
       */
      public List<SelectOption> getEmailTemplates() {
          List<SelectOption> options = new List<SelectOption>();
-         options.add(new SelectOption('None',Label.Template_name));
+         options.add(new SelectOption('None','Please select a template'));
          for(EmailTemplate t : templateList){
              options.add(new SelectOption(t.Id,t.Name));
          }
@@ -775,7 +638,7 @@ public with Sharing class HVEMSettingsCtrl{
       * Function to initialize the dependent picklist at load time  
       */
      public pageReference initializeCasePicListValues(){
-         if(selectedPickListCaseField == null || selectedCaseFieldReplyTo == null){
+         if(selectedPickListCaseField == null){
              Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Case.fields.getMap();
              List<String> fields = new List<String>();
              for(Schema.SObjectField value : fieldMap.values()){
@@ -787,7 +650,6 @@ public with Sharing class HVEMSettingsCtrl{
                  }
              }
              selectedPickListCaseField = fields[0];
-             selectedCaseFieldReplyTo = fields[0];
          }
          return null;
      }
@@ -796,6 +658,7 @@ public with Sharing class HVEMSettingsCtrl{
       * function to add options to picklist to display the fields of cases with type picklist.
       */
      public List<SelectOption> getCasePickListFields(){
+         //Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Case.fields.getMap();
          List<SelectOption> options = new List<SelectOption>();
          for(Schema.SObjectField value : fieldMap.values()){
              Schema.DescribeFieldResult fieldResult = value.getDescribe();  
@@ -829,28 +692,6 @@ public with Sharing class HVEMSettingsCtrl{
      } 
 
      /**
-      * Function to add options to picklist to display values for selected pickList for Reply To.
-      */
-     public List<SelectOption> getCasePickListFieldsValuesReplyTo(){
-         Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Case.fields.getMap();
-         List<SelectOption> options = new List<SelectOption>();
-         String fieldName = '';
-         for(Schema.SObjectField value : fieldMap.values()){
-             Schema.DescribeFieldResult fieldResult = value.getDescribe();  
-             fieldName= String.valueOf(fieldResult.getName());
-             if(fieldName == selectedCaseFieldReplyTo ){
-                 List<Schema.PicklistEntry> pickListValues = fieldResult.getPicklistValues();
-                 for(Schema.PicklistEntry item : pickListValues){
-                     options.add(new SelectOption(item.getValue(),item.getLabel()));
-                 }                
-             }          
-         }
-         return options;
-     } 
-
-
-
-     /**
       * Function to add options to the case's Status SelectList
       */
      public List<SelectOption> getCaseStatusFieldValues(){
@@ -869,210 +710,5 @@ public with Sharing class HVEMSettingsCtrl{
          }
          return options;
      }
-    /**
-    * populate list of all language options present in org 
-    **/
-    public List<SelectOption> getUserLanguagesList(){
-        Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.User.fields.getMap();
-        List<SelectOption> options = new List<SelectOption>();
-        for(Schema.SObjectField value : fieldMap.values()){
-            Schema.DescribeFieldResult fieldResult = value.getDescribe();  
-            String fieldName= String.valueOf(fieldResult.getName());
-            if(fieldName == 'LanguageLocaleKey'){
-                List<Schema.PicklistEntry> pickListValues = fieldResult.getPicklistValues();
-                for(Schema.PicklistEntry item : pickListValues){
-                    options.add(new SelectOption(item.getValue(),item.getLabel()));
-                }                
-            }          
-        }
-        templateCount = options.size();
-        return options;
-    }
-    
-    /**
-    * populate list of Selected Routing Addresses
-    **/
-    public List<SelectOption> getSelectedRoutingAddress(){
-        List<SelectOption> options = new List<SelectOption>();
-        for(String emailInstance : selectedRoutingAddressList){
-            options.add(new SelectOption(emailInstance ,emailInstance ));
-        }
-        return options;
-    }
-    
-    /**
-    * populate list of Selected Mapping Routing Addresses
-    **/
-    public List<SelectOption> getSelectedMappingRoutingAddress(){
-        List<SelectOption> options = new List<SelectOption>();
-        for(String emailInstance : availableRoutingAddressList){
-            options.add(new SelectOption(emailInstance ,emailInstance ));
-        }
-        return options;
-    }
-    
-    /**
-    * populate list of Case attributes to Routing address mapping
-    **/
-    public List<SelectOption> getCaseReplyToFilterMapEntry(){ 
-        
-        List<SelectOption> options = new List<SelectOption>();
-        for(HVEM_Email_Routing_Mapping__c routingConfigOptionsMappingInstance : routingMappingConfigOptions){
-            list<String> apiValues;
-            List<String> labelValues;
-            if(routingConfigOptionsMappingInstance.Case_API_and_Label__c != null && routingConfigOptionsMappingInstance.Case_API_and_Label__c != ''){
-                String[] apiAndLabel = (routingConfigOptionsMappingInstance.Case_API_and_Label__c).split(':',-2);
-                apiValues = apiAndLabel[0].split('\\|\\|',-2);
-                labelValues = apiAndLabel[1].split('\\|\\|',-2);
-                
-            }
-            options.add(new SelectOption(routingConfigOptionsMappingInstance.Case_API_and_Label__c + ' >> ' +routingConfigOptionsMappingInstance.Email_Routing_Address__c,apiValues[1] + ':' + labelValues[1] + ' >> ' + routingConfigOptionsMappingInstance.Email_Routing_Address__c));
-        }
-        return options;
-    }
-    
-    /**
-    * Function to add Routing address 
-    **/
-    public void caseMapRoutingAddressAdd(){
-        saveCS = false;
-        // chnages
-        baseURLBlankError = false;
-        userLanguageError = false;
-        PublicGroupError = false;
-        replyToBlankError = false;
-        categoryGroupsError = false;
-        articleTypesError = false;
-        caseFilterError = false;
-        isroutingAddressPresent = false;
-        isInvalidRoutingEmail = false;
-        
-        HVEM_Email_Routing_Mapping__c routingSettingsInstance = new HVEM_Email_Routing_Mapping__c();
-        isroutingMappingAlreadyPresent = false;
-        if(caseMapRoutingAdd != null && caseMapRoutingAdd != ''){
-            
-             for(HVEM_Email_Routing_Mapping__c routingConfigOptionsMappingInstance : routingMappingConfigOptions){
-                if(routingConfigOptionsMappingInstance.Case_API_and_Label__c.trim() == caseMapRoutingAdd.split('>>',0)[0].trim()){
-                    isroutingMappingAlreadyPresent = true; 
-                    break;
-                }
-             }
-             if(isroutingMappingAlreadyPresent == false){
-                 routingSettingsInstance.Case_API_and_Label__c = caseMapRoutingAdd.split('>>',0)[0];
-                 routingSettingsInstance.Email_Routing_Address__c = caseMapRoutingAdd.split('>>',0)[1];
-                 routingSettingsInstance.name = String.valueof(system.now());
-                 routingMappingConfigOptions.add(routingSettingsInstance);
-             }
-        }
-    }
-    
-    /**
-    * Function to remove Routing address from enterd routing address
-    **/
-    public void removeRoutingMapping(){
-        Integer counter = 0;
-        baseURLBlankError = false;
-        userLanguageError = false;
-        PublicGroupError = false;
-        replyToBlankError = false;
-        categoryGroupsError = false;
-        articleTypesError = false;
-        caseFilterError = false;
-        isroutingAddressPresent = false;
-        isInvalidRoutingEmail = false;
-        isroutingMappingAlreadyPresent = false;
-        
-        List<String> selectedRemoveList = new List<String>();
-        List<String> availableRemoveList = new List<String>();
-        
-        List<String> cloneSelectedRoutingAddressList = selectedRoutingAddressList.clone();
-        List<String> cloneAvailableRoutingAddressList = availableRoutingAddressList.clone();
-        
-        for(String strRoutingAdd : toRemoveRoutingAddress.split('>',0)){
-            for(String strSelectedRoutingAdd : selectedRoutingAddressList){
-                if(strSelectedRoutingAdd == strRoutingAdd){
-                    selectedRemoveList.add(strSelectedRoutingAdd);
-                }
-                counter++;
-            }
-            counter = 0;
-            for(String strAvailableRoutingAdd : availableRoutingAddressList){
-                if(strAvailableRoutingAdd == strRoutingAdd){
-                    availableRemoveList.add(strAvailableRoutingAdd);
-                }
-                counter++;
-            }
-        }
-        
-        selectedRoutingAddressList = new List<String>();
-        availableRoutingAddressList = new List<String>();
-        Boolean isElementPresent = false;
-        for(String str : cloneSelectedRoutingAddressList){
-            for(String content : selectedRemoveList){
-                if(content == str){
-                    isElementPresent = true;
-                }
-            }
-            if(!isElementPresent){
-                selectedRoutingAddressList.add(str);
-                availableRoutingAddressList.add(str);
-            }else{
-                isElementPresent = false;
-            }
-        }
-        
-    }
-    
-    /**
-    * Function to remove Mapping Routing address 
-    **/
-    public void removeMappingRoutingAddress(){
-        Integer counter = 0;
-        if(routingMappingConfigOptions != null && routingMappingConfigOptions.size() > 0){
-        for(HVEM_Email_Routing_Mapping__c routingConfigOptionsMappingInstance : routingMappingConfigOptions){
-            if(routingConfigOptionsMappingInstance.Case_API_and_Label__c.trim() == toRemoveRoutingMapAddress.split('>>',0)[0].trim()){
-                break;
-            }else{
-                counter++;
-            }
-        }
-        routingMappingConfigOptions.remove(counter);
-       }
-    }
-    
-    /**
-    * Function to validate Routing Address Input
-    **/
-    public pageReference validateRoutingAddressInput() {
-        isroutingAddressAlreadyPresent = false;
-        saveCS=false;
-        baseURLBlankError = false;
-        userLanguageError = false;
-        PublicGroupError = false;
-        replyToBlankError = false;
-        categoryGroupsError = false;
-        articleTypesError = false;
-        caseFilterError = false;
-        isroutingAddressPresent = false;
-        isInvalidRoutingEmail = false;
-        isroutingMappingAlreadyPresent = false;
-         
-        for(String selectedRoutingAddressInstance : selectedRoutingAddressList){
-            if(routingEmailInput == selectedRoutingAddressInstance){
-                isroutingAddressAlreadyPresent = true;
-                isInvalidRoutingEmail = false;
-            }
-        }
-        if(routingEmailInput != null && routingEmailInput != '' && isroutingAddressAlreadyPresent == false){
-            isInvalidRoutingEmail = !HVEMUtil.validateEmail(new String[]{routingEmailInput});
-            saveCS=false;
-            if(isInvalidRoutingEmail == false){
-                availableRoutingAddressList.add(routingEmailInput);
-                selectedRoutingAddressList.add(routingEmailInput);
-            }
-            
-        }
-        return null;
-    }
 
 }

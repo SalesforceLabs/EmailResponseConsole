@@ -2,10 +2,8 @@ trigger HVEMApprovalProcessAction on DraftEmailMessage__c (after update){
     HVEM_Config_Options__c configOptions = new HVEM_Config_Options__c();
     List<EmailMessage> emailMessageList = new List<EmailMessage>();
     String userName = UserInfo.getUserName();
-    Case caseInstance = new Case();
-    
     for(DraftEmailMessage__c demInstance : Trigger.New){
-        caseInstance = [SELECT Id,Status FROM Case WHERE Id = :demInstance.Case__c];
+        Case caseInstance = [SELECT Id,Status FROM Case WHERE Id = :demInstance.Case__c];
         if(demInstance.Status__c == 'Approved'){
             
             // Select current date time to be included in mail
@@ -141,16 +139,9 @@ trigger HVEMApprovalProcessAction on DraftEmailMessage__c (after update){
         mail.setBccSender(true);    
         mail.setToAddresses(additionalToList);
         if(configOptions != null){
-            //if(configOptions.Reply_To_Mail__c != ''){
-            	String replyTo = '';
-            	if(demInstance.Reply_To_Address__c != null && demInstance.Reply_To_Address__c != ''){
-            		replyTo = demInstance.Reply_To_Address__c;
-            	}else{
-            		replyTo = replyToAddressToUse();
+            if(configOptions.Reply_To_Mail__c != ''){
+                mail.setReplyTo(configOptions.Reply_To_Mail__c); 
             }
-            	mail.setReplyTo(replyTo);
-            //    mail.setReplyTo(configOptions.Reply_To_Mail__c); 
-            //}
         }
         if(ccList.size() > 0){
             mail.setCcAddresses(ccList);
@@ -182,39 +173,4 @@ trigger HVEMApprovalProcessAction on DraftEmailMessage__c (after update){
         Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
     }
     
-    
-    
-    /**
-	* Function to verify reply to address corresponding to ERC Setting mapping
-	**/
-	public String replyToAddressToUse(){
-		
-		String replyToAddress = '';
-		List<HVEM_Email_Routing_Address__c> routingAddressList = new List<HVEM_Email_Routing_Address__c>();
-		List<HVEM_Email_Routing_Mapping__c> routingAddressMappingList = new List<HVEM_Email_Routing_Mapping__c>();
-		
-		routingAddressList = [SELECT Name,Email_Address__c FROM HVEM_Email_Routing_Address__c];
-		routingAddressMappingList = [SELECT Name,Case_API_and_Label__c,Email_Routing_Address__c FROM HVEM_Email_Routing_Mapping__c];
-		String defaultReplyTo = '';
-		for(HVEM_Email_Routing_Address__c routinginstance : routingAddressList){
-			if(routinginstance.Name.replace('RoutingEmail','') == '1'){
-				defaultReplyTo = routinginstance.Email_Address__c;
-				break;
-			}
-		}
-		replyToAddress = defaultReplyTo;
-		if(routingAddressMappingList != null && routingAddressMappingList.size() > 0){
-			for(HVEM_Email_Routing_Mapping__c routinginstance : routingAddressMappingList){
-				List<String> caseFilterMapList = routinginstance.Case_API_and_Label__c.split('\\|\\|');         
-				/*String fieldAPI = caseFilterMapList[0].split('||',2)[0];
-				String fieldValue = caseFilterMapList[1].split('||',2)[0];*/
-				if(caseInstance.get(caseFilterMapList[0]) == caseFilterMapList[2]){                                 
-					replyToAddress = routinginstance.Email_Routing_Address__c;
-					break;
-				}           
-			}
-		}
-		
-		return replyToAddress;		
-	} 
 }

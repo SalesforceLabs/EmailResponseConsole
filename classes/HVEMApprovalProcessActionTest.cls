@@ -7,22 +7,9 @@ public class HVEMApprovalProcessActionTest
 	public static Task taskInstance; 
 	public static HVEM_Config_Options__c configOptions;
 	public static  EmailTemplate selectedEmailTemplate ;
-    public static List<HVEM_Email_Routing_Address__c> routingConfigOptions;
-    public static List<HVEM_Email_Routing_Mapping__c> routingMappingConfigOptions; 
-    public static HVEM_Email_Routing_Address__c routingConfigOptionsInstance;
-    public static HVEM_Email_Routing_Mapping__c routingMappingConfigOptionsInstance;
-    public static testMethod void setUpData()
+	static testMethod void setUpData()
 	{
 		configOptions = new HVEM_Config_Options__c();
-        routingConfigOptions = new List<HVEM_Email_Routing_Address__c>();
-        routingMappingConfigOptions = new List<HVEM_Email_Routing_Mapping__c>(); 
-        routingConfigOptionsInstance =  new HVEM_Email_Routing_Address__c(Name='RoutingEmail1',Email_Address__c = 'abcd@xyz.com');
-        insert routingConfigOptionsInstance;
-        routingConfigOptions.add(routingConfigOptionsInstance); 
-       
-        routingMappingConfigOptionsInstance = new HVEM_Email_Routing_Mapping__c(Case_API_and_Label__c = 'Reason||Case Reason:Installation||Reason',Email_Routing_Address__c= 'test@app.com',name='EmailAddress');
-        insert routingMappingConfigOptionsInstance;
-        routingMappingConfigOptions.add(routingMappingConfigOptionsInstance);
 
 		caseInstance = new Case(Status='New');
 		insert caseInstance;
@@ -83,7 +70,7 @@ public class HVEMApprovalProcessActionTest
 		demInstance.BccAddress__c = 'abc1@xyz.com;se@pt.com';
 		demInstance.ToAddress__c ='xyz@pzy.com;xyz@avcf.com;';
 		demInstance.FromAddress__c='abcd@xyz.com';
-        demInstance.Subject__c = 'Testing2';
+		demInstance.Subject__c = 'Testind2';
 		demInstance.TextBody__c='test';
 		demInstance.HtmlBody__c='<div >';
 		update demInstance;
@@ -96,7 +83,7 @@ public class HVEMApprovalProcessActionTest
 		demInstance.BccAddress__c = 'abc1@xyz.com';
 		demInstance.ToAddress__c ='xyz@pzy.com;xyz@avcf.com;';
 		demInstance.FromAddress__c='abcd@xyz.com';
-        demInstance.Subject__c = 'Testing2';
+		demInstance.Subject__c = 'Testind2';
 		demInstance.TextBody__c='test';
 		demInstance.HtmlBody__c='';
 		System.assertEquals(false,demInstance.BccAddress__c.contains(';'));

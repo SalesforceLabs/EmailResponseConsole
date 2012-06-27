@@ -38,7 +38,7 @@ public Class HVEMUtil {
 	 **/
 	public Static Boolean validateEmail(List<String> emailAddressList){
 		Boolean isValid = true;
-		Pattern emailPattern= Pattern.compile('([a-zA-Z0-9_\\-\\.]+)@((\\[a-z]{1,3}\\.[a-z]{1,3}\\.[a-z]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})');
+		Pattern emailPattern= Pattern.compile('((.)+[@][a-zA-Z0-9]+[.](.)+)');
 		Matcher emailMatcher;
 		// Then instantiate a new Matcher object "MyMatcher"
 		if(emailAddressList != null && emailAddressList.size() > 0){

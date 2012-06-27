@@ -35,6 +35,12 @@ ERC is available on the AppExchange both as a managed and an un-managed package.
 Version History
 ---------------
 
+*Version 3 - Not released yet*
+
+- Draft or rejected draft email icon in the case list view
+- Better (more scalable) template navigation
+- Missing static resource files
+
 *Version 2 - AppExchange Release: 2012/04/02*
 
 - Draft email support

@@ -62,7 +62,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 						<tr id="searchFiltersToggle">
 							<td colspan="2"><a class="hvemToggle" href=""
 								onclick="toggleFilters(true);return false;"
-                                style="color: #0055e3; text-decoration: none; cursor: pointer;">{!$Label.Show_Filters}</a></td>
+								style="color: #0055e3; text-decoration: none; cursor: pointer;">Show
+							Filters</a></td>
 						</tr>
 						<tr id="searchFilters" style="display: none;">
 							<td colspan="2">
@@ -70,7 +71,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 								<tr>
 									<a class="hvemToggle" href=""
 										onclick="toggleFilters();return false;"
-                                        style="color: #0055e3; text-decoration: none; cursor: pointer;">{!$Label.Hide_Filters}</a>
+										style="color: #0055e3; text-decoration: none; cursor: pointer;">Hide
+									Filters</a>
 								</tr>
 								<tr>
 									<td><apex:selectCheckboxes layout="pageDirection"
@@ -80,11 +82,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 									</apex:selectCheckboxes></td>
 								</tr>
 								<tr>
-                                    <td><apex:selectList style="border: 1px solid black;min-width:73%;margin-left:3px;" value="{!selectedLanguage}" onchange="fetchSelection();" multiselect="false" size="1" title="{!$Label.Please_Select_Language}">
-                                        <apex:selectOptions value="{!userLanguagesList}" />
-                                    </apex:selectList></td>
-                                </tr>
-                                <tr>
 									<td><apex:repeat value="{!categoryGroupDisplayList}"
 										var="dataCategory" id="repeatCategory_Id">
 										<table width="80%">
@@ -93,7 +90,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 													name="categoryType_{!dataCategory}"
 													onchange="fetchSelection();"
 													style="border: 1px solid black; width: 95%">
-                                                    <option value="{!$Label.No_Filter}">{!$Label.No_filter}</option>
+													<option value="No Filter">No filter</option>
 													<option value="{!dataCategory}__c ABOVE_OR_BELOW All__c">All</option>
 													<knowledge:categoryList categoryVar="category"
 														categoryGroup="{!dataCategory}" rootCategory="All"
@@ -124,7 +121,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 					severity="info" strength="1"
 					title="{!$Label.HVEM_Settings_NOT_set}" />
 				<apex:pageMessage rendered="{!AND(IF((filteredKnowledgeArticlesSize == 0),true,false),(subjectBlankError != true),(noArticlesToFilterError != true))}"
-                    severity="info" strength="1" summary="{!$Label.No_Search_Results_Found}"
+					severity="info" strength="1" summary="No Search Results Found"
 					id="ListEmptyError_Id" />
 				<apex:pageBlockTable id="idArticlePageBlockTable"
 					rendered="{!IF((filteredKnowledgeArticlesSize == 0),false,true)}"
@@ -134,31 +131,20 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 						headerValue="{!$Label.Suggested_Articles} : {!filteredKnowledgeArticlesSize}">
 						<apex:outputPanel id="idSingleArticlePanel" layout="block"
 							styleClass="hvemCaseItem">
-							<apex:commandLink value=""
-                                status="loadingStatus" action="{!attachArticle}" rendered="{!!isInsertingContent}"
-                                oncomplete="callEmailEditorPage('{!articleTitle}','{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
-                                style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;">                                
-                                <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/> 
-                                <apex:param value="{!article.knowledgeArticle.language}"
-                                    assignTo="{!selectedKnowledgeArticleLanguage}"
-                                    name="slectedKnowledgeArticlelanguage" />
-                                <apex:param value="{!article.knowledgeArticle.KnowledgeArticleId }"
-                                    assignTo="{!selectedKnowledgeArticleId}"
-                                    name="selectedKnowledgeArticleId" />
-                                <apex:param value="{!article.knowledgeArticle.UrlName}"
-                                    assignTo="{!selectedKnowledgeArticleURL}"
-                                    name="selectedKnowledgeArticleURL" />
-                                <apex:param value="{!LEFT(article.articleName,LEN(article.articleName)-5)}"
-                                    assignTo="{!articleName}"
-                                    name="selectedKnowledgeArticleFrameSource" />
-                                <apex:param assignTo="{!articleTitle}"
-                                    value="{!article.knowledgeArticle.title}" name="articleTitle" />                                                               
-                            </apex:commandLink>                            
-                                &nbsp;&nbsp;
-                            <apex:commandLink value="" rendered="{!isInsertingContent}" onclick="fetchTemplateType('{!article.knowledgeArticle.KnowledgeArticleId}','{!article.knowledgeArticle.id}','{!JSENCODE(LEFT(article.articleName,LEN(article.articleName)-5)+'/'+article.knowledgeArticle.UrlName)}','{!JSENCODE(article.articleName)}','{!JSENCODE(article.knowledgeArticle.title)}','{!JSENCODE(article.knowledgeArticle.summary)}');return false;"
-                                  status="loadingStatus"  style="color:#0055e3;text-decoration:none;cursor:pointer;display:inline;">
-                                  <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/> 
-                             </apex:commandLink>       
+							<apex:commandLink value="{!If(article.isAttached,$Label.Insert_url,$Label.Attach)}"
+								status="loadingStatus" action="{!attachArticle}"
+								oncomplete="callEmailEditorPage('{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
+								style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;">
+								<apex:param value="{!article.knowledgeArticle.KnowledgeArticleId }"
+									assignTo="{!selectedKnowledgeArticleId}"
+									name="selectedKnowledgeArticleId" />
+								<apex:param value="{!article.knowledgeArticle.UrlName}"
+									assignTo="{!selectedKnowledgeArticleURL}"
+									name="selectedKnowledgeArticleURL" />
+								<apex:param value="{!LEFT(article.articleName,LEN(article.articleName)-5)}"
+									assignTo="{!articleName}"
+									name="selectedKnowledgeArticleFrameSource" />
+							</apex:commandLink>                            
                                 &nbsp;&nbsp;
                                 <apex:commandLink onclick="setCurrentId(this);" status="loadingStatus"
 								action="{!displayCustomArticle}"
@@ -210,61 +196,56 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 				</apex:repeat>
 			</apex:outputLabel>
 		</apex:PageBlock></div>
-   <!--     <apex:outputPanel id="testListPanel">
-           <apex:outputText id="foobar" escape="false" style="display:block;text-wrap:none;" value="{!articleContentList}"></apex:outputText>
-       </apex:outputPanel> -->
 
 		<apex:actionFunction name="refreshSearchResultAF"
 			status="loadingStatus" action="{!filterArticleList}"
-            reRender="SearchResultId,customArticle_id,ErrorId"
+			reRender="SearchResultId,customArticle_id"
 			oncomplete="setFirstArticleStyle();">
 			<apex:param assignTo="{!withDataCategoryClause}"
 				name="withDataCategoryClauseName" value="" />
 			<apex:param assignTo="{!calledFrom}" name="calledFromName" value="" />
 
-        </apex:actionfunction>
-        
-        <apex:actionStatus id="loadingStatus" onstart="freezeBackground();"
-                onstop="unFreezeBackground();"/>
-    </apex:form></div>
-    <div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"/>
-    <div id="loadingImage" style="position: absolute; left: 40%; top: 60%;">
-        <apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
-            width="20px" height="20px" />
-    </div>
-    <script>  
+		</apex:actionfunction>
+
+		<apex:actionStatus id="loadingStatus" onstart="freezeBackground();"
+				onstop="unFreezeBackground();"/>
+	</apex:form></div>
+	<div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"/>
+	<div id="loadingImage" style="position: absolute; left: 40%; top: 60%;">
+		<apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
+			width="20px" height="20px" />
+	</div>
+	<script>  
         var categoryGroupCount = {!categoryGroupCount};
         var categoryGroupNames = '{!JSENCODE(hvemSettingsIns.Data_Category_Group_Filter__c)}';
         var withDataCategoryClause = '';      
-        function callEmailEditorPage(articleTitleForUrl,url){                      
-            var url = url.replace("//articles","/articles");
-            var frameArr = this.parent.frames; 
-            var frameInst; 
-            var lCaseId = '{!caseId}';
-            String.prototype.trim = function() {  
-                return this.replace(/^\s+|\s+$/g,"");  
-            }
-            if(lCaseId.length == '18'){
-                lCaseId = lCaseId.substring(0,15);
-            }
-            for(i=0;i<frameArr.length;i++){ 
-                try{ 
-                    if(frameArr[i].document.URL!=null && frameArr[i].document.URL!='undefined')
-                    { 
-                        if(frameArr[i].document.URL.indexOf('HVEMEmailEditorPublisherPage') != -1 && frameArr[i].document.URL.indexOf(lCaseId) != -1){ 
-                            frameInst = frameArr[i]; break; 
-                        } 
-                    }   
-                }catch(err){ 
-                    continue; 
-                } 
-            }
-            if(frameInst != null){
-                frameInst.insertURL(articleTitleForUrl,url,'url');
-            }    
-        }
-        
-         
+        function callEmailEditorPage(url){
+	        var frameArr = this.parent.frames; 
+	        var frameInst; 
+	        var lCaseId = '{!caseId}';
+	        String.prototype.trim = function() {  
+	            return this.replace(/^\s+|\s+$/g,"");  
+	        }
+	        if(lCaseId.length == '18'){
+	            lCaseId = lCaseId.substring(0,14);
+	        }
+	        for(i=0;i<frameArr.length;i++){ 
+	            try{ 
+	                if(frameArr[i].document.URL!=null && frameArr[i].document.URL!='undefined')
+	                { 
+	                    if(frameArr[i].document.URL.indexOf('HVEMEmailEditorPublisherPage') != -1 && frameArr[i].document.URL.indexOf(lCaseId) != -1){ 
+	                        frameInst = frameArr[i]; break; 
+	                    } 
+	                }   
+	            }catch(err){ 
+	                continue; 
+	            } 
+	        }
+	        if(frameInst != null){
+	            frameInst.insertURL(url);
+	        }    
+	    }
+
         window.onload = init;
         function init(){
             if(document.getElementById('HVEMKnowledgeArticlePageId:KnowledgeArticleComId:HVEMKnowledgeArticleCompId:HVEMKnowledgeArticleFormId:SearchResultId:idArticlePageBlockTable:0:idSingleArticlePanel') != null){
@@ -289,34 +270,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 }
             }            
         }
-        
-        function fetchTemplateType(knowledgeArticleId, frameSourceId, frameSourceName, articleName, articleTitle, articleSummary){
-            
-            var frameArr = this.parent.frames; 
-            var frameInst; 
-            var lCaseId = '{!caseId}';
-            var templateType;
-            if(lCaseId.length == '18'){
-                lCaseId = lCaseId.substring(0,15);
-            }
-            for(i=0;i<frameArr.length;i++){ 
-                try{ 
-                    if(frameArr[i].document.URL!=null && frameArr[i].document.URL!='undefined')
-                    { 
-                        if(frameArr[i].document.URL.indexOf('HVEMEmailEditorPublisherPage') != -1 && frameArr[i].document.URL.indexOf(lCaseId) != -1){ 
-                            frameInst = frameArr[i]; break; 
-                        } 
-                    }   
-                }catch(err){ 
-                    continue; 
-                } 
-            }
-            if(frameInst != null){
-                templateType = frameInst.templateType;
-            }             
-             frameInst.displayContent(templateType,knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary); 
-                        
-        }                        
                                          
     </script>
 

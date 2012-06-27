@@ -53,7 +53,7 @@ public class HVEMCaseListDetailsCtrlTestClass{
     public HVEMCaseListDetailsCtrlTestClass(){
         HVEMCaseListDetailsCtrlObj.queueId = userInfo.getUserId();
     }
-    public static void setupDataInit(){
+    static void setupDataInit(){
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.draftsEmailList = new List< DraftEmailMessage__c>();
         HVEMCaseListDetailsCtrlObj.queueId = '' + userInfo.getUserId();
@@ -79,7 +79,7 @@ public class HVEMCaseListDetailsCtrlTestClass{
 
     }
 
-    public static void setupDataRefreshCaseQueueList(){
+    static void setupDataRefreshCaseQueueList(){
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.queueId = '' + userInfo.getUserId();
         HVEMCaseListDetailsCtrlObj.refreshListParam = 'fromRefresh';
@@ -96,14 +96,14 @@ public class HVEMCaseListDetailsCtrlTestClass{
             caseObj = new Case(status='New',Origin='Phone', ownerId = userObj.id);
             insert caseObj;
         }
-        DEMInstance = new DraftEmailMessage__c(case__c = caseObj.id,status__c = 'Approval',ToAddress__c='test@hvem.com',EmailTemplate_Type__c='None',HtmlBody__c='');                                                                                  
+        DEMInstance = new DraftEmailMessage__c(case__c = caseObj.id,status__c = 'approval',ToAddress__c='test@hvem.com',EmailTemplate_Type__c='None',HtmlBody__c='');                                                                                  
         insert DEMInstance;
         EmailMessage emailInstance = new EmailMessage(parentId=caseObj.id,subject ='text1');
         insert emailInstance;
 
     }
 
-    public static testmethod void testRefreshCaseQueueList(){
+    static testmethod void testRefreshCaseQueueList(){
         setupDataRefreshCaseQueueList();
         ApexPages.currentPage().getParameters().put('Id',caseObj.Id); 
         test.startTest();
@@ -113,7 +113,7 @@ public class HVEMCaseListDetailsCtrlTestClass{
 
     }
 
-    public static testmethod void testCaseListDetailsCtrlInit(){
+    static testmethod void testCaseListDetailsCtrlInit(){
         setupDataInit();
         ApexPages.currentPage().getParameters().put('Id',caseObj.Id); 
         test.startTest();
@@ -122,18 +122,21 @@ public class HVEMCaseListDetailsCtrlTestClass{
         System.assertEquals(true, HVEMCaseListDetailsCtrlObj.loggedUserInstance != null);
     }
 
-    public static testmethod void testAssignCaseFromQueue(){
+    static testmethod void testAssignCaseFromQueue(){
         setupDataInit();
         ApexPages.currentPage().getParameters().put('Id',caseObj.Id); 
         test.startTest();
         HVEMCaseListDetailsCtrlObj.assignCaseFromQueue();
         List<Case> caseList = [Select id from case where OwnerId = :userInfo.getUserId()];                
         System.assertEquals(true, caseList.size() > 0);
+        List<Case> caseDeleteList = [select id from case];
+        delete caseDeleteList;
+        HVEMCaseListDetailsCtrlObj.assignCaseFromQueue();
         test.stopTest();
 
     }
 
-    public static testmethod void testStoreSelectedQueuePageId(){
+    static testmethod void testStoreSelectedQueuePageId(){
         setupDataInit();
         ApexPages.currentPage().getParameters().put('Id',caseObj.Id); 
         test.startTest();
@@ -141,7 +144,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         test.stopTest();
         System.assertEquals(true, HVEMCaseListDetailsCtrlObj.queuePageId != null);
     }
-    public static void testdata(){    
+    static void testdata()
+    {    
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.draftsEmailList = new List< DraftEmailMessage__c>();
         HVEMCaseListDetailsCtrlObj.loggedInUserCaseList= new List<case>();
@@ -162,7 +166,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         EmailMessageObj = new EmailMessage();
     }
 
-    public static testMethod void testdraftsCaseListFunc(){
+    static testMethod void testdraftsCaseListFunc()
+    {
         setupDataInit();
         test.startTest();
         HVEMCaseListDetailsCtrlObj.draftsCaseListFunc();
@@ -174,7 +179,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         System.assertEquals(true,demObj.Status__c=='Draft'); 
         test.stopTest();
     }
-    public static testMethod void testdraftsCaseList(){
+    static testMethod void testdraftsCaseList()
+    {
         setupDataInit();
         test.startTest();
         HVEMCaseListDetailsCtrlObj.isDrafts=false;
@@ -183,7 +189,7 @@ public class HVEMCaseListDetailsCtrlTestClass{
         test.stopTest();
     }
     
-    public static void dataForDraftsCaseListFunctionElse(){
+    static void dataForDraftsCaseListFunctionElse(){
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.draftsEmailList = new List< DraftEmailMessage__c>();
         HVEMCaseListDetailsCtrlObj.queueId = '' + userInfo.getUserId();
@@ -207,7 +213,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         caseId = selectedCase.Id; 
 
     }
-    public static testMethod void testdraftsCaseListFunctionElsePart(){
+    static testMethod void testdraftsCaseListFunctionElsePart()
+    {
         dataForDraftsCaseListFunctionElse();
         test.startTest();
         HVEMCaseListDetailsCtrlObj.draftsCaseListFunc();
@@ -215,7 +222,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         test.stopTest();
     }
      
-    public static testMethod void testdraftsCaseListNegative(){
+    static testMethod void testdraftsCaseListNegative()
+    {
         dataForDraftsCaseListFunctionElse();
         test.startTest();
         HVEMCaseListDetailsCtrlObj.refreshCaseQueueList();
@@ -223,7 +231,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         test.stopTest();
     }
     
-    public static testMethod void testcontroller(){
+    static testMethod void testcontroller()
+    {
         testdata();
         test.startTest();
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl();
@@ -231,7 +240,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         test.stopTest();
     }
 
-    public static testMethod void testOpenCaseDetailsPrimaryTab(){
+    static testMethod void testOpenCaseDetailsPrimaryTab()
+    {
         setupDataInit();
         test.startTest();
         System.assertEquals(true, HVEMCaseListDetailsCtrlObj.selectedCase!= null);
@@ -239,7 +249,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         test.stopTest();
     }
 
-    public static void setupdataRefreshcaseListDEMNull(){
+    static void setupdataRefreshcaseListDEMNull()
+    {
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.queueId = '' + userInfo.getUserId();
         HVEMCaseListDetailsCtrlObj.refreshListParam = 'fromRefresh';
@@ -264,7 +275,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
 
     }
 
-    public static testMethod void testRefreshCaseQueueListDEMListNull(){
+    static testMethod void testRefreshCaseQueueListDEMListNull()
+    {
         setupdataRefreshcaseListDEMNull();
         ApexPages.currentPage().getParameters().put('Id',caseObj.Id); 
         test.startTest();
@@ -273,7 +285,9 @@ public class HVEMCaseListDetailsCtrlTestClass{
         System.assertEquals(true, DEMInstance.status__c != 'Approval');
     }
 
-    public static void dataRefreshcaseListcheckingListNull(){
+    static void dataRefreshcaseListcheckingListNull()
+    {
+
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.queueId = '' + userInfo.getUserId();
 
@@ -309,7 +323,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
 
     }
 
-    public static testMethod void testRefreshCaseQueueListNull(){
+    static testMethod void testRefreshCaseQueueListNull()
+    {
         dataRefreshcaseListcheckingListNull();
         ApexPages.currentPage().getParameters().put('Id',caseObj.Id); 
         test.startTest();
@@ -318,7 +333,9 @@ public class HVEMCaseListDetailsCtrlTestClass{
         System.assertEquals(true,HVEMCaseListDetailsCtrlObj.configoptions!=null);
     }
 
-    public static void setupdataRefreshcaseBothListNull(){
+    static void setupdataRefreshcaseBothListNull()
+    {
+
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.queueId = '' + userInfo.getUserId();
 
@@ -354,7 +371,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
        
     }
 
-    public static testMethod void testRefreshCaseQueueBothListNull(){
+    static testMethod void testRefreshCaseQueueBothListNull()
+    {
         setupdataRefreshcaseBothListNull();
         ApexPages.currentPage().getParameters().put('Id',caseObj.Id); 
         test.startTest();
@@ -364,7 +382,9 @@ public class HVEMCaseListDetailsCtrlTestClass{
     }
 
 
-    public static void setupdataRefreshcaseListFlagCheck(){
+    static void setupdataRefreshcaseListFlagCheck()
+    {
+
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.queueId = '' + userInfo.getUserId();
 
@@ -392,7 +412,8 @@ public class HVEMCaseListDetailsCtrlTestClass{
         HVEMCaseListDetailsCtrlObj.isDrafts = false;
     }
 
-    public static testMethod void testRefreshCaseQueueListFlagCheck(){
+    static testMethod void testRefreshCaseQueueListFlagCheck()
+    {
         setupdataRefreshcaseListFlagCheck();
         ApexPages.currentPage().getParameters().put('Id',caseObj.Id); 
         test.startTest();
@@ -400,11 +421,16 @@ public class HVEMCaseListDetailsCtrlTestClass{
         System.assertEquals(true,HVEMCaseListDetailsCtrlObj.configOptions!=null);
         HVEMCaseListDetailsCtrlObj.isDrafts = true;
         HVEMCaseListDetailsCtrlObj.refreshCaseQueueList(); 
+        delete DEMInstance;
+        delete EmailmessageObj;
+        HVEMCaseListDetailsCtrlObj.refreshCaseQueueList();
         test.stopTest(); 
 
     }
  
-    public static void dataForRefreshcaseListElsePart(){
+   static void dataForRefreshcaseListElsePart()
+    {
+
         HVEMCaseListDetailsCtrlObj = new HVEMCaseListDetailsCtrl(); 
         HVEMCaseListDetailsCtrlObj.queueId = '' + userInfo.getUserId();
 
@@ -423,16 +449,16 @@ public class HVEMCaseListDetailsCtrlTestClass{
         }
         EmailmessageObj = new EmailMessage(subject='text',ParentId = caseObj.id,Incoming = false);
         insert EmailmessageObj;
-   }
-    
-   public static testMethod void testForRefreshcaseListElsePart(){
+    }
+   static testMethod void testForRefreshcaseListElsePart()
+    {
         dataForRefreshcaseListElsePart();
         HVEMCaseListDetailsCtrlObj.configOptions = null;
         test.startTest();
         HVEMCaseListDetailsCtrlObj.refreshCaseQueueList();  
         System.assertEquals(true,HVEMCaseListDetailsCtrlObj.isPreviousCasePresent==true);
         test.stopTest(); 
-   }
+    }
   
 
 }

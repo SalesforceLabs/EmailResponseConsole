@@ -39,7 +39,11 @@ Version History
 
 - Draft or rejected draft email icon in the case list view
 - Better (more scalable) template navigation
-- Missing static resource files
+- Fixed some missing static resource files
+- Multiple reply-to addresses support (including a selection based on case attributes mapping)
+- Ability to change case status without sending an email - aka "spam" management
+- Support Knowledge with multi-lingual configuration
+- Ability to optionally insert KB content (but no support for images yet) instead of links to articles
 
 *Version 2 - AppExchange Release: 2012/04/02*
 

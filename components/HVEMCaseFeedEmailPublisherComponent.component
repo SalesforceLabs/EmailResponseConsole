@@ -1,0 +1,126 @@
+<!--
+Copyright (c) 2012, salesforce.com, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, 
+    this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, 
+    this list of conditions and the following disclaimer in the documentation 
+    and/or other materials provided with the distribution.
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
+    may be used to endorse or promote products derived from this software 
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+
+
+<apex:component controller="HVEMEmailEditorCompCtrl" allowDML="true" id="caseFeedEmailPublisherCompId">
+     <apex:emailPublisher autoCollapseBody="false" entityId="{!caseId}" emailBodyFormat="textAndHTML" rendered="{!IF(isServiceCloud ==true,true,false)}" />
+     
+     <apex:outputPanel id="hiddenPanelId">
+     	<apex:inputHidden value="{!bodyValue}" id="textValue" />	
+     </apex:outputPanel>
+     
+     
+     <apex:outputPanel id="caseDetailSection" rendered="{!IF(isServiceCloud ==true,false,true)}">
+        <table>
+            <tr id="detailTDId">
+                <td><apex:detail id="detailTag_Id" title="false" relatedListHover="true" relatedList="true" subject="{!caseInstance.id}" /></td>
+            </tr>
+        </table>
+        
+    </apex:outputPanel>
+    
+    <apex:actionFunction name="displayContentCaseFeedEmailPublisherAF" status="loadingStatus" action="{!insertArticleContent}" rerender="hiddenPanelId" oncomplete="populateCaseFeedContent();">
+	        <apex:param assignTo="{!templateType}" name="templateType" value="" />
+	        <apex:param value="" assignTo="{!selectedKnowledgeArticleId}" name="selectedKnowledgeArticleId" />
+	        <apex:param value="" assignTo="{!selectedKnowledgeArticleFrameSourceId}" name="selectedKnowledgeArticleFrameSourceId" />
+	        <apex:param value="" assignTo="{!selectedKnowledgeArticleFrameSource}" name="selectedKnowledgeArticleFrameSource" />
+	        <apex:param value="" assignTo="{!articleTypeOfSelectedArticle}" name="articleTypeOfSelectedArticle" />
+	        <apex:param assignTo="{!articleTitle}" value="" name="articleTitle" />
+	        <apex:param assignTo="{!articleSummary}" value="" name="articleSummary" />
+    </apex:actionfunction> 
+    <apex:actionStatus id="loadingStatus" onstart="freezeBackground();" onstop="unFreezeBackground();"/>    
+    
+    <div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"/>
+    <div id="loadingImage" style="position: absolute; left: 40%; top: 60%;">
+        <apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}" width="20px" height="20px" />
+    </div>
+    <script>
+        function insertURLCaseFeedPublisher(articleTitle,url,type){
+        	var lCaseId = '{!caseId}';
+        	
+        	 if(lCaseId.length == '18'){
+                lCaseId = lCaseId.substring(0,15);
+            }
+            if(document.getElementById('emailPublisherText_' + lCaseId +  '_div').style.display == 'none'){
+	     		for(var i in CKEDITOR.instances) {
+				   var editor = CKEDITOR.instances[i];
+				   var element = CKEDITOR.dom.element.createFromHtml('<a style="margin-right:10px;" href = "' + url + '" >' + articleTitle + '</a>');
+				  editor.insertElement( element );
+				 }
+	     	}else{
+	     		var editorElement = document.getElementById('emailPublisherText_' + lCaseId);
+	     		var editorValue = editorElement.value;
+	     		var beforeString =editorValue.substring(0,editorElement.selectionStart); 
+				var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length); 
+				editorElement.value =   beforeString + url + '  ' + afterString;
+	     	}
+	     	
+        }
+        
+        function displayContentCaseFeedEmailPublisher(knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary){
+        	var lCaseId = '{!caseId}';
+        	
+        	 if(lCaseId.length == '18'){
+                lCaseId = lCaseId.substring(0,15);
+            }
+        	
+        	if(document.getElementById('emailPublisherText_' + lCaseId +  '_div').style.display == 'none'){
+        	 	displayContentCaseFeedEmailPublisherAF('custom',knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary);
+        	 }else{
+        	 	displayContentCaseFeedEmailPublisherAF('text',knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary);
+        	 }
+        }
+        
+        
+        function populateCaseFeedContent(){
+        	var lCaseId = '{!caseId}';
+        	 if(lCaseId.length == '18'){
+                lCaseId = lCaseId.substring(0,15);
+            }
+        	 var editorContent = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:caseFeedEmailPublisherComponentId:caseFeedEmailPublisherCompId:textValue').value;
+			 if(document.getElementById('emailPublisherText_' + lCaseId +  '_div').style.display == 'none'){
+			 	for(var i in CKEDITOR.instances) {
+				   var editor = CKEDITOR.instances[i];
+				  var element = CKEDITOR.dom.element.createFromHtml('<table><tr><td>' + editorContent + '</td></tr></table>');
+				  editor.insertElement( element );
+				 }
+			 }else{
+				var editorElement = document.getElementById('emailPublisherText_' + lCaseId);
+				var editorValue = editorElement.value;
+				editorContent = editorContent.replace(/<br\/>/g, "\n");
+				var decoded = HVEMApp.Util.String.unescapeHtml(editorContent,true);
+				decoded = decoded.replace('<![CDATA[', '');
+				decoded = decoded.replace(']]>', '');
+				var beforeString = editorElement.value.substring(0,editorElement.selectionStart); 
+				var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length); 
+				editorElement.value =   beforeString + decoded + '  ' + afterString;
+			 }        	 
+        }
+    </script>
+</apex:component>

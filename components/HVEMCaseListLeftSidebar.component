@@ -137,7 +137,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <table class="hvemTable" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="tdStyle"><apex:outputPanel id="idQueueCaseCountPanel">
-                    <!-- <input type="button" id="refreshImageId" onclick="refreshFull('fromRefresh');" Class="hvemRefreshListButton" title="Refresh"/> -->
                     <apex:outputPanel rendered="{!If(queueListErrorMessage != '',true,false)}">
                         <apex:outputLabel styleClass="LabelStyle"
                             value="{!queueListErrorMessage}" />
@@ -150,7 +149,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 {!$Label.My_Assigned_Queues} : {!queueCountList.size} <input
                                         type="button" id="refreshImageId"
                                         onclick="refreshFull('fromRefresh');"
-                                        Class="hvemRefreshListButton" title="Refresh" />
+                                        Class="hvemRefreshListButton" style="margin-top:-4px" title="Refresh" />
                                 </apex:facet></div>
                                 <table width="100%;" cellpadding="0" cellspacing="0">
                                     <tr>

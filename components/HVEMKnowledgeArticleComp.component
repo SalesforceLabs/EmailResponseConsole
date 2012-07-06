@@ -40,6 +40,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 	<div class="hvemTable">
 	<apex:form id="HVEMKnowledgeArticleFormId"
 		onkeypress="if (event.keyCode == 13) {fetchSelection(); return false;}">
+		<apex:outputPanel id="hiddenPanelId">
+			<apex:inputHidden id="isCustomEmailPublisher" value="{!isCustomEmailPublisher}" />
+		</apex:outputPanel>
 		<apex:outputPanel id="ErrorId">
 			<apex:pageMessages />
 		</apex:outputPanel>
@@ -137,6 +140,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 							<apex:commandLink value=""
                                 status="loadingStatus" action="{!attachArticle}" rendered="{!!isInsertingContent}"
                                 oncomplete="callEmailEditorPage('{!articleTitle}','{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
+                                rerender="hiddenPanelId"
                                 style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;">                                
                                 <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/> 
                                 <apex:param value="{!article.knowledgeArticle.language}"
@@ -210,9 +214,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 				</apex:repeat>
 			</apex:outputLabel>
 		</apex:PageBlock></div>
-   <!--     <apex:outputPanel id="testListPanel">
-           <apex:outputText id="foobar" escape="false" style="display:block;text-wrap:none;" value="{!articleContentList}"></apex:outputText>
-       </apex:outputPanel> -->
 
 		<apex:actionFunction name="refreshSearchResultAF"
 			status="loadingStatus" action="{!filterArticleList}"
@@ -234,10 +235,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </div>
     <script>  
         var categoryGroupCount = {!categoryGroupCount};
-        var categoryGroupNames = '{!JSENCODE(hvemSettingsIns.Data_Category_Group_Filter__c)}';
-        var withDataCategoryClause = '';      
-        function callEmailEditorPage(articleTitleForUrl,url){                      
-            var url = url.replace("//articles","/articles");
+        var categoryGroupNames = '{!JSENCODE(hvemSettingsIns.Data_Category_Group_Filter__c)}'; 
+        var withDataCategoryClause = '';   
+           
+        function callEmailEditorPage(articleTitleForUrl,url){          
+        	var isCustomEmailEditorJS = document.getElementById('HVEMKnowledgeArticlePageId:KnowledgeArticleComId:HVEMKnowledgeArticleCompId:HVEMKnowledgeArticleFormId:isCustomEmailPublisher').value;
+        	var url = url.replace("//articles","/articles");
             var frameArr = this.parent.frames; 
             var frameInst; 
             var lCaseId = '{!caseId}';
@@ -251,16 +254,26 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 try{ 
                     if(frameArr[i].document.URL!=null && frameArr[i].document.URL!='undefined')
                     { 
-                        if(frameArr[i].document.URL.indexOf('HVEMEmailEditorPublisherPage') != -1 && frameArr[i].document.URL.indexOf(lCaseId) != -1){ 
-                            frameInst = frameArr[i]; break; 
-                        } 
-                    }   
+	                         if(frameArr[i].document.URL.indexOf('HVEMEmailEditorPublisherPage') != -1 && frameArr[i].document.URL.indexOf(lCaseId) != -1){ 
+	                            frameInst = frameArr[i]; break; 
+	                         }
+	                     }else{
+	                     	if(frameArr[i].document.URL.indexOf('HVEMEmailEditorPublisherPage') != -1 && frameArr[i].document.URL.indexOf(lCaseId) != -1){ 
+	                            frameInst = frameArr[i]; break; 
+	                         }
+	                     } 
+                    
                 }catch(err){ 
                     continue; 
                 } 
             }
             if(frameInst != null){
-                frameInst.insertURL(articleTitleForUrl,url,'url');
+            	if(isCustomEmailEditorJS == 'true'){
+            		frameInst.insertURL(articleTitleForUrl,url,'url');
+            	}else if(isCustomEmailEditorJS == 'false'){
+            		frameInst.insertURLCaseFeedPublisher(articleTitleForUrl,url,'url');
+                }
+               
             }    
         }
         
@@ -291,7 +304,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         }
         
         function fetchTemplateType(knowledgeArticleId, frameSourceId, frameSourceName, articleName, articleTitle, articleSummary){
-            
+            var isCustomEmailEditorJS = document.getElementById('HVEMKnowledgeArticlePageId:KnowledgeArticleComId:HVEMKnowledgeArticleCompId:HVEMKnowledgeArticleFormId:isCustomEmailPublisher').value;
             var frameArr = this.parent.frames; 
             var frameInst; 
             var lCaseId = '{!caseId}';
@@ -313,8 +326,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             }
             if(frameInst != null){
                 templateType = frameInst.templateType;
-            }             
-             frameInst.displayContent(templateType,knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary); 
+            }
+            if(isCustomEmailEditorJS == 'true'){
+            	 frameInst.displayContent(templateType,knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary);
+            }else{
+            	 frameInst.displayContentCaseFeedEmailPublisher(knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary);
+            }
+             
                         
         }                        
                                          

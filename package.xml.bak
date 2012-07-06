@@ -19,7 +19,6 @@
       <members>HVEMSettingsCtrlTestClass</members>
       <members>HVEMUtil</members>
       <members>HVEMUtilTestClass</members>
-	  <members>HVEMCaseFeedEmailPublisherCntrl</members>
       <name>ApexClass</name>
    </types>
    <types>
@@ -28,7 +27,6 @@
       <members>HVEMCaseListLeftSidebar</members>
       <members>HVEMEmailEditorComponent</members>
       <members>HVEMKnowledgeArticleComp</members>
-	  <members>HVEMCaseFeedEmailPublisherComponent</members>
       <name>ApexComponent</name>
    </types>
    <types>
@@ -66,5 +64,5 @@
       <members>HVEMApprovalProcessAction</members>
       <name>ApexTrigger</name>
    </types>
-   <version>25.0</version>
+   <version>24.0</version>
 </Package>

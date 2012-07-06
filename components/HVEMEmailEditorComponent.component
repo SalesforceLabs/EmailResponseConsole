@@ -30,9 +30,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     controller="HVEMEmailEditorCompCtrl" allowDML="true">
     <apex:includeScript value="/support/console/22.0/integration.js" />
     <apex:includeScript value="{!URLFOR($Resource.HVEMCKEditor,'/ckeditor/ckeditor.js')}" />
-    <!-- <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HtmlDecode.js')}"/> -->
-
-
     <style>
         .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton
             {
@@ -406,8 +403,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         rendered="{!IF(isServiceCloud ==true,false,true)}">
         <table>
             <tr id="detailTDId">
-                <td><apex:outputLink style="white-space:nowrap;" title="Link"
-                    value="/apex/HVEMMainPage" id="theLink"> {!$Label.Back_to_List_Cases} </apex:outputLink></td>
                 <td><apex:detail id="detailTag_Id" title="false"
                     relatedListHover="true" relatedList="true"
                     subject="{!caseInstance.id}" /></td>
@@ -545,10 +540,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                        if('{!configOptions.Allow_Drafts__c}' == 'true'){
                            discardLink.style.display = 'none';
                            document.getElementById('discardChangesSpan').style.display='block';
-                           
-                          // saveLink.removeAttribute('onClick');
-                          // saveLink.removeAttribute('href');
-                          // saveLink.className = 'diabledLink';
                       }
                        
                    }else if('{!isUnderApproval}' == 'false'){}

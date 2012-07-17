@@ -44,6 +44,8 @@ Version History
 - Ability to change case status without sending an email - aka "spam" management
 - Support Knowledge with multi-lingual configuration
 - Ability to optionally insert KB content (but no support for images yet) instead of links to articles
+- better links to Knowledge articles with HTML emails
+- [Experimental] optionally use the Case Feed email publisher instead of the ERC custom publisher
 
 *Version 2 - AppExchange Release: 2012/04/02*
 

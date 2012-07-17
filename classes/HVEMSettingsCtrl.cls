@@ -87,6 +87,7 @@ public with Sharing class HVEMSettingsCtrl{
     public String toRemoveRoutingAddress{get; set;}
     public String caseMapRoutingAdd {get; set;}
     public String toRemoveRoutingMapAddress {get; set;}
+    public String emailPublisherSelection {get; set;}
 
     public boolean saveCS{get;set;}
     public boolean articleTypesError{get;set;}
@@ -176,6 +177,12 @@ public with Sharing class HVEMSettingsCtrl{
         toSaveList = new List<String>();               
         selectedCategoryGroups = null;
         dataCategory='';
+         if(configOptions.IsCustomEmailPublisher__c){
+         	emailPublisherSelection = 'Customemailpublisher';	
+         }else{
+         	emailPublisherSelection = 'Casefeedemailpublisher'; 
+         }
+        
         
         IsVisibleInPKB = true;
         IsVisibleInPRM = false;
@@ -208,6 +215,25 @@ public with Sharing class HVEMSettingsCtrl{
              }                    
          }
      }
+	/**
+	* Function to set values of default Email Publisher tag to be used
+	**/
+	 public List<SelectOption> getEmailPublisherSelectionOptions() {
+	 	List<SelectOption> options = new List<SelectOption>(); 
+        options.add(new SelectOption('Customemailpublisher','Use ERC custom e-mail publisher'));
+        options.add(new SelectOption('Casefeedemailpublisher','Use Case Feed e-mail publisher (experimental)')); 
+        return options; 
+	 }
+
+    /**
+    * Function to set Boolean to disable/enable HVEm Settings option
+    **/
+    public void disableEnableEmailPublisherOptions(){
+        configOptions = HVEM_Config_Options__c.getInstance('HVEM');
+        selectedLanguages = configOptions.Languages_Selected__c;
+        strChosenArticleTypes = configOptions.Article_Types_Filter__c;
+        
+    }
 
      /*
       * Function to remove options from the toSaveList
@@ -588,7 +614,9 @@ public with Sharing class HVEMSettingsCtrl{
                  selectedPublicGroupsExtended += singleGroup.subString(0,15) +',';
              }
              else{
-                 PublicGroupError = true;
+             	 if(emailPublisherSelection == 'Customemailpublisher'){
+                 	PublicGroupError = true;
+             	 }
              }                    
          } 
              if((categoryGroupsLength == 0)||(categoryGroupsLength >= 4)){            
@@ -601,34 +629,42 @@ public with Sharing class HVEMSettingsCtrl{
              }                
              else if((baseURL == null) || (baseURL.length() == 0) || (verifyBaseURL() == true)){
                  baseURLBlankError = true;    
-             }else if(selectedRoutingEmailAddress == null || selectedRoutingEmailAddress == ''){
+             }else if((selectedRoutingEmailAddress == null || selectedRoutingEmailAddress == '') && emailPublisherSelection == 'Customemailpublisher'){
                  isroutingAddressPresent = true;
              }
              else if(!PublicGroupError){  
                  
                  if(configOptions != null){
                      configOptions = [SELECT name,id FROM HVEM_Config_Options__c WHERE Id = : configOptions.id];
+                     
+                     if(emailPublisherSelection == 'Customemailpublisher'){
+                     	configOptions.Public_Groups_With_No_Approval__c = selectedPublicGroups;
+                        configOptions.Public_Groups_With_No_Approval_Extended__c = selectedPublicGroupsExtended;
+                        configOptions.Default_Email_Template__c=templates;
+                     	configOptions.Default_Email_Folder__c=folders;
+                     	configOptions.Allow_Drafts__c = enableDraftEmails;
+                     	configOptions.Allow_Draft_Approval__c = enableApprovalProcess; 
+                     	configOptions.Allow_changing_case_status__c = enableChangeCaseStatus;
+                     
+                     
+                     }
+                     if(emailPublisherSelection == 'Casefeedemailpublisher'){
+                     	configOptions.IsCustomEmailPublisher__c= false;	
+                     }else{
+                     	configOptions.IsCustomEmailPublisher__c= true;
+                     }
+                     configOptions.Article_Link_Base_URL__c=baseURL;
+                     configOptions.Insert_KB_Article_Content__c = InsertArticleContent;
                      configOptions.Article_Types_Filter__c=strChosenArticleTypes;
                      configOptions.Data_Category_Group_Filter__c=strChosenCategoryGroups;
                      configOptions.Languages_Selected__c = selectedLanguages;
                      configOptions.Available_Data_Category_Group_Filter__c=availableCategoryGroups;
-                     configOptions.Article_Link_Base_URL__c=baseURL;
                      configOptions.Auto_Populate_To_Field_From_Case_Contact__c=autoPopulate;
-                     configOptions.Default_Email_Template__c=templates;
-                     configOptions.Default_Email_Folder__c=folders;
-                     configOptions.Allow_Drafts__c = enableDraftEmails;
-                     configOptions.Allow_Draft_Approval__c = enableApprovalProcess; 
                      configOptions.Under_Approval_Case_Status__c = caseStatusUnderApproval;                              
-                     configOptions.Public_Groups_With_No_Approval__c = selectedPublicGroups;
-                     configOptions.Public_Groups_With_No_Approval_Extended__c = selectedPublicGroupsExtended;
-                     configOptions.Allow_changing_case_status__c = enableChangeCaseStatus;
-                     configOptions.Insert_KB_Article_Content__c =InsertArticleContent;
                      configOptions.PRM_Channel_Available__c = PRMChannelVisible ;
                      configOptions.PKB_Channel_Available__c = PKBChannelVisible ;
                      configOptions.CSP_Channel_Available__c = CSPChannelVisible ;
-                     configOptions.Check_PKB_Channel__c = IsVisibleInPKB;
-                     configOptions.Check_CSP_Channel__c = IsVisibleInCSP;
-                     configOptions.Check_PRM_Channel__c = IsVisibleInPRM;
+                     
                     
                      update configOptions ;
                      caseFilterError = false;
@@ -638,27 +674,40 @@ public with Sharing class HVEMSettingsCtrl{
                  }else{
                      configOptions =new HVEM_Config_Options__c();
                      configOptions.name='HVEM';
+                     
+                      if(emailPublisherSelection == 'Customemailpublisher'){
+                     	
+                     	configOptions.Public_Groups_With_No_Approval__c = selectedPublicGroups;
+                        configOptions.Public_Groups_With_No_Approval_Extended__c = selectedPublicGroupsExtended;
+                     	configOptions.Default_Email_Template__c=templates;
+                     	configOptions.Default_Email_Folder__c=folders;
+                     	configOptions.Allow_Drafts__c = enableDraftEmails;
+                     	configOptions.Allow_Draft_Approval__c = enableApprovalProcess; 
+                     	configOptions.Allow_changing_case_status__c = enableChangeCaseStatus;
+                     
+                     
+                     }
+                     
+                     if(emailPublisherSelection == 'Casefeedemailpublisher'){
+                     	configOptions.IsCustomEmailPublisher__c= false;	
+                     }else{
+                     	configOptions.IsCustomEmailPublisher__c= true;
+                     }
+                     
+                     configOptions.Article_Link_Base_URL__c=baseURL;
+                     configOptions.Insert_KB_Article_Content__c = InsertArticleContent;
                      configOptions.Available_Data_Category_Group_Filter__c = availableCategoryGroups;
                      configOptions.Article_Types_Filter__c=strChosenArticleTypes;
                      configOptions.Data_Category_Group_Filter__c=strChosenCategoryGroups;
-                     configOptions.Article_Link_Base_URL__c=baseURL;
                      configOptions.Languages_Selected__c = selectedLanguages;
                      configOptions.Auto_Populate_To_Field_From_Case_Contact__c=autoPopulate; 
-                     configOptions.Default_Email_Template__c=templates;
-                     configOptions.Default_Email_Folder__c=folders;
-                     configOptions.Allow_Drafts__c = enableDraftEmails;
-                     configOptions.Allow_Draft_Approval__c = enableApprovalProcess;
                      configOptions.Under_Approval_Case_Status__c = caseStatusUnderApproval;             
-                     configOptions.Public_Groups_With_No_Approval__c = selectedPublicGroups;
-                     configOptions.Public_Groups_With_No_Approval_Extended__c = selectedPublicGroupsExtended;                
-                     configOptions.Allow_changing_case_status__c = enableChangeCaseStatus;  
                      configOptions.PRM_Channel_Available__c = PRMChannelVisible ;
                      configOptions.PKB_Channel_Available__c = PKBChannelVisible ;
                      configOptions.CSP_Channel_Available__c = CSPChannelVisible ;
                      configOptions.Check_PKB_Channel__c = IsVisibleInPKB;       
                      configOptions.Check_CSP_Channel__c = IsVisibleInCSP;
                      configOptions.Check_PRM_Channel__c = IsVisibleInPRM;
-                     configOptions.Insert_KB_Article_Content__c =InsertArticleContent;
                      insert configOptions;
                      caseFilterError = false;
                      isInvalidRoutingEmail = false;
@@ -669,38 +718,39 @@ public with Sharing class HVEMSettingsCtrl{
                  /**
                  * code to save entered email routing address in new Custom settings
                  **/
+                 if(emailPublisherSelection == 'Customemailpublisher'){
+	                 delete [SELECT Id FROM HVEM_Email_Routing_Address__c];
+	                 routingConfigOptions = new List<HVEM_Email_Routing_Address__c>();
+	                 Integer counter = 0;
+	                 
+	                 for(String emailAddress : selectedRoutingEmailAddress.split(',',0)){
+	                     counter++;
+	                     HVEM_Email_Routing_Address__c routingConfigOptionsInstance = new HVEM_Email_Routing_Address__c();
+	                     routingConfigOptionsInstance.Name = counter + Label.RoutingEmail;
+	                     routingConfigOptionsInstance.Email_Address__c = emailAddress;
+	                     routingConfigOptions.add(routingConfigOptionsInstance);
+	                     
+	                 }
+	                 counter = 0;
+	                 insert routingConfigOptions;
                  
-                 delete [SELECT Id FROM HVEM_Email_Routing_Address__c];
-                 routingConfigOptions = new List<HVEM_Email_Routing_Address__c>();
-                 Integer counter = 0;
-                 
-                 for(String emailAddress : selectedRoutingEmailAddress.split(',',0)){
-                     counter++;
-                     HVEM_Email_Routing_Address__c routingConfigOptionsInstance = new HVEM_Email_Routing_Address__c();
-                     routingConfigOptionsInstance.Name = counter + Label.RoutingEmail;
-                     routingConfigOptionsInstance.Email_Address__c = emailAddress;
-                     routingConfigOptions.add(routingConfigOptionsInstance);
-                     
-                 }
-                 counter = 0;
-                 insert routingConfigOptions;
-                 
-                 /**
-                 * code to insert mappings in Config options
-                 **/
-                if(caseRoutingAddressmappings != null){
-                     delete [SELECT Case_API_and_Label__c,Email_Routing_Address__c FROM HVEM_Email_Routing_Mapping__c];
-                     List<HVEM_Email_Routing_Mapping__c> tempRoutingMap = new List<HVEM_Email_Routing_Mapping__c>();
-                     
-                     for(HVEM_Email_Routing_Mapping__c routingConfigOptionsMappingInstance : routingMappingConfigOptions){
-                        HVEM_Email_Routing_Mapping__c tempRoutingMapInstance = new HVEM_Email_Routing_Mapping__c();
-                        tempRoutingMapInstance.Case_API_and_Label__c = routingConfigOptionsMappingInstance.Case_API_and_Label__c;
-                        tempRoutingMapInstance.Email_Routing_Address__c = routingConfigOptionsMappingInstance.Email_Routing_Address__c;
-                        tempRoutingMapInstance.name = routingConfigOptionsMappingInstance.name;
-                        tempRoutingMap.add(tempRoutingMapInstance);
-                     }
-                     insert tempRoutingMap;
-                    
+	                 /**
+	                 * code to insert mappings in Config options
+	                 **/
+	                if(caseRoutingAddressmappings != null){
+	                     delete [SELECT Case_API_and_Label__c,Email_Routing_Address__c FROM HVEM_Email_Routing_Mapping__c];
+	                     List<HVEM_Email_Routing_Mapping__c> tempRoutingMap = new List<HVEM_Email_Routing_Mapping__c>();
+	                     
+	                     for(HVEM_Email_Routing_Mapping__c routingConfigOptionsMappingInstance : routingMappingConfigOptions){
+	                        HVEM_Email_Routing_Mapping__c tempRoutingMapInstance = new HVEM_Email_Routing_Mapping__c();
+	                        tempRoutingMapInstance.Case_API_and_Label__c = routingConfigOptionsMappingInstance.Case_API_and_Label__c;
+	                        tempRoutingMapInstance.Email_Routing_Address__c = routingConfigOptionsMappingInstance.Email_Routing_Address__c;
+	                        tempRoutingMapInstance.name = routingConfigOptionsMappingInstance.name;
+	                        tempRoutingMap.add(tempRoutingMapInstance);
+	                     }
+	                     insert tempRoutingMap;
+	                    
+	                 }
                  }
              }
 
@@ -936,7 +986,6 @@ public with Sharing class HVEMSettingsCtrl{
     **/
     public void caseMapRoutingAddressAdd(){
         saveCS = false;
-        // chnages
         baseURLBlankError = false;
         userLanguageError = false;
         PublicGroupError = false;

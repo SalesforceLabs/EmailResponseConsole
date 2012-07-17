@@ -42,7 +42,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 			top: 0%;
 			left: 0%;
 			width: 100%;
-			height: 300%;
+			height: 400%;
 			/* make it white but fully transparent */
 			background-color: #6D7B8D;
 			opacity: .20;
@@ -123,15 +123,23 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 					<center><apex:commandButton id="SaveButton1Id"
 						value="{!$Label.Save}" onclick="OnBtnSaveClick();"
 						oncomplete="return false;" /></center>
+					
 					</td>
 				</tr>
 				<tr>
-					<td><apex:outputText value="{!$Label.Email_Publisher_Options}"
+					<td colspan="2">
+					  <apex:selectRadio value="{!emailPublisherSelection}" onclick="disableEnableEmailPublisherOptionsAF();">
+							<apex:selectoptions value="{!emailPublisherSelectionOptions}" />
+						</apex:selectRadio>
+					</td>
+				</tr>
+				<tr>
+					<td><br/><br/><apex:outputText value="{!$Label.Email_Publisher_Options}"
 						style="font-weight:bold;" /></td>
 				</tr>
 				<tr>
 					<td><apex:outputLabel value="{!$Label.Template_Folder}" /></td>
-					<td><apex:selectList id="folderSelectListId"
+					<td><apex:selectList id="folderSelectListId" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
 						style="width:250px" size="1" value="{!folders}"
 						onchange="initializeEmailTemplate()">
 						<apex:selectOptions value="{!emailFolders}" />
@@ -139,38 +147,36 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 					<p/>
 					</td>
 				</tr>
+				
 				<tr>
 					<td><apex:outputLabel value="{!$Label.Default_Templates}" /></td>
-					<td><apex:selectList id="emailTemplateId" style="width:250px"
-						size="1" value="{!templates}">
+					<td>
+					
+					<apex:selectList id="emailTemplateId" style="width:250px" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
+						size="1" value="{!templates}"> 
 						<apex:selectOptions value="{!emailTemplates}" />
 					</apex:selectList>
 					<p/>
 					</td>
 				</tr>
-             <!--   <tr>
-					<td><apex:outputLabel value="{!$Label.Default_Reply_To_address}" /></td>
-					<td><apex:inputText style="width:250px;border-left:4px solid red;"
-						value="{!replyToAddress}" /></td>
-                </tr>    -->
 				<tr>
-					<td colspan="2"><apex:inputCheckbox value="{!autoPopulate}" />
+					<td colspan="2"><apex:inputCheckbox value="{!autoPopulate}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/>
 					<apex:outputText value="{!$Label.Auto_populate}" /></td>
 				</tr>
 				<tr>
-					<td colspan="2"><apex:inputCheckbox value="{!enableDraftEmails}" /> <apex:outputText value="{!$Label.Enable_Draft_Emails}" /></td>
+					<td colspan="2"><apex:inputCheckbox value="{!enableDraftEmails}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Enable_Draft_Emails}" /></td>
 				</tr>
 				<tr>
-                     <td colspan="2"><apex:inputCheckbox value="{!enableChangeCaseStatus}" /> <apex:outputText value="{!$Label.Allow_changing_case_status}" /></td>
+                     <td colspan="2"><apex:inputCheckbox value="{!enableChangeCaseStatus}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Allow_changing_case_status}" /></td>
                 </tr>
                 <tr>
-					<td colspan="2"><apex:inputCheckbox value="{!enableApprovalProcess}" onclick="enableApproval();" /> <apex:outputText value="{!$Label.Enable_Approval_process}" /></td>
+					<td colspan="2"><apex:inputCheckbox value="{!enableApprovalProcess}" onclick="enableApproval();" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Enable_Approval_process}" /></td>
 				</tr>
 				<tr>
 					<td colspan="2"><apex:outputText style="margin-left:50px;"
 						value="{!$Label.New_case_status_when_sending_an_email_to_approval}" />
-					<apex:selectList id="caseStatusListId"
-						disabled="{!IF(enableApprovalProcess,false,true)}"
+					<apex:selectList id="caseStatusListId" 
+						disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
 						style="margin-left:5px;min-width:110px;" size="1"
 						value="{!caseStatusUnderApproval}">
 						<apex:selectoptions value="{!caseStatusFieldValues}" />
@@ -183,12 +189,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 				<tr>
 					<td colspan="2"><apex:outputText style="margin-left:100px;font-weight:bold;"
 						value="{!$Label.Search_for_public_Groups} " /> <apex:inputText id="searchTextId"
-						disabled="{!IF(enableApprovalProcess,false,true)}"
+						disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
 						style="margin-left:2px;margin-right:5px;"
 						value="{!searchGroupText}"
 						onkeypress="if (event.keyCode == 13) {enterHit(); return false;}" />
 					<apex:commandButton id="SearchButtonId" title="Filter"
-						disabled="{!IF(enableApprovalProcess,false,true)}"
+						disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
 						value="{!$Label.Find}" action="{!filterGroups}"
 						reRender="PublicGroupSelectList1Id" status="loadingStatus" /></td>
 				</tr>
@@ -197,9 +203,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 						value="{!$Label.To_create_a_new_public_group_go_to} " /> <apex:outputPanel id="createGroupId">
 						<apex:commandLink title="{!$Label.Create_New_Public_Group}"
 							onclick="openPublicGroups();" oncomplete="return false;"
-							rendered="{!IF(enableApprovalProcess,true,false)}"> {!$Label.Setup_Manage_Users_Public_Groups}</apex:commandLink>
+							rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}"> {!$Label.Setup_Manage_Users_Public_Groups}</apex:commandLink>
 						<apex:outputLabel style="text-decoration:underline;color:#787878;"
-							rendered="{!IF(enableApprovalProcess,false,true)}">{!$Label.Setup_Manage_Users_Public_Groups}</apex:outputLabel>
+							rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">{!$Label.Setup_Manage_Users_Public_Groups}</apex:outputLabel>
 					</apex:outputPanel></td>
 				</tr>
 				<tr>
@@ -209,7 +215,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 						<tr>
 							<td><apex:selectList id="PublicGroupSelectList1Id"
                                 title="{!$Label.Channel_Available}"
-								disabled="{!IF(enableApprovalProcess,false,true)}"
+								disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
 								value="{!selectedPubliGroupsList}" multiselect="true" size="5"
 								style="min-width:110px">
 								<apex:selectOptions value="{!publicGroups}" />
@@ -222,12 +228,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 											action="{!addOption}"
 											reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id"
 											status="loadingStatus"
-											rendered="{!IF(enableApprovalProcess,true,false)}">
+											rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
 											<img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
 												src="/s.gif" />
 										</apex:commandLink>
 										<apex:outputLabel style="color:#787878;"
-											rendered="{!IF(enableApprovalProcess,false,true)}">
+											rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
 											<img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
 												src="/s.gif" />
 										</apex:outputLabel>
@@ -239,12 +245,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 											action="{!removeOption}"
 											reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id"
 											status="loadingStatus"
-											rendered="{!IF(enableApprovalProcess,true,false)}">
+											rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
 											<img class="leftArrowIcon" title="{!$Label.Remove}"
 												alt="Remove" src="/s.gif" />
 										</apex:commandLink>
 										<apex:outputLabel style="color:#787878;"
-											rendered="{!IF(enableApprovalProcess,false,true)}">
+											rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
 											<img class="leftArrowIcon" title="{!$Label.Remove}"
 												alt="Remove" src="/s.gif" />
 										</apex:outputLabel>
@@ -254,7 +260,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 							</td>
 							<td><apex:selectList id="PublicGroupSelectList2Id"
 								title="Selected"
-								disabled="{!IF(enableApprovalProcess,false,true)}"
+								disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
 								value="{!saveGroupList}" multiselect="true" size="5"
 								style="min-width:110px">
 								<apex:selectOptions value="{!savedOptions}" />
@@ -274,26 +280,37 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         <table>
                         <tr>
                             <td><apex:inputText id="routingEmailAddresAdd"
+                                disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                 styleClass="borderStyle" title="Available"
                                 style="width:110px;resize:none;"
                                 value="{!routingEmailInput}" /></td>
                             <td><apex:commandLink style="margin-bottom:7px;"
-                                id="EmailAddressAddId"
-                                onclick="validateRoutingAddressAF();return false;">
+                                id="EmailAddressAddId" rendered="{!If(emailPublisherSelection == 'Customemailpublisher',true,false)}"
+                                onclick="validateRoutingAddressJS();return false;">
                                 <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
                                     src="/s.gif" />
                                     
                             </apex:commandLink>
-                            
+                            <apex:outputPanel style="margin-bottom:7px;"
+                                id="EmailAddressAddIdPanel" rendered="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}">
+                                <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
+                                    src="/s.gif" />
+                            </apex:outputPanel>
                                  <br />
-                            <a id="EmailAddressRemoveId" onclick="populateRoutingAddress('remove');return false;">
+                            <apex:commandLink id="EmailAddressRemoveId" onclick="populateRoutingAddress('remove');return false;" rendered="{!If(emailPublisherSelection == 'Customemailpublisher',true,false)}">
                                 <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove"
                                     src="/s.gif" />
-                            </a></td>
+                            </apex:commandLink>
+                            
+                            <apex:outputPanel id="EmailAddressRemovepanelId" rendered="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}">
+                                <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove"
+                                    src="/s.gif" />
+                            </apex:outputPanel>
+                            </td>
                             <td>
                             <apex:outputPanel id="availableroutingAddresspanel">
-                            <apex:selectList id="AvailableEmailAddressId" title="Selected"
-                                multiselect="true" disabled="false" size="5"
+                            <apex:selectList id="AvailableEmailAddressId" title="Selected" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
+                                multiselect="true"  size="5"
                                 style="min-width:110px">
                                 <apex:selectoptions value="{!selectedRoutingAddress}" />
                             </apex:selectList>
@@ -307,37 +324,35 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <!-- Section for case to reply to address mappting-- START -->
                 <tr>
                     <td><apex:outputText value="{!$Label.Case_Attribute_to_Routing_Email_Mapping}" /></td>
-                    <td><apex:selectList id="CasePicklistFieldsId" title="Case Field"
+                    <td><apex:selectList id="CasePicklistFieldsId" title="Case Field" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                         value="{!selectedCaseFieldReplyTo}" multiselect="false" size="1"
                         style="width:110px" onchange="initializeCasePicListValuesReplyToJS();">
                         <apex:selectOptions value="{!casePickListFields}" />
                     </apex:selectList>&nbsp;&nbsp; <apex:selectList id="CasePicklistValuesReplyToId"
-                        title="{!$Label.Selected_Field_s_values}"
+                        title="{!$Label.Selected_Field_s_values}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                         value="{!selectedCasePicklistReplyTo}" multiselect="false" size="1"
                         style="width:110px">
                         <apex:selectOptions value="{!CasePickListFieldsValuesReplyTo}" />
                     </apex:selectList>&nbsp;&nbsp; <apex:outputText value="{!$Label.Map_To}"
                         style="font-weight:bold;" />&nbsp;&nbsp; <apex:outputPanel id="mappingReplyToValuesPanel">
-                        <apex:selectList id="ReplyToAddressLinks" disabled="false" title="Available Reply To Address" multiselect="false" size="1" value="{!mappedReplyToAddress}" style="min-width:180px">
+                        <apex:selectList id="ReplyToAddressLinks" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}" title="Available Reply To Address" multiselect="false" size="1" value="{!mappedReplyToAddress}" style="min-width:180px">
                             <apex:selectOptions value="{!SelectedMappingRoutingAddress}"/>
                         </apex:selectList>
                 </apex:outputPanel>
-                    <apex:commandButton onclick="fetchRoutingAddressMappings();return false;"
+                    <apex:commandButton onclick="fetchRoutingAddressMappings();return false;" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                         status="loadingStatus" style="width:100px;margin-left:5px;"
-                        id="AddCaseMappingReplyToId" value="{!$Label.Add}"
-                        title="{!$Label.Adds_the_contents_for_mapping}"
-                         /></td>
+                        id="AddCaseMappingReplyToId" value="{!$Label.Add}" title="{!$Label.Adds_the_contents_for_mapping}"/></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td><apex:outputPanel id="caseRoutingEmailMappingId">
-                        <apex:selectList style="width:460px;"
+                        <apex:selectList style="width:460px;" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                             id="caseFilterMappingReplyToSelectListId" value="{!caseReplyToMapSelected}"
                             multiselect="false" size="6">
                             <apex:selectOptions value="{!caseReplyToFilterMapEntry}" />
                         </apex:selectList>&nbsp;&nbsp;
                     </apex:outputPanel> <apex:commandButton style="width:100px" id="RemoveFiltersReplyToButtonId"
-                        value="{!$Label.Remove}"
+                        value="{!$Label.Remove}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                         title="{!$Label.Removes_the_contents_from_mapping}"
                         onclick="removeRoutingMapJS();return false;" >
                     </apex:commandButton>    
@@ -345,13 +360,30 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 </tr>
                 <!-- Section for case to reply to address mappting-- END-->
                 
+                <tr>
+					<td><br/><br/>
+					<apex:outputText style="font-weight:bold;"
+						value="{!$Label.Article_Links_Options}" /></td>
+				</tr>
+
+                <tr>
+                    <td><apex:outputText value="{!$Label.Article_Links_Base_URL}" /></td>
+                    <td><apex:inputText style="border-left:4px solid red;"
+                        id="baseURLId" label="Base URL" value="{!baseURL}" size="82" /></td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2"><apex:inputCheckbox value="{!InsertArticleContent}" /> <apex:outputText value="{!$Label.Insert_Article_Content}" /></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2"><br/><apex:outputLabel value="{!$Label.Search_Options}" style="font-weight:bold;" /></td>
+                </tr>
+                
 				<tr>
 					<td colspan="2"><br />
 					<apex:outputText value="{!$Label.Suggested_Article_Component_Options}"
 						style="font-weight:bold;" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><apex:outputLabel value="{!$Label.Search_Options}" style="font-weight:bold;" /></td>
 				</tr>
 				<tr>
 					<td><apex:outputLabel value="{!$Label.Data_Category_Group_filter}" /></td>
@@ -552,9 +584,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         rerender="caseFilterMappingPanelId,idErrorMessagePanel" /></td>
                 </tr>
                 <tr>
-                    <td colspan="2"><apex:inputCheckbox value="{!InsertArticleContent}" /> <apex:outputText value="{!$Label.Insert_Article_Content}" /></td>
-                </tr> 
-                <tr>
                     <td style="vertical-align:top;float:left;"><br />
                     <apex:outputText value="{!$Label.Article_query_conditions}" /></td>
                    
@@ -591,22 +620,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     </td>  
                 </tr>
                 <tr>
-					<td><br />
-					<apex:outputText style="font-weight:bold;"
-						value="{!$Label.Article_Links_Options}" /></td>
-				</tr>
-				<tr>
-					<td><apex:outputText value="{!$Label.Article_Links_Base_URL}" /></td>
-					<td><apex:inputText style="border-left:4px solid red;"
-						id="baseURLId" label="Base URL" value="{!baseURL}" size="82" /></td>
-				</tr>
-				<tr>
 					<td colspan="2">
 					<center><apex:commandButton id="SaveButton2Id"
 						value="{!$Label.Save}" onclick="OnBtnSaveClick();"
 						oncomplete="return false;" /></center>
 					</td>
 				</tr>
+				
 			</table>
 		</apex:pageBlock>
         <apex:actionFunction name="validateRoutingAddressAF" action="{!validateRoutingAddressInput}" status="loadingStatus"
@@ -622,7 +642,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <apex:actionfunction name="removeMappingRoutingAddressAF" action="{!removeMappingRoutingAddress}" status="loadingStatus" rerender="caseFilterMappingReplyToSelectListId,idErrorMessagePanel" >
             <apex:param name="RemoveRoutingmap" assignTo="{!toRemoveRoutingMapAddress}" value="" /> 
         </apex:actionfunction>
-         
+        <apex:actionFunction name="disableEnableEmailPublisherOptionsAF" action="{!disableEnableEmailPublisherOptions}" rerender="hvemForm" status="loadingStatus" oncomplete="init();"/>
 
 		<apex:actionFunction name="addMappingAF" status="loadingStatus"
 			oncomplete="reRenderFilter();">
@@ -683,7 +703,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                    isRoutingEmailPresentJSvar = '{!isroutingAddressAlreadyPresent}';
                 </script>
             </apex:outputPanel>
-	</apex:form>
+            
+            <apex:inputHidden value="{!selectedLanguages}" id="selectedLanguagesId"/>
+            <apex:inputHidden value="{!strChosenArticleTypes}" id="selectedArticleTypesId"/>
+    </apex:form>
 
 	<script>
         
@@ -693,6 +716,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             var routingEmailInput = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:routingEmailAddresAdd').value;
             var selectedEmailAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:AvailableEmailAddressId');
             var mappingroutingAddressList = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:ReplyToAddressLinks');
+			
             if(emailRoutingParam == 'add'){
                 if(routingEmailInput != null && routingEmailInput != '' && isInvalidRoutingEmail == 'false' && isRoutingEmailPresentJSvar == 'false'){
                     document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:routingEmailAddresAdd').value = '';
@@ -810,10 +834,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             }else{
                 if(lst.selectedIndex == lst.options.length-1){
                 }else{
-                    for (i=lst.options.length-1; i>=0; i--) 
-                    {
-                        if (lst.options[i].selected)
-                        {
+                    for (i=lst.options.length-1; i>=0; i--){
+                        if (lst.options[i].selected){
                                 var tempValue = lst.options[i].value;
                                 var tempIndex = i+1;
                                 lst.options[i].value = lst.options[i+1].value;
@@ -831,7 +853,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         }
     
         var strChosenCategoryGroups ="";
-        window.onload=function(){
+        window.onload= init;
+        
+        function init(){
 	        var categoryGroup1Id= document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups1Id');
 	        var articleType1Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter1Id');
 	        var articleType2Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter2Id');
@@ -841,9 +865,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             articleType2Id.length = 0 ;
             selectedLanguageoption.length = 0;
             if('{!configOptions}' != null){
-                var articleTypes = '{!JSENCODE(strChosenArticleTypes)}'.split(',');
-                var selectedLanguages = '{!JSENCODE(selectedLanguages)}'.split(',');
-               
+                //var articleTypes = '{!JSENCODE(strChosenArticleTypes)}'.split(',');
+                //var selectedLanguages = '{!JSENCODE(selectedLanguages)}'.split(',');
+                var selectedLanguages = document.getElementById('HVEMPageId:hvemForm:selectedLanguagesId').value.split(',');
+                var articleTypes = document.getElementById('HVEMPageId:hvemForm:selectedArticleTypesId').value.split(',');
+                
                 for(var a=0;a<articleTypes.length;a++){
                     for(var i=(articleType1Id.options.length - 1);i>=0;i--){
                         if(articleType1Id.options[i].value == articleTypes[a])
@@ -904,7 +930,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 	               }else if(fullString.indexOf(optionsArrayFrmLst[i].text) != -1){
 	                   fullString = fullString.replace(optionsArrayFrmLst[i].text,'');
 	               }
-	               //FromList.options[i] = null;
 	            }else{
 	                finalcategoryGroup[j++] = new Option(optionsArrayFrmLst[i].text,optionsArrayFrmLst[i].text,true,false);
 	            }
@@ -1045,6 +1070,17 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             }
             initializeCasePicListValuesReplyToAF();
         }
+        
+        function validateRoutingAddressJS(){
+            var routingMappingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:caseFilterMappingReplyToSelectListId');
+            for(var i =0;i<routingMappingAddress.options.length;i++){
+                if(routingMappingAddress.options[i].selected){
+                    routingMappingAddress.options[i].selected = false;
+                }
+            }
+            validateRoutingAddressAF();
+        }
+        
         
 	</script>
 </apex:page>

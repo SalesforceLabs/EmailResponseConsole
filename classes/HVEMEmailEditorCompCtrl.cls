@@ -194,8 +194,18 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         }
          
         // Get full case Instance
-        caseInstance = [Select Type, SystemModstamp, SuppliedPhone, SuppliedName, SuppliedEmail, SuppliedCompany, Subject, Status, Reason, Priority, ParentId, OwnerId, Origin, LastModifiedDate, LastModifiedById, IsEscalated, IsDeleted, IsClosed, Id,  Description, CreatedDate, CreatedById, ContactId, ClosedDate, CaseNumber, AssetId, AccountId From Case where Id=:caseId];
-        if(configOptions == null){  
+        //caseInstance = [Select Type, PotentialLiability__c ,SLAViolation__c,SystemModstamp, SuppliedPhone, SuppliedName, SuppliedEmail, SuppliedCompany, Subject, Status, Reason, Priority, ParentId, OwnerId, Origin, LastModifiedDate, LastModifiedById, IsEscalated, IsDeleted, IsClosed, Id,  Description, CreatedDate, CreatedById, ContactId, ClosedDate, CaseNumber, AssetId, AccountId From Case where Id=:caseId];
+        List<Case> caseListLocal  = new List<Case>();
+        HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
+        lCondition.setCondition('Id=\'' + caseId + '\'');
+        List<String> fields = new List<String>();
+        caseListLocal = dbHelper.getQueryResults(new Case(), fields, lCondition);
+        if(caseListLocal != null && caseListLocal.size() > 0){
+        	caseInstance = caseListLocal[0]; 
+        }else{
+        	caseInstance = new Case();
+        }
+        if(configOptions == null){ 
             caseInstance.contactId = null;
         }       
        emailSubject = 'Re: ' + caseInstance.Subject;

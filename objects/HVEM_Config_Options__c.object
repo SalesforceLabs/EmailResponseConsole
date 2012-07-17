@@ -165,6 +165,13 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>IsCustomEmailPublisher__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>IsCustomEmailPublisher</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Languages_Selected__c</fullName>
         <externalId>false</externalId>
         <label>Languages Selected</label>

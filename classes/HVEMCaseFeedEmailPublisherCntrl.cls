@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright (c) 2012, salesforce.com, Inc.
 All rights reserved.
 
@@ -23,22 +23,28 @@ BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE. 
- -->
+OF THE POSSIBILITY OF SUCH DAMAGE.
 
-<apex:page id="HVEMEmailEditorPublishierPageId" standardController="Case" extensions="HVEMCaseFeedEmailPublisherCntrl">
-    <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />
-    <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMEmailEditorComponentStyle.css')}" />
-    <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMCaseConversationComponentStyle.css')}" />
+*/
+
+/**
+* This class acts as a controller to email editor component having Case Feed email publisher
+**/
+
+public class HVEMCaseFeedEmailPublisherCntrl{
+   public boolean isCaseFeedEmailPublisherEnabled{get; set;}
+   public Id caseId{get; set;} 
+   public HVEM_Config_Options__c configOptions{get;set;}
+   
     
-    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMEmailEditorComponent.js')}" />
-    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
-    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCaseConversation.js')}" />
-    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMString.js')}"/>
-	
-    <apex:form id="HVEMEmailPublisierForm">
-        <c:HVEMEmailEditorComponent id="com1" rendered="{!!isCaseFeedEmailPublisherEnabled}"/>
-        <c:HVEMCaseFeedEmailPublisherComponent id="caseFeedEmailPublisherComponentId" rendered="{!isCaseFeedEmailPublisherEnabled}"/>
-      
-    </apex:form>
-</apex:page>
+   public HVEMCaseFeedEmailPublisherCntrl(ApexPages.StandardController controller) {
+          
+         configOptions = HVEM_Config_Options__c.getInstance('HVEM');
+         if(configOptions.IsCustomEmailPublisher__c){
+         	isCaseFeedEmailPublisherEnabled = false;
+         }else{
+         	isCaseFeedEmailPublisherEnabled = true;
+         }
+    }
+
+}

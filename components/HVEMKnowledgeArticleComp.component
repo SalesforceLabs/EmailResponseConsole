@@ -139,7 +139,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 							styleClass="hvemCaseItem">
 							<apex:commandLink value=""
                                 status="loadingStatus" action="{!attachArticle}" rendered="{!!isInsertingContent}"
-                                oncomplete="callEmailEditorPage('{!articleTitle}','{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
+                                oncomplete="callEmailEditorPage('{!JSINHTMLENCODE(articleTitle)}','{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
                                 rerender="hiddenPanelId"
                                 style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;">                                
                                 <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/> 

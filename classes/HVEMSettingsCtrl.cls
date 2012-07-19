@@ -177,12 +177,13 @@ public with Sharing class HVEMSettingsCtrl{
         toSaveList = new List<String>();               
         selectedCategoryGroups = null;
         dataCategory='';
+        if(configOptions != null){ 
          if(configOptions.IsCustomEmailPublisher__c){
          	emailPublisherSelection = 'Customemailpublisher';	
          }else{
          	emailPublisherSelection = 'Casefeedemailpublisher'; 
          }
-        
+        }
         
         IsVisibleInPKB = true;
         IsVisibleInPRM = false;

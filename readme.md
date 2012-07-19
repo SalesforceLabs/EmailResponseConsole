@@ -35,7 +35,7 @@ ERC is available on the AppExchange both as a managed and an un-managed package.
 Version History
 ---------------
 
-*Version 3 - Not released yet*
+*Version 3 - AppExchange Release: 2012/07/19*
 
 - Draft or rejected draft email icon in the case list view
 - Better (more scalable) template navigation

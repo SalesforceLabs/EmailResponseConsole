@@ -1256,10 +1256,13 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public void insertArticleContent() {
     	bodyValue = '';  
         articleContentList = new List<String>();
-        CaseArticle caseArticleInstance = new CaseArticle();
-        caseArticleInstance.CaseId = caseId;
-        caseArticleInstance.KnowledgeArticleId = selectedKnowledgeArticleId;
-        insert caseArticleInstance;
+        List<CaseArticle> ca = [select ID from CaseArticle where CaseId =: caseId and KnowledgeArticleId =: selectedKnowledgeArticleId];
+        if (ca.isEmpty()) {
+	        CaseArticle caseArticleInstance = new CaseArticle();
+	        caseArticleInstance.CaseId = caseId;
+	        caseArticleInstance.KnowledgeArticleId = selectedKnowledgeArticleId;
+	        insert caseArticleInstance;
+        }
         try{                
             String ConditionForArticleObject = 'SELECT Id, title, Summary from '+articleTypeOfSelectedArticle+' WHERE Id=\''+selectedKnowledgeArticleId+'\'';
             if((String.valueOf(selectedKnowledgeArticleFrameSourceId) != null) && (String.valueOf(selectedKnowledgeArticleFrameSourceId) != '')){   

@@ -183,6 +183,11 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
      * Functon to attach Article to Case in CaseArticle object
      */
     public void attachArticle(){
+        List<CaseArticle> ca = [select ID from CaseArticle where CaseId =: caseId and KnowledgeArticleId =: selectedKnowledgeArticleId];
+        if (!ca.isEmpty()) {
+        	// the link already exist, we should not insert a new one
+        	return;
+        }
         CaseArticle caseArticleInstance = new CaseArticle();
         caseArticleInstance.CaseId = caseId;
         caseArticleInstance.KnowledgeArticleId = selectedKnowledgeArticleId;

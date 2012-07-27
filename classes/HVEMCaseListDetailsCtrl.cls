@@ -308,17 +308,17 @@ public with Sharing class HVEMCaseListDetailsCtrl {
                     EmailMessage latestEmailSent = latestEmailSentList.get(0);                     
                     if(latestEmailSent.SystemModstamp < DEMInstance.SystemModstamp){
                         previousCase = [select Status,caseNumber,Owner.Name,Contact.Name,IsEscalated, Subject from Case where id=:DEMInstance.case__c];
-                        previousCaseErrorMessage = Label.Error_emailMessage  + DEMInstance.case__r.caseNumber + Label.Email_underApproval ;
+                        previousCaseErrorMessage = Label.Error_emailMessage  + ' ' + DEMInstance.case__r.caseNumber + ' ' + Label.Email_underApproval ;
 						isPreviousCasePresent = true; 
 					}else{
 						previousCase = (Case)latestEmailSent.parent;
-                        previousCaseErrorMessage = Label.Error_emailMessage  + previousCase.CaseNumber +  Label.Error_email;
+                        previousCaseErrorMessage = Label.Error_emailMessage + ' ' + previousCase.CaseNumber + ' ' +  Label.Error_email;
 						isPreviousCasePresent = true; 
 					}                   
 
 				}else{
 					previousCase = [select Status,caseNumber,Owner.Name,Contact.Name,IsEscalated, Subject from Case where id=:DEMInstance.case__c];
-                    previousCaseErrorMessage = Label.Error_emailMessage + DEMInstance.case__r.caseNumber + Label.Email_underApproval ;
+                    previousCaseErrorMessage = Label.Error_emailMessage + ' ' + DEMInstance.case__r.caseNumber + ' ' + Label.Email_underApproval ;
 					isPreviousCasePresent = true;
 				}
 			}
@@ -326,7 +326,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
 				if(latestEmailSentList.size() > 0 && latestEmailSentList != null){
 					EmailMessage latestEmailSent = latestEmailSentList.get(0);                     
 					previousCase = (Case)latestEmailSent.parent;
-                    previousCaseErrorMessage = Label.Error_emailMessage + previousCase.CaseNumber +  Label.Error_email;
+                    previousCaseErrorMessage = Label.Error_emailMessage + ' ' + previousCase.CaseNumber + ' ' +  Label.Error_email;
 					isPreviousCasePresent = true;                                                
 				}else{
 					previousCaseErrorMessage = 'Hello, ' + loggedUserInstance.Name;
@@ -340,7 +340,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
 				previousCase = (Case)latestEmailSent.parent;
 				if(System.now() > latestEmailSent.SystemModstamp.addMinutes(1)){}
 				else{                        
-                    previousCaseErrorMessage = Label.Error_emailMessage + previousCase.CaseNumber + Label.Error_email;
+                    previousCaseErrorMessage = Label.Error_emailMessage + ' ' + previousCase.CaseNumber + ' ' + Label.Error_email;
 					isPreviousCasePresent = true;                                                
 				}
 			}else{

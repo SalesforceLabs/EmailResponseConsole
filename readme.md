@@ -38,6 +38,7 @@ Version History
 *Version ?? - Not released yet*
 
 - Move the case list view information message (on previous) down a bit
+- Fix spacing issue in the case list view information message and make it black instead of red
 - Fix the redundant feed items when an article is attached more than one time to the case
 
 *Version 3 - AppExchange Release: 2012/07/19*

@@ -171,10 +171,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             <tr>
                 <td class="tdStyle"><apex:outputPanel id="idPreviousCasePanel"
                     styleClass="hvemBasicPanel">
-                    <apex:outputLabel styleClass="LabelStyle"
-                        value="{!previousCaseErrorMessage}"
-                        rendered="{!If(previousCaseErrorMessage !='',true,false)}">
-                    </apex:outputLabel>
 
                     <apex:pageBlock rendered="{!If(isPreviousCasePresent ,true,false)}">
                         <apex:outputPanel id="idPreviousCaseInternalPanel">
@@ -195,6 +191,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             </table>
                         </apex:outputPanel>
                     </apex:pageBlock>
+                    <apex:outputLabel styleClass="LabelStyle"
+                        value="{!previousCaseErrorMessage}"
+                        rendered="{!If(previousCaseErrorMessage !='',true,false)}">
+                    </apex:outputLabel>
                 </apex:outputPanel></td>
             </tr>
             <tr>
@@ -276,12 +276,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             width="20px" height="20px" /></div>
     </apex:form></div>
     <script>
-		if (sforce.console.isInConsole() && isHVEMUser == 'true') {
-			document.getElementById('customCaseListDiv').className = 'blockDiv';
-			document.getElementById('enhancedListDiv').className = 'hideDiv';
-		}else{
-			document.getElementById('customCaseListDiv').className = 'hideDiv';
-			document.getElementById('enhancedListDiv').className = 'blockDiv';
-		}
+        if (sforce.console.isInConsole() && isHVEMUser == 'true') {
+            document.getElementById('customCaseListDiv').className = 'blockDiv';
+            document.getElementById('enhancedListDiv').className = 'hideDiv';
+        }else{
+            document.getElementById('customCaseListDiv').className = 'hideDiv';
+            document.getElementById('enhancedListDiv').className = 'blockDiv';
+        }
     </script>
 </apex:component>

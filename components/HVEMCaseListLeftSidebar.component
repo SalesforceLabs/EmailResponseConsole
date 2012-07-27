@@ -176,11 +176,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             <tr>
                 <td class="tdStyle"><apex:outputPanel id="idPreviousCasePanel"
                     styleClass="hvemBasicPanel">
-                    <apex:outputLabel styleClass="LabelStyle"
-                        value="{!previousCaseErrorMessage}"
-                        rendered="{!If(previousCaseErrorMessage !='',true,false)}">
-                    </apex:outputLabel>
-
                     <apex:pageBlock rendered="{!If(isPreviousCasePresent ,true,false)}">
                         <apex:outputPanel id="idPreviousCaseInternalPanel">
                             <apex:outputLabel styleClass="commonCssBold hvemHeading">{!$Label.Previous_Case_Label}</apex:outputLabel>
@@ -199,6 +194,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             </table>
                         </apex:outputPanel>
                     </apex:pageBlock>
+                    <apex:outputLabel styleClass="LabelStyle"
+                        value="{!previousCaseErrorMessage}"
+                        rendered="{!If(previousCaseErrorMessage !='',true,false)}">
+                    </apex:outputLabel>
                 </apex:outputPanel></td>
             </tr>
             <tr>

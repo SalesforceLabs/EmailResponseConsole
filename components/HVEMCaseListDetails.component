@@ -26,46 +26,16 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE. 
  -->
 
-<apex:component access="global" controller="HVEMCaseListDetailsCtrl"
-    allowDML="true">
-    <input type="HIDDEN" id="idSelectedQueue" name="nameSelectedQueue"
-        value="" />
-    <input type="HIDDEN" id="idSelectedCase" name="nameSelectedCase"
-        value="" />
+<apex:component access="global" controller="HVEMCaseListDetailsCtrl" allowDML="true">
+    <input type="HIDDEN" id="idSelectedQueue" name="nameSelectedQueue" value="" />
+    <input type="HIDDEN" id="idSelectedCase" name="nameSelectedCase" value="" />
 
-    <style>
+    <style type="text/css">
         .hvemRefreshListButton,.rightArrowIcon {
             background:
                 url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
                 -5px -5px no-repeat transparent;
         }
-        
-        .draftLabel {
-            cursor: pointer;
-            border: none;
-            vertical-align: bottom;
-            width: 2%;
-            position: absolute;
-            right: 6%;
-        }
-        
-        .checkbox {
-            border: medium none;
-            cursor: pointer;
-            position: absolute;
-            right: 8%;
-            vertical-align: bottom;
-            width: 2%;
-        }
-        
-        .blockDiv{
-            display:block;
-        }                
-        
-        .hideDiv{
-            display:none;
-        }
-
     </style>
     <div id="enhancedListDiv" class="hideDiv"><apex:enhancedList type="Case" height="500" rowsPerPage="25" id="CaseList"
         customizable="true" />
@@ -73,29 +43,28 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <div id="customCaseListDiv" class="hideDiv"><apex:form id="idMainPanel">
 
         <apex:outputPanel id="idPrimarytabPanel">
-            <script>
-                /**
-                * Code to hide open Case Details Primary Tab
-                **/
-                function openCaseDetailsPrimaryTab(type){
-                    if(type == 'queue'){    
-                        if('{!casesInQueueList.size}' > 0){
-                            sforce.console.openPrimaryTab(null ,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
-                        }
-                    }else{
-                        sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
-                    }
-                } 
-                
-                /**
-                * Code to change Primary Focus 
-                **/
-                function changePrimaryFocus(){
-                    var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
-                    sforce.console.focusPrimaryTabByName(primaryTabName);
-                }
-            
-        </script>
+		    <script type="text/javascript">
+			    /**
+			    * Code to hide open Case Details Primary Tab
+			    **/
+			    function openCaseDetailsPrimaryTab(type){
+			        if(type == 'queue'){    
+			            if('{!casesInQueueList.size}' > 0){
+			                sforce.console.openPrimaryTab(null ,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
+			            }
+			        }else{
+			            sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
+			        }
+			    } 
+			    
+			    /**
+			    * Code to change Primary Focus 
+			    **/
+			    function changePrimaryFocus(){
+			        var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
+			        sforce.console.focusPrimaryTabByName(primaryTabName);
+			    }
+		    </script>
         </apex:outputPanel>
         <apex:actionFunction name="assignCaseFromQueueAF"
             action="{!assignCaseFromQueue}"
@@ -191,7 +160,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             </table>
                         </apex:outputPanel>
                     </apex:pageBlock>
-                    <apex:outputLabel styleClass="LabelStyle"
+               
+                    <apex:outputLabel styleClass="InfoLabelStyle"
                         value="{!previousCaseErrorMessage}"
                         rendered="{!If(previousCaseErrorMessage !='',true,false)}">
                     </apex:outputLabel>
@@ -275,7 +245,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             style="position: absolute; left: 40%; top: 40%;"><apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
             width="20px" height="20px" /></div>
     </apex:form></div>
-    <script>
+    <script type="text/javascript">
         if (sforce.console.isInConsole() && isHVEMUser == 'true') {
             document.getElementById('customCaseListDiv').className = 'blockDiv';
             document.getElementById('enhancedListDiv').className = 'hideDiv';

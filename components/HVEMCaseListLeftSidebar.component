@@ -27,61 +27,44 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component controller="HVEMCaseListDetailsCtrl" allowDML="true">
-    <script>
+    <style type='text/css'>
+		.hvemRefreshListButton,.rightArrowIcon {
+		    background:
+		        url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
+		        -5px -5px no-repeat transparent;
+		}
+    </style>
+    <script type='text/javascript'>
         var selectedCaseId = '{!caseId}';
         var currentCase = '';
         var finalQueueId = '{!finalQueueId}';
         var tabTitle = '{!JSENCODE(initialSelectedCase.CaseNumber)}';
         var isHVEMUser = '{!loggedUserInstance.HVEM_User__c}';
+        
+	    function initConsole(){
+	       document.getElementById('idSelectedQueue').value = finalQueueId;
+	       currentCase = '{!caseId}';
+	       if( document.getElementById('idSelectedCase_' + selectedCaseId) != '' && document.getElementById('idSelectedCase_' + selectedCaseId) != null){
+	           document.getElementById('idSelectedCase_' + selectedCaseId).className='highLightSelection';
+	       }
+	       
+	       if(document.getElementById(finalQueueId) != '' && document.getElementById(finalQueueId) != null ){
+	           document.getElementById(finalQueueId).style.backgroundColor = '#effaff';
+	           document.getElementById(finalQueueId).style.border = '1px solid #b3c0c9';
+	       }
+	       if(tabTitle != undefined){
+	            sforce.console.setTabTitle(tabTitle);
+	        }
+	    }  
+        
+	    window.onload = initConsole;
     </script>
     <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCaseListDetailsComponent.js')}" />
     <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
 
-    <input type="HIDDEN" id="idSelectedQueue" name="nameSelectedQueue"
-        value="" />
-    <input type="HIDDEN" id="idSelectedCase" name="nameSelectedCase"
-        value="" />
+    <input type="HIDDEN" id="idSelectedQueue" name="nameSelectedQueue" value="" />
+    <input type="HIDDEN" id="idSelectedCase" name="nameSelectedCase" value="" />
 
-    <style>
-        .hvemRefreshListButton,.rightArrowIcon {
-            background:
-                url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
-                -5px -5px no-repeat transparent;
-        }
-        
-        .highLightSelection {
-            background-color: #effaff;
-            border: 1px solid #b3c0c9;
-            -moz-border-radius: 4px;
-            -webkit-border-radius: 4px;
-            border-radius: 4px;
-            display: block;
-            padding: 4px 7px !important;
-            cursor: pointer;
-        }
-        
-        .highLightSelection em {
-            color: #6B6B6B;
-        }
-        
-        .removeHighLight {
-            -moz-border-radius: 4px;
-            -webkit-border-radius: 4px;
-            border-radius: 4px;
-            display: block;
-            width: auto;
-            cursor: pointer;
-            background-color: #ffffff;
-            border: 0px;
-        }
-        
-        a{
-            color: #0055e3 !important; 
-            text-decoration: underline; 
-            cursor: pointer;
-            display:block;
-        }
-    </style>
     <apex:form id="idMainPanel">
 
         <apex:outputPanel id="idPrimarytabPanel">
@@ -194,7 +177,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             </table>
                         </apex:outputPanel>
                     </apex:pageBlock>
-                    <apex:outputLabel styleClass="LabelStyle"
+                    <apex:outputLabel styleClass="InfoLabelStyle"
                         value="{!previousCaseErrorMessage}"
                         rendered="{!If(previousCaseErrorMessage !='',true,false)}">
                     </apex:outputLabel>
@@ -283,22 +266,4 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             style="position: absolute; left: 40%; top: 40%;"><apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
             width="20px" height="20px" /></div>
     </apex:form>
-    <script>
-    window.onload = initConsole;
-    function initConsole(){
-       document.getElementById('idSelectedQueue').value = finalQueueId;
-       currentCase = '{!caseId}';
-       if( document.getElementById('idSelectedCase_' + selectedCaseId) != '' && document.getElementById('idSelectedCase_' + selectedCaseId) != null){
-           document.getElementById('idSelectedCase_' + selectedCaseId).className='highLightSelection';
-       }
-       
-       if(document.getElementById(finalQueueId) != '' && document.getElementById(finalQueueId) != null ){
-           document.getElementById(finalQueueId).style.backgroundColor = '#effaff';
-           document.getElementById(finalQueueId).style.border = '1px solid #b3c0c9';
-       }
-       if(tabTitle != undefined){
-            sforce.console.setTabTitle(tabTitle);
-        }
-    }  
-    </script>
 </apex:component>

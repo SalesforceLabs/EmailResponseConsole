@@ -29,8 +29,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 <apex:page >
     <apex:includeScript value="/support/console/22.0/integration.js"/>
     
-   <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" /> 
-   <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMCaseListDetailsStyle.css')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" /> 
+   	<apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMCaseListDetailsStyle.css')}" />
 
     <c:HVEMCaseListLeftSidebar id="HVEMCaseListLeftSidebarId" />
 </apex:page>

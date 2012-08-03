@@ -367,7 +367,8 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
                         articleIdArticleTypeMap.put(unorderedKnowledgeArticlesList[i][j].id, String.valueOf(unorderedKnowledgeArticlesList[i].getSObjectType())+' >> '+unorderedKnowledgeArticlesList[i].getSObjectType().getDescribe().getLabel());
                     }
                 }
-
+				
+				Integer idx = 0;
                 for(KnowledgeArticleVersion article : KnowledgeArticlesList){
                     if(articleIdArticleTypeMap.containsKey(article.id) &&  (filteredKnowledgeArticles.size() <= 49)){
                         String articleAPILabelString = articleIdArticleTypeMap.get(article.id);
@@ -380,7 +381,7 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
                             }
                         }
                         if( (articleAPILabelList != null) && (articleAPILabelList.size() > 0)){
-                            filteredKnowledgeArticles.add(new HVEMKnowledgeArticleStructure(article,articleAPILabelList[0],articleAPILabelList[1],isAttached));                           
+                            filteredKnowledgeArticles.add(new HVEMKnowledgeArticleStructure(article,articleAPILabelList[0],articleAPILabelList[1],isAttached,idx++));                           
                         }
                         isAttached = false;
                     }

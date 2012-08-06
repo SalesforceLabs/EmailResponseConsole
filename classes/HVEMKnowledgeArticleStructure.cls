@@ -2,27 +2,27 @@
 Copyright (c) 2012, salesforce.com, Inc.
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, 
+    * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-    this list of conditions and the following disclaimer in the documentation 
+    * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
-    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
-    may be used to endorse or promote products derived from this software 
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software
     without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
@@ -32,45 +32,60 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public Class HVEMKnowledgeArticleStructure{
 
-	private KnowLedgeArticleVersion knowledgeArticle{get;set;}
-	private String articleName{get;set;}
-	private String articleLabel{get;set;}
-	private Boolean isAttached {get; set;}
+    private KnowLedgeArticleVersion knowledgeArticle{get;set;}
+    private String articleName{get;set;}
+    private String articleLabel{get;set;}
+    private Boolean isAttached {get; set;}
+    public Integer idx {get; set;} // index in the search results list
 
-	/**
-	 * Constructor
-	 */
-	public HVEMKnowledgeArticleStructure(KnowledgeArticleVersion pKnowledgeArticle, String pArticleName, String pArticleLabel,Boolean pIsAttached){
-		knowledgeArticle = pKnowledgeArticle; 
-		articleName = pArticleName;
-		articleLabel = pArticleLabel;
-		isAttached = pIsAttached; 
-	}
+    /**
+    * Constructor
+    */
+    public HVEMKnowledgeArticleStructure(KnowledgeArticleVersion pKnowledgeArticle, String pArticleName, String pArticleLabel,Boolean pIsAttached){
+        knowledgeArticle = pKnowledgeArticle;
+        articleName = pArticleName;
+        articleLabel = pArticleLabel;
+        isAttached = pIsAttached;
+    }
+    public HVEMKnowledgeArticleStructure(KnowledgeArticleVersion pKnowledgeArticle, String pArticleName, String pArticleLabel,Boolean pIsAttached, Integer pIdx){
+        knowledgeArticle = pKnowledgeArticle;
+        articleName = pArticleName;
+        articleLabel = pArticleLabel;
+        isAttached = pIsAttached;
+        idx = pIdx;
+    }
 
 
-	public Boolean getIsAttached(){
-		return this.isAttached;
-	}
+    public Boolean getIsAttached(){
+        return this.isAttached;
+    }
 
-	/**
-	 * function that return an Instance of KnowledgeArticleVersion Object
-	 */
-	public KnowLedgeArticleVersion getKnowledgeArticle(){
-		return this.knowledgeArticle;
-	}
+    /**
+    * function that return an Instance of KnowledgeArticleVersion Object
+    */
+    public KnowLedgeArticleVersion getKnowledgeArticle(){
+        return this.knowledgeArticle;
+    }
 
-	/**
-	 * Function thet return the string that contains the knowledge article name.
-	 */
-	public String getarticleName(){
-		return this.articleName ;
-	}
+    /**
+    * Function thet return the string that contains the knowledge article name.
+    */
+    public String getarticleName(){
+        return this.articleName;
+    }
 
-	/**
-	 * Function thet return the string that contains the knowledge article Label.
-	 */
-	public String getarticleLabel(){
-		return this.articleLabel ;
-	}
+    /**
+    * Function thet return the string that contains the knowledge article Label.
+    */
+    public String getarticleLabel(){
+        return this.articleLabel ;
+    }
+
+    /**
+    * Function thet return the index in the search result list.
+    */
+    //public Integer getidx(){
+    //    return this.idx;
+    //}
 
 }

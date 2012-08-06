@@ -2,28 +2,28 @@
 Copyright (c) 2012, salesforce.com, Inc.
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, 
+    * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-    this list of conditions and the following disclaimer in the documentation 
+    * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
-    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
-    may be used to endorse or promote products derived from this software 
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software
     without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE. 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component access="global" id="hvemEmailEditoComponentId"
@@ -37,7 +37,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
                 -65px -7px no-repeat transparent;
         }
-        
+
         .LabelStyle {
             font-size: 14px;
             font-weight: normal;
@@ -45,21 +45,21 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             cursor: pointer;
             background: grey;
         }
-        
+
         body .btn {
             padding: 2px 0px;
         }
-        
+
         .Fontbolder {
             font-weight: bolder;
         }
-        
+
         .btnhidden {
             display: none;
         }
-        
+
         .btnvisible {
-            
+
             color: #333333;
             font-size: 0.9em;
             font-weight: bold;
@@ -70,21 +70,21 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             float: right;
             border-radius: 5px 5px 5px 5px;
         }
-        
+
         .hyperLink {
             cursor: pointer;
             margin: 3px;
             color: #0055e3;
             text-decoration: none;
         }
-        
+
         .labelStyle{
             left: 10px;
             margin-right: 1px;
             position: relative;
             cursor: pointer;
-        
-        } 
+
+        }
         .divClass{
             border: 1px solid;
             border-color: #B5B5B5 #B5B5B5 #7F7F7F;
@@ -94,7 +94,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             margin-top:-1px;
             display: none;
         }
-                     
+
       .highLightSelection {
             background-color: #effaff;
             cursor: pointer;
@@ -115,7 +115,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             font-weight: bold;
             height:18px;
        }
-         
+
      .dropdownSelection{
         background-color: #ffffff;
         cursor: pointer;
@@ -126,12 +126,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         font-weight: bold;
         height:18px;
      }
-	 .discardLink {
+    .discardLink {
         color:blue;
         margin-top:4px;
         position: absolute;
-        right: 194px;        
-    }    
+        right: 194px;
+    }
     .disableDiscard{
         display:none;
         color:grey;
@@ -143,7 +143,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         position:absolute;
         margin-top: 4px;
         right: 182px;
-    }    
+    }
     .activeSaveLink{
         color:blue;
         margin-top: 4px;
@@ -154,13 +154,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          color:grey;
          margin-top: 4px;
          position: absolute;
-         right: 149px;    
+         right: 149px;
     }
-	.showOptionDiv{
-		margin-top: 7.5px;
-		position: absolute;
-		right: 10px;
-	}
+    .showOptionDiv{
+        margin-top: 7.5px;
+        position: absolute;
+        right: 10px;
+    }
     </style>
     <apex:outputPanel id="errorPanel" rendered="{!isServiceCloud}">
         <apex:pageMessages />
@@ -257,7 +257,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          action="{!initializeEmailTemplate}" reRender="emailTemplateId" />
     <apex:actionFunction name="changeCaseStausAF" status="loadingStatus"
          action="{!changeCaseStatus}" oncomplete="handleTabs();"
-         rerender="idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,spanId,errorPanel"/>         
+         rerender="idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,spanId,errorPanel"/>
     <apex:outputPanel id="idfullBodyPanel" rendered="{!isServiceCloud}">
         <table class="hvemPubTable" width="100%;">
             <tr>
@@ -284,7 +284,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;"
                     value="{!$Label.Additional_To}  " /></td>
                 <td align="left" style="margin-left: 3px;"><apex:inputTextArea style="resize:none;" disabled="{!isUnderApproval}" cols="50"
-                    rows="5" id="idAdditionalTo" value="{!additionalTo}" /> 
+                    rows="5" id="idAdditionalTo" value="{!additionalTo}" />
                     <apex:outputPanel rendered="{!!isUnderApproval}">
                     <a> <img
                         onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
@@ -302,7 +302,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 </td>
                 <td align="left" style="margin-left: 3px;">
                     <apex:inputTextArea cols="50" rows="5" id="idCcTo" value="{!addCc}"
-                        disabled="{!isUnderApproval}" /> 
+                        disabled="{!isUnderApproval}" />
                     <apex:outputPanel rendered="{!!isUnderApproval}">
                             <a> <img style="cursor: pointer;"
                                 onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
@@ -319,7 +319,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Add_Bcc}  " />
                 </td>
                 <td align="left" style="margin-left: 3px;"><apex:inputTextArea cols="50" rows="5" id="idBccTo" value="{!addBcc}"
-                    disabled="{!isUnderApproval}" /> 
+                    disabled="{!isUnderApproval}" />
                     <apex:outputPanel rendered="{!!isUnderApproval}">
                         <a> <img style="cursor: pointer;"
                             onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
@@ -336,13 +336,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td align="right"><apex:outputLabel value="{!$Label.Template}" style="font-weight:bold;" /></td>
                  <td>
                   <apex:outputPanel id="templatePanaelId">
-                      <apex:selectList disabled="{!isUnderApproval}" 
-                        id="folderSelectListId" style="width:250px;border: 1px solid black" 
+                      <apex:selectList disabled="{!isUnderApproval}"
+                        id="folderSelectListId" style="width:250px;border: 1px solid black"
                         size="1" value="{!folders}" onchange="initializeEmailTemplateAF();">
                         <apex:selectOptions value="{!emailFolders}"/>
                     </apex:selectList>&nbsp;&nbsp;
                         <apex:selectList disabled="{!isUnderApproval}"
-                        id="emailTemplateId" style="width:250px;border: 1px solid black" 
+                        id="emailTemplateId" style="width:250px;border: 1px solid black"
                         size="1" value="{!selectedTemplate}"  onchange="populateEditorAF();">
                         <apex:selectOptions value="{!EmailTemplatesList}"/>
                     </apex:selectList>
@@ -354,7 +354,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                       value="{!$Label.Body}" /></td>
                  <td>
                     <apex:outputPanel id="editorAreaPanel">
-                       <textArea style="width:100%;" id="idMainEmailBody"  name="nameMainEmailBody"   rows="20" cols="120"/> 
+                       <textArea style="width:100%;" id="idMainEmailBody"  name="nameMainEmailBody"   rows="20" cols="120"/>
                     </apex:outputPanel>
                 </td>
             </tr>
@@ -366,20 +366,20 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         id="caseStatusSelectListId" value="{!caseStatus}"
                         multiselect="false" size="1" style="border: 1px solid black">
                         <apex:selectOptions value="{!caseStatusFieldValues}" />
-                    </apex:selectList> 
+                    </apex:selectList>
                     <apex:inputCheckbox disabled="{!isUnderApproval}"
                         id="includeThreadCheckBoxId" value="{!includeThread}"
                         selected="false" />
                         <apex:outputLabel style="font-weight:bold;">Include Thread</apex:outputLabel>
                      <apex:outputPanel id="saveDiscardId" style="float:right;width:302px">
                         <apex:commandLink styleClass="discardLink" rendered="{!configOptions.Allow_Drafts__c}" id="DiscardId" value="{!$Label.Discard_Changes}" onclick="discardDraftAF();" oncomplete="return false;"/>&nbsp;
-                        <label id="discardChangesSpan" Class="disableDiscard" >{!$Label.Discard_Changes}</label>&nbsp;    
-                        
+                        <label id="discardChangesSpan" Class="disableDiscard" >{!$Label.Discard_Changes}</label>&nbsp;
+
                         <apex:outputLabel rendered="{!configOptions.Allow_Drafts__c}" styleClass="singleLine"> | </apex:outputLabel> &nbsp;
                         <apex:commandLink styleClass="activeSaveLink" rendered="{!configOptions.Allow_Drafts__c && !isUnderApproval}" id="SaveId" onclick="saveDraftJS();" oncomplete="return false;">{!$Label.Save}</apex:commandLink>&nbsp;&nbsp;
-                                                    
+
                         <apex:outputLabel styleClass="disableSave" value="{!$Label.Save}" rendered="{!isUnderApproval}"></apex:outputLabel>
-                        <span id="spanId" style="width:100px"> <apex:commandButton disabled="{!isUnderApproval}" value="{!$Label.Send_and_Next_Case}" 
+                        <span id="spanId" style="width:100px"> <apex:commandButton disabled="{!isUnderApproval}" value="{!$Label.Send_and_Next_Case}"
                             onclick="sendAndNextActionJS('NormalSend');" oncomplete="return false;" style="margin-left:0px;position:absolute;right:29px;"/>
                             <apex:commandButton id="showOptionsId" rendered="{!If(enableChangeCaseStatus || isSuperUser,true,false)}" disabled="{!isUnderApproval}" value="▼" onclick="showOptions();"
                             onblur="hideDropDownOptions();" oncomplete="return false;" style="width:6%;float:right;margin-left:-5px;" /><br />
@@ -389,7 +389,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                       style="width:132px; height:18px;" onclick = "hideOptions('spam');">
                                       <apex:outputLabel styleClass="labelStyle" style="Bottom:-2px;" value="{!$Label.Change_status}" title="Change status"></apex:outputLabel></span>
                                 <span onmouseover="populateMouseVar('in','superUserApproval');" onblur="hideOptions('other');"
-                                      onmouseout="populateMouseVar('out','superUserApproval');" id="superUserApproval" class="dropdownSelection" 
+                                      onmouseout="populateMouseVar('out','superUserApproval');" id="superUserApproval" class="dropdownSelection"
                                       style="width:132px; height: 18px;margin-right:1px;margin-top: -1px;" onclick="hideOptions('review');">
                                       <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="{!$Label.Submit_for_Review}" title="Submit for Review"></apex:outputLabel></span>
                             </div>
@@ -450,24 +450,24 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <div style="position: absolute; top: 150px; left: 200px;"><apex:actionStatus id="loadingStatus" onstart="freezeBackground();"
         onstop="unFreezeBackground();">
     </apex:actionStatus></div>
-    <script>   
+    <script>
             function displayContent(templateType,knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary){
                 insertArticleContentAF(templateType,knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary);
             }
-             
+
             function loadEditor(){
-            	var templateType = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:templateType').value;
-           		var editorTextValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:textValue').value;
-           		var editorElement = document.getElementById('idMainEmailBody');
-           		var editorValue = editorElement.value ;
-                
-            	if(templateType == 'text'){
-            	   editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
-	               var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
+                var templateType = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:templateType').value;
+                var editorTextValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:textValue').value;
+                var editorElement = document.getElementById('idMainEmailBody');
+                var editorValue = editorElement.value ;
+
+                if(templateType == 'text'){
+                editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
+                var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
                    decoded = decoded.replace('<![CDATA[', '');
-	               decoded = decoded.replace(']]>', '');
-	               var beforeString = editorElement.value.substring(0,editorElement.selectionStart); 
-                   var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length); 
+                decoded = decoded.replace(']]>', '');
+                var beforeString = editorElement.value.substring(0,editorElement.selectionStart);
+                   var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length);
                    editorElement.value =   beforeString + decoded + '  ' + afterString;
                 }else if(templateType == 'custom'){
                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
@@ -477,23 +477,23 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                    CKEDITOR.instances.idMainEmailBody.insertElement( element );
                 }else{
                    editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
-	               var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
+                var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
                    decoded = decoded.replace('<![CDATA[', '');
-	               decoded = decoded.replace(']]>', '');
-	               var beforeString = editorElement.value.substring(0,editorElement.selectionStart); 
-                   var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length); 
+                decoded = decoded.replace(']]>', '');
+                var beforeString = editorElement.value.substring(0,editorElement.selectionStart);
+                   var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length);
                    editorElement.value =   beforeString + decoded + '  ' + afterString;
                 }
-            	
-            	
-            }   
-              
+
+
+            }
+
             var isTemplateDeleted = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:TemplateDeleted').value;
             var editorHtmlValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:htmlValue').value;
             var templateType = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:templateType').value;
             var editorTextValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:textValue').value;
             var previousEmailTemplate = templateType;
-            var isHVEMUser = '{!activeUser.HVEM_User__c}'; 
+            var isHVEMUser = '{!activeUser.HVEM_User__c}';
             var inConsole = testIsInConsole();
             if(isHVEMUser == 'true' && inConsole == 1){
                 if(templateType == 'custom'){
@@ -513,20 +513,20 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         decoded = decoded.replace(']]>', '');
                         if(inConsole == 1){
                             document.getElementById('idMainEmailBody').value = editorTextValue;
-                        }                    
-                    
+                        }
+
                 }
            }
           //changes
-            window.onload=function(){  
+            window.onload=function(){
                 if(inConsole == 1 && isHVEMUser == 'true'){
-                    var templateSelectList = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:emailTemplateId');                               
-                    
+                    var templateSelectList = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:emailTemplateId');
+
                     for(var i=(templateSelectList.options.length - 1);i>=0;i--){
                          if(templateSelectList .options[i].disabled == true){
-                            templateSelectList .options[i].className = 'Fontbolder'; 
+                            templateSelectList .options[i].className = 'Fontbolder';
                         }
-                    }                
+                    }
                    //Phase - II - Email Editor Component - START
                    var saveLink = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:SaveId');
                    var discardLink = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:DiscardId');
@@ -535,24 +535,24 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                            discardLink.style.display = 'none';
                            document.getElementById('discardChangesSpan').style.display='block';
                        }
-                  }     
+                  }
                    if('{!isUnderApproval}' == 'true'){
                        if('{!configOptions.Allow_Drafts__c}' == 'true'){
                            discardLink.style.display = 'none';
                            document.getElementById('discardChangesSpan').style.display='block';
                       }
-                       
+
                    }else if('{!isUnderApproval}' == 'false'){}
                    if(templateType == 'custom' && '{!isUnderApproval}' == 'true'){
                        CKEDITOR.instances.idMainEmailBody.setReadOnly(true);
                    }else if('{!isUnderApproval}' == 'true'){
                        document.getElementById('idMainEmailBody').disabled = true;
                    }
-                   
-                //Phase - II - Email Editor Component - END 
+
+                //Phase - II - Email Editor Component - END
                 }
             }
-                               
+
     </script>
 
     <script>
@@ -561,8 +561,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         if(templateType == 'text'){
                             var editorElement = document.getElementById('idMainEmailBody');
                             var editorValue = editorElement.value;
-                            var beforeString =editorValue.substring(0,editorElement.selectionStart); 
-                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length); 
+                            var beforeString =editorValue.substring(0,editorElement.selectionStart);
+                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length);
                             editorElement.value =   beforeString + url + '  ' + afterString;
                         }else if(templateType == 'custom'){
                             var element = CKEDITOR.dom.element.createFromHtml( '<a style="margin-right:10px;" href="' + url + ' " target="__blank" >' + articleTitleForUrl +  '</a> ' );
@@ -570,39 +570,39 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         }else{
                             var editorElement = document.getElementById('idMainEmailBody');
                             var editorValue = editorElement.value ;
-                            var beforeString =editorValue.substring(0,editorElement.selectionStart); 
-                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length); 
+                            var beforeString =editorValue.substring(0,editorElement.selectionStart);
+                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length);
                             editorElement.value =   beforeString + url + '  ' +  afterString;
                         }
                    }
-                   if(type == 'content') 
+                   if(type == 'content')
                      {
                         if(templateType == 'text'){
                             var editorElement = document.getElementById('idMainEmailBody');
                             var editorValue = editorElement.value;
-                            var beforeString = editorValue.substring(0,editorElement.selectionStart); 
-                            var afterString = editorValue.substring(editorElement.selectionStart,editorValue.length); 
+                            var beforeString = editorValue.substring(0,editorElement.selectionStart);
+                            var afterString = editorValue.substring(editorElement.selectionStart,editorValue.length);
                             editorElement.value =   beforeString + url + '  ' + afterString;
                         }else if(templateType == 'custom'){
                             CKEDITOR.instances.idMainEmailBody.insertHtml('<p>' +  ' ' + url +  '</p> ' );
                         }else{
                             var editorElement = document.getElementById('idMainEmailBody');
                             var editorValue = editorElement.value ;
-                            var beforeString =editorValue.substring(0,editorElement.selectionStart); 
-                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length); 
+                            var beforeString =editorValue.substring(0,editorElement.selectionStart);
+                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length);
                             editorElement.value =   beforeString + url + '  ' +  afterString;
                         }
                    }
-                            
+
          }
-    
-    
+
+
           /** Script to show and hide drop down button */
-          
+
          var isMouseOver = false;
          var isoptionsVisible = 'false';
          var isActionComplete = 'false';
-         
+
          function showOptions(){
              if(inConsole == 1){
              if(isoptionsVisible ==  'false'){
@@ -615,28 +615,28 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                   }else{
                        document.getElementById('changeCaseId').className = 'btnhidden';
                    }
-              
+
                    if({!isSuperUser}){
                          document.getElementById('DivId').style.display='block';
                  if(document.getElementById('superUserApproval').className == 'btnhidden')
                      document.getElementById('superUserApproval').className = 'btnvisible';
                  else if(document.getElementById('superUserApproval').className == 'btnvisible')
-                     document.getElementById('superUserApproval').className = 'btnhidden';   
+                     document.getElementById('superUserApproval').className = 'btnhidden';
                    }else{
                        document.getElementById('superUserApproval').className = 'btnhidden';
                    }
                    isoptionsVisible = 'true';
                    isActionComplete = 'false';
-                   
+
                }else if(isoptionsVisible == 'true'){
-                     document.getElementById('DivId').style.display='none';                 
+                     document.getElementById('DivId').style.display='none';
                      isoptionsVisible = 'false';
                      isActionCalled = 'false';
                      isActionComplete = 'false';
-               }   
-             } 
+               }
+             }
          }
-         
+
          function hideOptions(type){
                  if(type == 'review'){
                      sendAndNextActionJS('SuperUserApproval');
@@ -647,17 +647,17 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                  isActionComplete = 'true';
                  isoptionsVisible = 'false';
                  }
-             document.getElementById('DivId').style.display='none';  
-                 } 
-                  
+             document.getElementById('DivId').style.display='none';
+                 }
+
          function hideDropDownOptions(){
              if(isActionComplete == 'false' && isMouseOver == 'false'){
-                 document.getElementById('DivId').style.display='none';  
+                 document.getElementById('DivId').style.display='none';
                  isActionComplete = 'true';
                  isoptionsVisible = 'false';
-             } 
+             }
          }
-        
+
          function populateMouseVar(type,CaseId){
              if(inConsole == 1){
                  if(type == 'out'){
@@ -666,8 +666,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                  }else if(type == 'in'){
                      isMouseOver = 'true';
                         document.getElementById(CaseId).className='highLightSelection';
-                 }  
-             }             
+                 }
+             }
          }
         function saveDiscardLink(){
                 document.getElementById('discardChangesSpan').style.display='none';
@@ -675,7 +675,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 discardLink.style.display = 'block';
                 return false;
         }
-        
-        
+
+
     </script>
 </apex:component>

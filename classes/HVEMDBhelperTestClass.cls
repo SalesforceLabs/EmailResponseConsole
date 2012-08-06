@@ -4,20 +4,20 @@ public class HVEMDBhelperTestClass
    static HVEMDBhelper HVEMDBhelperInstance;
    static List<String> fieldsList;
    static HVEMConditionBuilder lCondition;
-  
+
    public static void setUpInitData(){
       HVEMDBhelperInstance= new HVEMDBhelper();
       fieldsList = new List<String>();
       lCondition = new HVEMConditionBuilder();
-      lCondition.setCondition('ORDER BY LastModifiedDate'); 
+      lCondition.setCondition('ORDER BY LastModifiedDate');
       fieldsList = new List<String>();
       fieldsList.add('caseNumber');
       fieldsList.add('IsEscalated');
       fieldsList.add('Owner.Name');
       fieldsList.add('Subject');
       fieldsList.add('Status');
-        
-   }      
+
+   }
    public static testMethod void testgetQueryResults(){
        setUpInitData();
        Test.startTest();
@@ -36,8 +36,8 @@ public class HVEMDBhelperTestClass
       fieldsList.add('Owner.Name');
       fieldsList.add('Subject');
       fieldsList.add('Status');
-        
-   }    
+
+   }
    public static testMethod void testgetQueryResultsElse(){
        setUpInitDataElse();
        Test.startTest();
@@ -45,5 +45,5 @@ public class HVEMDBhelperTestClass
        System.AssertEquals(true,lCondition!=null);
        Test.stopTest();
     }
-    
+
  }

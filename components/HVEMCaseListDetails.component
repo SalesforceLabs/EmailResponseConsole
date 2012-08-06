@@ -2,28 +2,28 @@
 Copyright (c) 2012, salesforce.com, Inc.
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, 
+    * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-    this list of conditions and the following disclaimer in the documentation 
+    * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
-    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
-    may be used to endorse or promote products derived from this software 
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software
     without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE. 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component access="global" controller="HVEMCaseListDetailsCtrl" allowDML="true">
@@ -43,28 +43,28 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <div id="customCaseListDiv" class="hideDiv"><apex:form id="idMainPanel">
 
         <apex:outputPanel id="idPrimarytabPanel">
-		    <script type="text/javascript">
-			    /**
-			    * Code to hide open Case Details Primary Tab
-			    **/
-			    function openCaseDetailsPrimaryTab(type){
-			        if(type == 'queue'){    
-			            if('{!casesInQueueList.size}' > 0){
-			                sforce.console.openPrimaryTab(null ,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
-			            }
-			        }else{
-			            sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
-			        }
-			    } 
-			    
-			    /**
-			    * Code to change Primary Focus 
-			    **/
-			    function changePrimaryFocus(){
-			        var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
-			        sforce.console.focusPrimaryTabByName(primaryTabName);
-			    }
-		    </script>
+            <script type="text/javascript">
+                /**
+                * Code to hide open Case Details Primary Tab
+                **/
+                function openCaseDetailsPrimaryTab(type){
+                    if(type == 'queue'){
+                        if('{!casesInQueueList.size}' > 0){
+                            sforce.console.openPrimaryTab(null ,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
+                        }
+                    }else{
+                        sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
+                    }
+                }
+
+                /**
+                * Code to change Primary Focus
+                **/
+                function changePrimaryFocus(){
+                    var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
+                    sforce.console.focusPrimaryTabByName(primaryTabName);
+                }
+            </script>
         </apex:outputPanel>
         <apex:actionFunction name="assignCaseFromQueueAF"
             action="{!assignCaseFromQueue}"
@@ -160,7 +160,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             </table>
                         </apex:outputPanel>
                     </apex:pageBlock>
-               
+
                     <apex:outputLabel styleClass="InfoLabelStyle"
                         value="{!previousCaseErrorMessage}"
                         rendered="{!If(previousCaseErrorMessage !='',true,false)}">
@@ -182,7 +182,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             <apex:column >
                                 <apex:facet name="header">
                                     <apex:outputPanel id="facetDivId" styleClass="draftsClass">
-                                   {!$Label.My_Assigned_Cases} : {!loggedInUserCaseList.size}  
+                                   {!$Label.My_Assigned_Cases} : {!loggedInUserCaseList.size}
                                    <apex:outputPanel rendered="{!isDraftsAllowed}">
                                             <apex:inputCheckbox styleClass="checkbox" id="checkId"
                                                 value="{!isDrafts}"
@@ -201,10 +201,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <apex:outputLabel style="cursor:pointer;text-decoration:underline;"
                                     value="{!loggedInUserCaseVar.loggedUserCase.CaseNumber} - " /> <strong><apex:outputLabel style="cursor:pointer;text-decoration:underline;"
                                     value="{!If(loggedInUserCaseVar.loggedUserCase.IsEscalated,'Escalated',loggedInUserCaseVar.loggedUserCase.Status)}" /></strong>
-                                </a> 
+                                </a>
                                 <apex:image rendered="{!loggedInUserCaseVar.isRejected}" style="float:right;" title="{!$Label.Case_rejected_email}" value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/RejectedDraft.png')}" width="20px" height="18px"/>
                                 <apex:image rendered="{!loggedInUserCaseVar.isDraft}" style="float:right;" title="{!$Label.Case_draft_email}" value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/DraftCase.png')}" width="16px" height="14px"/>
-                                
+
                                 <em><apex:outputLabel value="{!loggedInUserCaseVar.loggedUserCase.Contact.Name}" /></em>
                                 <p><apex:outputLabel value="{!loggedInUserCaseVar.loggedUserCase.Subject}"
                                     style="white-space:wrap;" /></p>
@@ -225,7 +225,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         var tabTitle = '{!JSENCODE(initialSelectedCase.CaseNumber)}';
                         var isHVEMUser = '{!loggedUserInstance.HVEM_User__c}';
                     </script>
-                </apex:outputPanel> 
+                </apex:outputPanel>
                 <apex:outputPanel id="onloadScriptPanel">
                     <script>
                          var finalQueueId = '{!finalQueueId}';
@@ -234,7 +234,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                              document.getElementById(finalQueueId).style.backgroundColor = '#effaff';
                              document.getElementById(finalQueueId).style.border = '1px solid #b3c0c9';
                          }
-                           
+
                     </script>
                 </apex:outputPanel></td>
             </tr>

@@ -2,79 +2,79 @@
 Copyright (c) 2012, salesforce.com, Inc.
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, 
+    * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-    this list of conditions and the following disclaimer in the documentation 
+    * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
-    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
-    may be used to endorse or promote products derived from this software 
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software
     without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE. 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:page id="HVEMPageId" controller="HVEMSettingsCtrl"
-	showheader="true" sidebar="false">
-	<apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMSettings_js.js')}" />
+    showheader="true" sidebar="false">
+    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMSettings_js.js')}" />
 
-	<style>
-		.blockDiv { /* Disaplay the disabling div */
-			display: block;
-			/* Display it on the layer with index 1001.
-		           Make sure this is the highest z-index value
-		           used by layers on that page */
-			z-index: 1001;
-			/* make it cover the whole screen */
-			position: absolute;
-			top: 0%;
-			left: 0%;
-			width: 100%;
-			height: 400%;
-			/* make it white but fully transparent */
-			background-color: #6D7B8D;
-			opacity: .20;
-			filter: alpha(opacity = 20);
-		}
-		
-		.borderStyle {
-			border: 1px solid black;
-			border-color: #778899;
-		}
-		
-		.blockdisplay {
-			display: block;
-		}
-		
-		.nonedisplay {
-			display: none;
-		}
-	</style>
+    <style>
+        .blockDiv { /* Disaplay the disabling div */
+            display: block;
+            /* Display it on the layer with index 1001.
+                Make sure this is the highest z-index value
+                used by layers on that page */
+            z-index: 1001;
+            /* make it cover the whole screen */
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 400%;
+            /* make it white but fully transparent */
+            background-color: #6D7B8D;
+            opacity: .20;
+            filter: alpha(opacity = 20);
+        }
 
-	<div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"
-		class="nonedisplay"></div>
-	<div id="loadingImage" style="position: absolute; left: 40%; top: 40%;"
-		class="nonedisplay"><apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
-		width="20px" height="20px" /></div>
-	<apex:form id="hvemForm">
-		<apex:pageBlock id="hvemPageBlockId" title="{!$Label.HVEM_Settings}">
-			<apex:outputPanel id="idErrorMessagePanel">
-				<apex:pageMessage id="saveMessageId" rendered="{!saveCS}"
-					severity="confirm" strength="3"
-					title="{!$Label.Save_confirmation_Message}"
-					summary="{!$Label.settings_for_HVEM_have_been_saved}" />
+        .borderStyle {
+            border: 1px solid black;
+            border-color: #778899;
+        }
+
+        .blockdisplay {
+            display: block;
+        }
+
+        .nonedisplay {
+            display: none;
+        }
+    </style>
+
+    <div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"
+        class="nonedisplay"></div>
+    <div id="loadingImage" style="position: absolute; left: 40%; top: 40%;"
+        class="nonedisplay"><apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
+        width="20px" height="20px" /></div>
+    <apex:form id="hvemForm">
+        <apex:pageBlock id="hvemPageBlockId" title="{!$Label.HVEM_Settings}">
+            <apex:outputPanel id="idErrorMessagePanel">
+                <apex:pageMessage id="saveMessageId" rendered="{!saveCS}"
+                    severity="confirm" strength="3"
+                    title="{!$Label.Save_confirmation_Message}"
+                    summary="{!$Label.settings_for_HVEM_have_been_saved}" />
                 <apex:pageMessage id="routingAddressAlreadyPresentErrorid" rendered="{!isroutingAddressAlreadyPresent}"
                     severity="error" strength="3"
                     title="{!$Label.Routing_Address_Error}"
@@ -86,192 +86,192 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <apex:pageMessage id="userLanaguageId" rendered="{!userLanguageError}"
                     severity="error" strength="3"
                     summary="{!$Label.Please_select_atleast_one_language}" />
-				<apex:pageMessage id="ArticleErrorId"
-					rendered="{!articleTypesError}" severity="error" strength="2"
-					summary="{!$Label.articleTypes_Error_Message}" />
+                <apex:pageMessage id="ArticleErrorId"
+                    rendered="{!articleTypesError}" severity="error" strength="2"
+                    summary="{!$Label.articleTypes_Error_Message}" />
                 <apex:pageMessage id="routingmapErrorid"
                     rendered="{!isroutingMappingAlreadyPresent}" severity="error" strength="2"
-                    title="{!$Label.Email_Routing_Map_Error}" 
+                    title="{!$Label.Email_Routing_Map_Error}"
                     summary="{!$Label.Routing_Address_already_present_Please_verify_and_reenter}"/>
-				<apex:pageMessage id="CategoryErrorId"
-					rendered="{!categoryGroupsError}" severity="error" strength="2"
-					summary="{!$Label.CategoryGroups_Error_Message}" />
-				<apex:pageMessage id="CaseFilterErrorId"
-					rendered="{!caseFilterError}" severity="error" strength="2"
-                    title="{!$Label.Case_Attributes_Filter_Mapping_Error}" 
-					summary="{!$Label.Case_Filter_Mapping_Error}" />
-				<apex:pageMessage id="replyToBlankErrorId"
-					rendered="{!replyToBlankError}" severity="error" strength="2"
-					summary="{!$Label.Invalid_email_Address_in_reply_to}"
-					title="{!$Label.Invalid_Email_Address}" />
-				<apex:pageMessage id="baseUrlBlankErrorId"
-					rendered="{!baseURLBlankError}" severity="error" strength="2"
-					summary="{!$Label.Invalid_Url_in_Base_URL}"
-					title="{!$Label.Invalid_URL}" />
-				<apex:pageMessage id="PublicGroupErrorId"
-					rendered="{!PublicGroupError}" severity="error" strength="2"
-					summary="{!$Label.Maximum_Public_Group_selection_limit_exceeded}"
-					title="{!$Label.Limit_Exceeded_Error}" />
+                <apex:pageMessage id="CategoryErrorId"
+                    rendered="{!categoryGroupsError}" severity="error" strength="2"
+                    summary="{!$Label.CategoryGroups_Error_Message}" />
+                <apex:pageMessage id="CaseFilterErrorId"
+                    rendered="{!caseFilterError}" severity="error" strength="2"
+                    title="{!$Label.Case_Attributes_Filter_Mapping_Error}"
+                    summary="{!$Label.Case_Filter_Mapping_Error}" />
+                <apex:pageMessage id="replyToBlankErrorId"
+                    rendered="{!replyToBlankError}" severity="error" strength="2"
+                    summary="{!$Label.Invalid_email_Address_in_reply_to}"
+                    title="{!$Label.Invalid_Email_Address}" />
+                <apex:pageMessage id="baseUrlBlankErrorId"
+                    rendered="{!baseURLBlankError}" severity="error" strength="2"
+                    summary="{!$Label.Invalid_Url_in_Base_URL}"
+                    title="{!$Label.Invalid_URL}" />
+                <apex:pageMessage id="PublicGroupErrorId"
+                    rendered="{!PublicGroupError}" severity="error" strength="2"
+                    summary="{!$Label.Maximum_Public_Group_selection_limit_exceeded}"
+                    title="{!$Label.Limit_Exceeded_Error}" />
                 <apex:pageMessage id="InValidEmailErrorId"
                     rendered="{!isInvalidRoutingEmail}" severity="error" strength="2"
                     summary="{!$Label.Please_verify_routing_Email_address_and_correct_it}"
                     title="{!$Label.Invalid_Routing_Email_address_entered}" />
-			</apex:outputPanel>
-			<table cellpadding="5" cellspacing="5">
-				<tr>
-					<td colspan="2">
-					<center><apex:commandButton id="SaveButton1Id"
-						value="{!$Label.Save}" onclick="OnBtnSaveClick();"
-						oncomplete="return false;" /></center>
-					
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">
-					  <apex:selectRadio value="{!emailPublisherSelection}" onclick="disableEnableEmailPublisherOptionsAF();">
-							<apex:selectoptions value="{!emailPublisherSelectionOptions}" />
-						</apex:selectRadio>
-					</td>
-				</tr>
-				<tr>
-					<td><br/><br/><apex:outputText value="{!$Label.Email_Publisher_Options}"
-						style="font-weight:bold;" /></td>
-				</tr>
-				<tr>
-					<td><apex:outputLabel value="{!$Label.Template_Folder}" /></td>
-					<td><apex:selectList id="folderSelectListId" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
-						style="width:250px" size="1" value="{!folders}"
-						onchange="initializeEmailTemplate()">
-						<apex:selectOptions value="{!emailFolders}" />
-					</apex:selectList>
-					<p/>
-					</td>
-				</tr>
-				
-				<tr>
-					<td><apex:outputLabel value="{!$Label.Default_Templates}" /></td>
-					<td>
-					
-					<apex:selectList id="emailTemplateId" style="width:250px" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
-						size="1" value="{!templates}"> 
-						<apex:selectOptions value="{!emailTemplates}" />
-					</apex:selectList>
-					<p/>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2"><apex:inputCheckbox value="{!autoPopulate}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/>
-					<apex:outputText value="{!$Label.Auto_populate}" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><apex:inputCheckbox value="{!enableDraftEmails}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Enable_Draft_Emails}" /></td>
-				</tr>
-				<tr>
+            </apex:outputPanel>
+            <table cellpadding="5" cellspacing="5">
+                <tr>
+                    <td colspan="2">
+                    <center><apex:commandButton id="SaveButton1Id"
+                        value="{!$Label.Save}" onclick="OnBtnSaveClick();"
+                        oncomplete="return false;" /></center>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                    <apex:selectRadio value="{!emailPublisherSelection}" onclick="disableEnableEmailPublisherOptionsAF();">
+                            <apex:selectoptions value="{!emailPublisherSelectionOptions}" />
+                        </apex:selectRadio>
+                    </td>
+                </tr>
+                <tr>
+                    <td><br/><br/><apex:outputText value="{!$Label.Email_Publisher_Options}"
+                        style="font-weight:bold;" /></td>
+                </tr>
+                <tr>
+                    <td><apex:outputLabel value="{!$Label.Template_Folder}" /></td>
+                    <td><apex:selectList id="folderSelectListId" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
+                        style="width:250px" size="1" value="{!folders}"
+                        onchange="initializeEmailTemplate()">
+                        <apex:selectOptions value="{!emailFolders}" />
+                    </apex:selectList>
+                    <p/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><apex:outputLabel value="{!$Label.Default_Templates}" /></td>
+                    <td>
+
+                    <apex:selectList id="emailTemplateId" style="width:250px" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
+                        size="1" value="{!templates}">
+                        <apex:selectOptions value="{!emailTemplates}" />
+                    </apex:selectList>
+                    <p/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><apex:inputCheckbox value="{!autoPopulate}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/>
+                    <apex:outputText value="{!$Label.Auto_populate}" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><apex:inputCheckbox value="{!enableDraftEmails}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Enable_Draft_Emails}" /></td>
+                </tr>
+                <tr>
                      <td colspan="2"><apex:inputCheckbox value="{!enableChangeCaseStatus}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Allow_changing_case_status}" /></td>
                 </tr>
                 <tr>
-					<td colspan="2"><apex:inputCheckbox value="{!enableApprovalProcess}" onclick="enableApproval();" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Enable_Approval_process}" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><apex:outputText style="margin-left:50px;"
-						value="{!$Label.New_case_status_when_sending_an_email_to_approval}" />
-					<apex:selectList id="caseStatusListId" 
-						disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
-						style="margin-left:5px;min-width:110px;" size="1"
-						value="{!caseStatusUnderApproval}">
-						<apex:selectoptions value="{!caseStatusFieldValues}" />
-					</apex:selectList></td>
-				</tr>
-				<tr>
-					<td colspan="2"><apex:outputText style="margin-left:50px;"
-						value="{!$Label.Group_of_Users_allowed_to_send_email_witout_going_through_the_approval_process}" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><apex:outputText style="margin-left:100px;font-weight:bold;"
-						value="{!$Label.Search_for_public_Groups} " /> <apex:inputText id="searchTextId"
-						disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
-						style="margin-left:2px;margin-right:5px;"
-						value="{!searchGroupText}"
-						onkeypress="if (event.keyCode == 13) {enterHit(); return false;}" />
-					<apex:commandButton id="SearchButtonId" title="Filter"
-						disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
-						value="{!$Label.Find}" action="{!filterGroups}"
-						reRender="PublicGroupSelectList1Id" status="loadingStatus" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><apex:outputText style="margin-left:100px;font-weight:bold;"
-						value="{!$Label.To_create_a_new_public_group_go_to} " /> <apex:outputPanel id="createGroupId">
-						<apex:commandLink title="{!$Label.Create_New_Public_Group}"
-							onclick="openPublicGroups();" oncomplete="return false;"
-							rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}"> {!$Label.Setup_Manage_Users_Public_Groups}</apex:commandLink>
-						<apex:outputLabel style="text-decoration:underline;color:#787878;"
-							rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">{!$Label.Setup_Manage_Users_Public_Groups}</apex:outputLabel>
-					</apex:outputPanel></td>
-				</tr>
-				<tr>
-					<td />
-					<td>
-					<table>
-						<tr>
-							<td><apex:selectList id="PublicGroupSelectList1Id"
+                    <td colspan="2"><apex:inputCheckbox value="{!enableApprovalProcess}" onclick="enableApproval();" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Enable_Approval_process}" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><apex:outputText style="margin-left:50px;"
+                        value="{!$Label.New_case_status_when_sending_an_email_to_approval}" />
+                    <apex:selectList id="caseStatusListId"
+                        disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                        style="margin-left:5px;min-width:110px;" size="1"
+                        value="{!caseStatusUnderApproval}">
+                        <apex:selectoptions value="{!caseStatusFieldValues}" />
+                    </apex:selectList></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><apex:outputText style="margin-left:50px;"
+                        value="{!$Label.Group_of_Users_allowed_to_send_email_witout_going_through_the_approval_process}" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><apex:outputText style="margin-left:100px;font-weight:bold;"
+                        value="{!$Label.Search_for_public_Groups} " /> <apex:inputText id="searchTextId"
+                        disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                        style="margin-left:2px;margin-right:5px;"
+                        value="{!searchGroupText}"
+                        onkeypress="if (event.keyCode == 13) {enterHit(); return false;}" />
+                    <apex:commandButton id="SearchButtonId" title="Filter"
+                        disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                        value="{!$Label.Find}" action="{!filterGroups}"
+                        reRender="PublicGroupSelectList1Id" status="loadingStatus" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><apex:outputText style="margin-left:100px;font-weight:bold;"
+                        value="{!$Label.To_create_a_new_public_group_go_to} " /> <apex:outputPanel id="createGroupId">
+                        <apex:commandLink title="{!$Label.Create_New_Public_Group}"
+                            onclick="openPublicGroups();" oncomplete="return false;"
+                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}"> {!$Label.Setup_Manage_Users_Public_Groups}</apex:commandLink>
+                        <apex:outputLabel style="text-decoration:underline;color:#787878;"
+                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">{!$Label.Setup_Manage_Users_Public_Groups}</apex:outputLabel>
+                    </apex:outputPanel></td>
+                </tr>
+                <tr>
+                    <td />
+                    <td>
+                    <table>
+                        <tr>
+                            <td><apex:selectList id="PublicGroupSelectList1Id"
                                 title="{!$Label.Channel_Available}"
-								disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
-								value="{!selectedPubliGroupsList}" multiselect="true" size="5"
-								style="min-width:110px">
-								<apex:selectOptions value="{!publicGroups}" />
-							</apex:selectList></td>
-							<td>
-							<table>
-								<tr>
-									<td><apex:outputPanel id="addPublicGroupId">
-										<apex:commandLink oncomplete="return false;"
-											action="{!addOption}"
-											reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id"
-											status="loadingStatus"
-											rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
-											<img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
-												src="/s.gif" />
-										</apex:commandLink>
-										<apex:outputLabel style="color:#787878;"
-											rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
-											<img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
-												src="/s.gif" />
-										</apex:outputLabel>
-									</apex:outputPanel></td>
-								</tr>
-								<tr>
-									<td><apex:outputPanel id="removePublicGroupId">
-										<apex:commandLink oncomplete="return false;"
-											action="{!removeOption}"
-											reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id"
-											status="loadingStatus"
-											rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
-											<img class="leftArrowIcon" title="{!$Label.Remove}"
-												alt="Remove" src="/s.gif" />
-										</apex:commandLink>
-										<apex:outputLabel style="color:#787878;"
-											rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
-											<img class="leftArrowIcon" title="{!$Label.Remove}"
-												alt="Remove" src="/s.gif" />
-										</apex:outputLabel>
-									</apex:outputPanel></td>
-								</tr>
-							</table>
-							</td>
-							<td><apex:selectList id="PublicGroupSelectList2Id"
-								title="Selected"
-								disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
-								value="{!saveGroupList}" multiselect="true" size="5"
-								style="min-width:110px">
-								<apex:selectOptions value="{!savedOptions}" />
-							</apex:selectList></td>
-						</tr>
-                        
+                                disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                                value="{!selectedPubliGroupsList}" multiselect="true" size="5"
+                                style="min-width:110px">
+                                <apex:selectOptions value="{!publicGroups}" />
+                            </apex:selectList></td>
+                            <td>
+                            <table>
+                                <tr>
+                                    <td><apex:outputPanel id="addPublicGroupId">
+                                        <apex:commandLink oncomplete="return false;"
+                                            action="{!addOption}"
+                                            reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id"
+                                            status="loadingStatus"
+                                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
+                                            <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
+                                                src="/s.gif" />
+                                        </apex:commandLink>
+                                        <apex:outputLabel style="color:#787878;"
+                                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
+                                            <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
+                                                src="/s.gif" />
+                                        </apex:outputLabel>
+                                    </apex:outputPanel></td>
+                                </tr>
+                                <tr>
+                                    <td><apex:outputPanel id="removePublicGroupId">
+                                        <apex:commandLink oncomplete="return false;"
+                                            action="{!removeOption}"
+                                            reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id"
+                                            status="loadingStatus"
+                                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
+                                            <img class="leftArrowIcon" title="{!$Label.Remove}"
+                                                alt="Remove" src="/s.gif" />
+                                        </apex:commandLink>
+                                        <apex:outputLabel style="color:#787878;"
+                                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
+                                            <img class="leftArrowIcon" title="{!$Label.Remove}"
+                                                alt="Remove" src="/s.gif" />
+                                        </apex:outputLabel>
+                                    </apex:outputPanel></td>
+                                </tr>
+                            </table>
+                            </td>
+                            <td><apex:selectList id="PublicGroupSelectList2Id"
+                                title="Selected"
+                                disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                                value="{!saveGroupList}" multiselect="true" size="5"
+                                style="min-width:110px">
+                                <apex:selectOptions value="{!savedOptions}" />
+                            </apex:selectList></td>
+                        </tr>
+
                     </table>
                     </td>
                 </tr>
                 <!-- Section for addition of multiple reply to address-START -->
-                
+
                 <tr>
                     <td>
                         <apex:outputText >{!$Label.Add_Email_Routing_Address}</apex:outputText>
@@ -289,7 +289,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 onclick="validateRoutingAddressJS();return false;">
                                 <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
                                     src="/s.gif" />
-                                    
+
                             </apex:commandLink>
                             <apex:outputPanel style="margin-bottom:7px;"
                                 id="EmailAddressAddIdPanel" rendered="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}">
@@ -301,7 +301,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove"
                                     src="/s.gif" />
                             </apex:commandLink>
-                            
+
                             <apex:outputPanel id="EmailAddressRemovepanelId" rendered="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}">
                                 <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove"
                                     src="/s.gif" />
@@ -317,9 +317,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             </apex:outputPanel>
                             </td>
                         </tr>
-					</table>
-					</td>
-				</tr>
+                    </table>
+                    </td>
+                </tr>
                 <!-- Section for addition of multiple reply to address-END-->
                 <!-- Section for case to reply to address mappting-- START -->
                 <tr>
@@ -355,23 +355,23 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         value="{!$Label.Remove}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                         title="{!$Label.Removes_the_contents_from_mapping}"
                         onclick="removeRoutingMapJS();return false;" >
-                    </apex:commandButton>    
+                    </apex:commandButton>
                     </td>
                 </tr>
                 <!-- Section for case to reply to address mappting-- END-->
-                
+
                 <tr>
-					<td><br/><br/>
-					<apex:outputText style="font-weight:bold;"
-						value="{!$Label.Article_Links_Options}" /></td>
-				</tr>
+                    <td><br/><br/>
+                    <apex:outputText style="font-weight:bold;"
+                        value="{!$Label.Article_Links_Options}" /></td>
+                </tr>
 
                 <tr>
                     <td><apex:outputText value="{!$Label.Article_Links_Base_URL}" /></td>
                     <td><apex:inputText style="border-left:4px solid red;"
                         id="baseURLId" label="Base URL" value="{!baseURL}" size="82" /></td>
                 </tr>
-                
+
                 <tr>
                     <td colspan="2"><apex:inputCheckbox value="{!InsertArticleContent}" /> <apex:outputText value="{!$Label.Insert_Article_Content}" /></td>
                 </tr>
@@ -379,84 +379,84 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <tr>
                     <td colspan="2"><br/><apex:outputLabel value="{!$Label.Search_Options}" style="font-weight:bold;" /></td>
                 </tr>
-                
-				<tr>
-					<td colspan="2"><br />
-					<apex:outputText value="{!$Label.Suggested_Article_Component_Options}"
-						style="font-weight:bold;" /></td>
-				</tr>
-				<tr>
-					<td><apex:outputLabel value="{!$Label.Data_Category_Group_filter}" /></td>
-					<td>
-					<table>
-						<tr>
-							<td><apex:inputTextArea id="categoryGroupTextId"
+
+                <tr>
+                    <td colspan="2"><br />
+                    <apex:outputText value="{!$Label.Suggested_Article_Component_Options}"
+                        style="font-weight:bold;" /></td>
+                </tr>
+                <tr>
+                    <td><apex:outputLabel value="{!$Label.Data_Category_Group_filter}" /></td>
+                    <td>
+                    <table>
+                        <tr>
+                            <td><apex:inputTextArea id="categoryGroupTextId"
                                 styleClass="borderStyle" title="{!$Label.Channel_Available}"
-								style="width:110px;resize:none;"
-								value="{!availableCategoryGroups}" rows="5" /></td>
-							<td><apex:commandLink style="margin-bottom:7px;"
-								id="CategoryAddLinkId"
-								onclick="populateCategoryGroupSelected();"
-								oncomplete="return false;">
-								<img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
-									src="/s.gif" />
-							</apex:commandLink> <br />
-							<apex:commandLink id="CategoryRemoveLinkId"
-								oncomplete="return false;"
-								onclick="categoryGroupPopulate(false);">
-								<img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove"
-									src="/s.gif" />
-							</apex:commandLink></td>
-							<td><apex:selectList id="CategoryGroups2Id" title="Selected"
-								multiselect="true" disabled="false" size="5"
-								style="min-width:110px">
-								<apex:selectoptions value="{!enteredCategoryGroups}" />
-							</apex:selectList></td>
-						</tr>
-					</table>
-		                        
-					</td>
-				</tr>
-				<tr>
-					<td><apex:outputText value="{!$Label.ArticleTypes_filter}" /></td>
-					<td>
-					<table>
-						<tr>
-							<td><apex:selectList id="articleTypesFilter1Id"
+                                style="width:110px;resize:none;"
+                                value="{!availableCategoryGroups}" rows="5" /></td>
+                            <td><apex:commandLink style="margin-bottom:7px;"
+                                id="CategoryAddLinkId"
+                                onclick="populateCategoryGroupSelected();"
+                                oncomplete="return false;">
+                                <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
+                                    src="/s.gif" />
+                            </apex:commandLink> <br />
+                            <apex:commandLink id="CategoryRemoveLinkId"
+                                oncomplete="return false;"
+                                onclick="categoryGroupPopulate(false);">
+                                <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove"
+                                    src="/s.gif" />
+                            </apex:commandLink></td>
+                            <td><apex:selectList id="CategoryGroups2Id" title="Selected"
+                                multiselect="true" disabled="false" size="5"
+                                style="min-width:110px">
+                                <apex:selectoptions value="{!enteredCategoryGroups}" />
+                            </apex:selectList></td>
+                        </tr>
+                    </table>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="{!$Label.ArticleTypes_filter}" /></td>
+                    <td>
+                    <table>
+                        <tr>
+                            <td><apex:selectList id="articleTypesFilter1Id"
                                 title="{!$Label.Channel_Available}" value="{!selectedArticleTypesList}"
-								multiselect="true" size="5" style="min-width:110px">
-								<apex:selectOptions value="{!articleTypesDevName}" />
-							</apex:selectList></td>
-							<td>
-							<table>
-								<tr>
-									<td><apex:commandLink id="addLinkId"
-										oncomplete="return false;"
-										onclick="OnTransferBtnClick2(true,'articleType');">
-										<img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
-											src="/s.gif" />
-									</apex:commandLink></td>
-								</tr>
-								<tr>
-									<td><apex:commandLink id="removeLinkId"
-										oncomplete="return false;"
-										onclick="OnTransferBtnClick2(false,'articleType');">
-										<img class="leftArrowIcon" title="{!$Label.Remove}"
-											alt="Remove" src="/s.gif" />
-									</apex:commandLink></td>
-								</tr>
-							</table>
-							</td>
-							<td><apex:selectList id="articleTypesFilter2Id"
-								title="Selected" multiselect="true" size="5"
-								style="min-width:110px" /></td>
-						</tr>
-					</table>
-					</td>
-				</tr>
+                                multiselect="true" size="5" style="min-width:110px">
+                                <apex:selectOptions value="{!articleTypesDevName}" />
+                            </apex:selectList></td>
+                            <td>
+                            <table>
+                                <tr>
+                                    <td><apex:commandLink id="addLinkId"
+                                        oncomplete="return false;"
+                                        onclick="OnTransferBtnClick2(true,'articleType');">
+                                        <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add"
+                                            src="/s.gif" />
+                                    </apex:commandLink></td>
+                                </tr>
+                                <tr>
+                                    <td><apex:commandLink id="removeLinkId"
+                                        oncomplete="return false;"
+                                        onclick="OnTransferBtnClick2(false,'articleType');">
+                                        <img class="leftArrowIcon" title="{!$Label.Remove}"
+                                            alt="Remove" src="/s.gif" />
+                                    </apex:commandLink></td>
+                                </tr>
+                            </table>
+                            </td>
+                            <td><apex:selectList id="articleTypesFilter2Id"
+                                title="Selected" multiselect="true" size="5"
+                                style="min-width:110px" /></td>
+                        </tr>
+                    </table>
+                    </td>
+                </tr>
                  <!-- Section to select Language options for ERC App START -->
-                
-				<tr>
+
+                <tr>
                     <td><apex:outputText value="{!$Label.Select_Language}" /></td>
                     <td>
                     <table>
@@ -511,57 +511,57 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                         <apex:image title="{!$Label.Move_Bottom}" style="cursor:pointer;" onclick="MoveBottom()" url="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/bottom.png')}"/>
                                         </td>
                                     </tr>
-                                    
+
                                 </table>
-                            </td> 
+                            </td>
                         </tr>
                     </table>
                     <tr>
                        <td></td>
                        <td colspan="4">
                         <apex:outputLabel style="font-weight:bold;">Please make sure that selected languages have been configured in  </apex:outputLabel>&nbsp;
-                        <a onclick="openKnowledgeSettingsPage();" style="cursor:pointer;text-decoration:underline;">Knowledge settings</a> <br/><br/> 
+                        <a onclick="openKnowledgeSettingsPage();" style="cursor:pointer;text-decoration:underline;">Knowledge settings</a> <br/><br/>
                        </td>
                     </tr>
-                   
+
                     </td>
-                    
+
                </tr>
               <!-- Section to select Language options for ERC App END-->
                <tr>
-					<td><apex:outputText value="{!$Label.Case_Attributes_to_filter_mapping}" /></td>
+                    <td><apex:outputText value="{!$Label.Case_Attributes_to_filter_mapping}" /></td>
                     <td><apex:selectList id="CaseSelectListId" title="{!$Label.Case_Field}"
-						value="{!selectedPickListCaseField}" multiselect="false" size="1"
-						style="width:110px" onchange="initializeCasePicListValues();">
-						<apex:selectOptions value="{!casePickListFields}" />
-					</apex:selectList>&nbsp;&nbsp; <apex:selectList id="CaseSelectListValueId"
+                        value="{!selectedPickListCaseField}" multiselect="false" size="1"
+                        style="width:110px" onchange="initializeCasePicListValues();">
+                        <apex:selectOptions value="{!casePickListFields}" />
+                    </apex:selectList>&nbsp;&nbsp; <apex:selectList id="CaseSelectListValueId"
                         title="{!$Label.Selected_Field_s_values}"
-						value="{!selectedPickListCaseValue}" multiselect="false" size="1"
-						style="width:110px">
-						<apex:selectOptions value="{!casePickListFieldsValues}" />
-					</apex:selectList>&nbsp;&nbsp; <apex:outputText value="{!$Label.Map_To}"
-						style="font-weight:bold;" />&nbsp;&nbsp; <apex:outputPanel id="mappingCategorygroupPanel">
+                        value="{!selectedPickListCaseValue}" multiselect="false" size="1"
+                        style="width:110px">
+                        <apex:selectOptions value="{!casePickListFieldsValues}" />
+                    </apex:selectList>&nbsp;&nbsp; <apex:outputText value="{!$Label.Map_To}"
+                        style="font-weight:bold;" />&nbsp;&nbsp; <apex:outputPanel id="mappingCategorygroupPanel">
                         <apex:selectList id="CategoryGroupSelectId" title="{!$Label.Category_Group}"
-							value="{!selectedCategoryGroups}" multiselect="false" size="1"
-							onchange="getDataCategoriesAF();" style="width:110px">
-							<apex:selectOptions value="{!EnteredCategoryGroups}" />
-						</apex:selectList>&nbsp;&nbsp;
+                            value="{!selectedCategoryGroups}" multiselect="false" size="1"
+                            onchange="getDataCategoriesAF();" style="width:110px">
+                            <apex:selectOptions value="{!EnteredCategoryGroups}" />
+                        </apex:selectList>&nbsp;&nbsp;
                 </apex:outputPanel> <apex:outputPanel id="dataCategoryListId">
-						<select id="dataCategorySelectLisrtId" title="Data Category"
-							name="categoryType_{!selectedCategoryGroups}"
-							style="width: 110px">
-							<option value="All >> All">{!$label.All}</option>
-							<knowledge:categoryList categoryVar="category"
-								categoryGroup="{!selectedCategoryGroups}" rootCategory="All"
-								level="-1">
-								<option value="{!category.name} >> {!category.label}">
-									<apex:outputText escape="false"
-										value="{!LPAD(' ',6*category.depth,'&nbsp;')}" />
-									{!category.label}
-								</option>
-							</knowledge:categoryList>
-						</select>&nbsp;
-                </apex:outputPanel> 
+                        <select id="dataCategorySelectLisrtId" title="Data Category"
+                            name="categoryType_{!selectedCategoryGroups}"
+                            style="width: 110px">
+                            <option value="All >> All">{!$label.All}</option>
+                            <knowledge:categoryList categoryVar="category"
+                                categoryGroup="{!selectedCategoryGroups}" rootCategory="All"
+                                level="-1">
+                                <option value="{!category.name} >> {!category.label}">
+                                    <apex:outputText escape="false"
+                                        value="{!LPAD(' ',6*category.depth,'&nbsp;')}" />
+                                    {!category.label}
+                                </option>
+                            </knowledge:categoryList>
+                        </select>&nbsp;
+                </apex:outputPanel>
                <apex:commandButton onclick="fetchSelectedDataCategory();"
                         status="loadingStatus" style="width:100px;"
                         id="AddFiltersButtonId" value="{!$Label.Add}"
@@ -586,7 +586,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <tr>
                     <td style="vertical-align:top;float:left;"><br />
                     <apex:outputText value="{!$Label.Article_query_conditions}" /></td>
-                   
+
                     <td>
                     <table>
                        <tr style="border:1px">
@@ -610,67 +610,67 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                        <tr>
                           <td>
                            <apex:inputCheckbox value="{!IsVisibleInPKB}" />
-                           <apex:outputText value="{!$Label.Check_PKB_channel}" /><br />  
+                           <apex:outputText value="{!$Label.Check_PKB_channel}" /><br />
                            <apex:selectRadio label="Available" value="{!PKBChannelVisible}" style="margin-left:15%;" layout="lineDirection">
                                 <apex:selectOptions value="{!ChannelsVisible}"/>
                                 </apex:selectRadio><br/>
                           </td>
                        </tr>
                      </table>
-                    </td>  
+                    </td>
                 </tr>
                 <tr>
-					<td colspan="2">
-					<center><apex:commandButton id="SaveButton2Id"
-						value="{!$Label.Save}" onclick="OnBtnSaveClick();"
-						oncomplete="return false;" /></center>
-					</td>
-				</tr>
-				
-			</table>
-		</apex:pageBlock>
+                    <td colspan="2">
+                    <center><apex:commandButton id="SaveButton2Id"
+                        value="{!$Label.Save}" onclick="OnBtnSaveClick();"
+                        oncomplete="return false;" /></center>
+                    </td>
+                </tr>
+
+            </table>
+        </apex:pageBlock>
         <apex:actionFunction name="validateRoutingAddressAF" action="{!validateRoutingAddressInput}" status="loadingStatus"
             rerender="idErrorMessagePanel,routingAddressReloadPanel,mappingReplyToValuesPanel,ReplyToAddressLinks,AvailableEmailAddressId" oncomplete="populateRoutingAddress('add');" />
         <apex:actionFunction name="removeRoutingMappingAF" action="{!removeRoutingMapping}" status="loadingStatus"
             rerender="idErrorMessagePanel,AvailableEmailAddressId,ReplyToAddressLinks" >
             <apex:param name="toRemoveRoutingAddressNameparam" assignTo="{!toRemoveRoutingAddress}" value="" />
         </apex:actionFunction>
-        <apex:actionFunction name="caseMapRoutingAddressAddAF" status="loadingStatus" action="{!caseMapRoutingAddressAdd}" 
+        <apex:actionFunction name="caseMapRoutingAddressAddAF" status="loadingStatus" action="{!caseMapRoutingAddressAdd}"
             rerender="idErrorMessagePanel,caseFilterMappingReplyToSelectListId">
             <apex:param name="MapRoutingAddress" assignTo="{!caseMapRoutingAdd}" value="" />
         </apex:actionFunction>
         <apex:actionfunction name="removeMappingRoutingAddressAF" action="{!removeMappingRoutingAddress}" status="loadingStatus" rerender="caseFilterMappingReplyToSelectListId,idErrorMessagePanel" >
-            <apex:param name="RemoveRoutingmap" assignTo="{!toRemoveRoutingMapAddress}" value="" /> 
+            <apex:param name="RemoveRoutingmap" assignTo="{!toRemoveRoutingMapAddress}" value="" />
         </apex:actionfunction>
         <apex:actionFunction name="disableEnableEmailPublisherOptionsAF" action="{!disableEnableEmailPublisherOptions}" rerender="hvemForm" status="loadingStatus" oncomplete="init();"/>
 
-		<apex:actionFunction name="addMappingAF" status="loadingStatus"
-			oncomplete="reRenderFilter();">
-			<apex:param name="dataCategory" assignTo="{!dataCategory}" value="" />
-		</apex:actionFunction>
-		<apex:actionFunction name="reRenderFilter" action="{!addMapping}"
-			rerender="caseFilterMappingPanelId,idErrorMessagePanel" />
-		<apex:actionFunction action="{!initializeEmailTemplate}"
-			status="loadingStatus" name="initializeEmailTemplate"
-			reRender="emailTemplateId" />
-		<apex:actionFunction name="setFilters" status="loadingStatus"
-			action="{!saveTOCustomSettings}" rerender="idErrorMessagePanel">
-			<apex:param assignTo="{!strChosenCategoryGroups}"
-				name="strChosenCategoryGroups" value="" />
+        <apex:actionFunction name="addMappingAF" status="loadingStatus"
+            oncomplete="reRenderFilter();">
+            <apex:param name="dataCategory" assignTo="{!dataCategory}" value="" />
+        </apex:actionFunction>
+        <apex:actionFunction name="reRenderFilter" action="{!addMapping}"
+            rerender="caseFilterMappingPanelId,idErrorMessagePanel" />
+        <apex:actionFunction action="{!initializeEmailTemplate}"
+            status="loadingStatus" name="initializeEmailTemplate"
+            reRender="emailTemplateId" />
+        <apex:actionFunction name="setFilters" status="loadingStatus"
+            action="{!saveTOCustomSettings}" rerender="idErrorMessagePanel">
+            <apex:param assignTo="{!strChosenCategoryGroups}"
+                name="strChosenCategoryGroups" value="" />
             <apex:param assignTo="{!caseRoutingAddressmappings}"
                 name="strCaseRoutingAddressmappings" value="" />
-			<apex:param assignTo="{!strChosenArticleTypes}"
-				name="strChosenArticleTypes" value="" />
+            <apex:param assignTo="{!strChosenArticleTypes}"
+                name="strChosenArticleTypes" value="" />
             <apex:param assignTo="{!selectedLanguages}"
                 name="selectedlanguages" value="" />
             <apex:param assignTo="{!selectedRoutingEmailAddress}"
                 name="selectedemailAddress" value="" />
-			<apex:param assignTo="{!availableCategoryGroups}"
-				name="availableCategoryGroups" value="" />
-			</apex:actionfunction>
-			<apex:actionFunction action="{!initializeCasePicListValues}"
-				status="loadingStatus" name="initializeCasePicListValues"
-				reRender="CaseSelectListValueId" />
+            <apex:param assignTo="{!availableCategoryGroups}"
+                name="availableCategoryGroups" value="" />
+            </apex:actionfunction>
+            <apex:actionFunction action="{!initializeCasePicListValues}"
+                status="loadingStatus" name="initializeCasePicListValues"
+                reRender="CaseSelectListValueId" />
             <apex:actionFunction action="{!initializeCasePicListValues}"
                 status="loadingStatus" name="initializeCasePicListValuesReplyToAF"
                 reRender="CasePicklistValuesReplyToId" />
@@ -696,34 +696,34 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             <apex:actionStatus id="afterLoadingStatus"
                 onstart="freezeBackground();">
             </apex:actionStatus>
-                        
+
             <apex:outputPanel id="routingAddressReloadPanel">
                 <script>
                    isInvalidRoutingEmail = '{!isInvalidRoutingEmail}';
                    isRoutingEmailPresentJSvar = '{!isroutingAddressAlreadyPresent}';
                 </script>
             </apex:outputPanel>
-            
+
             <apex:inputHidden value="{!selectedLanguages}" id="selectedLanguagesId"/>
             <apex:inputHidden value="{!strChosenArticleTypes}" id="selectedArticleTypesId"/>
     </apex:form>
 
-	<script>
-        
+    <script>
+
         var isInvalidRoutingEmail ;
         var isRoutingEmailPresentJSvar;
         function populateRoutingAddress(emailRoutingParam){
             var routingEmailInput = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:routingEmailAddresAdd').value;
             var selectedEmailAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:AvailableEmailAddressId');
             var mappingroutingAddressList = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:ReplyToAddressLinks');
-			
+
             if(emailRoutingParam == 'add'){
                 if(routingEmailInput != null && routingEmailInput != '' && isInvalidRoutingEmail == 'false' && isRoutingEmailPresentJSvar == 'false'){
                     document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:routingEmailAddresAdd').value = '';
                 }
             }else if(emailRoutingParam == 'remove'){
                 var strToRemoveRoutingAddressJSVar = '';
-                
+
                 for(var i=0;i<selectedEmailAddress.options.length;i++){
                     if(selectedEmailAddress.options[i].selected){
                         strToRemoveRoutingAddressJSVar = strToRemoveRoutingAddressJSVar + selectedEmailAddress.options[i].text + '>';
@@ -732,9 +732,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 }
                 removeRoutingMappingAF(strToRemoveRoutingAddressJSVar);
            }
-        
+
         }
-        
+
         function MoveTop(){
             var lst = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:SelectedLanguageId');
             if(lst.selectedIndex == -1){
@@ -746,11 +746,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 else
                 {
                     var j = 1;
-                    for (i=0; i<lst.options.length; i++) 
+                    for (i=0; i<lst.options.length; i++)
                     {
-                        if (lst.options[i].selected) 
+                        if (lst.options[i].selected)
                         {
-                            
+
                             var tempValue = lst.options[i].value;
                             var tempIndex = j-1;
                             lst.options[i].value = lst.options[j-1].value;
@@ -763,11 +763,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             j++;
                         }
                     }
-                }   
+                }
             }
-            
+
         }
-        
+
         function MoveBottom(){
             var lst = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:SelectedLanguageId');
             if(lst.selectedIndex == -1){
@@ -775,8 +775,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 if(lst.selectedIndex == lst.options.length-1){
                 }else{
                     var j = lst.options.length - 2;
-                        
-                    for (i=lst.options.length-1; i>=0; i--) 
+
+                    for (i=lst.options.length-1; i>=0; i--)
                     {
                         if (lst.options[i].selected)
                         {
@@ -795,7 +795,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 }
             }
         }
-        
+
         function MoveUp(){
             var lst = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:SelectedLanguageId');
             if(lst.selectedIndex == -1){
@@ -806,9 +806,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 }
                 else
                 {
-                    for (i=0; i<lst.options.length; i++) 
+                    for (i=0; i<lst.options.length; i++)
                     {
-                        if (lst.options[i].selected) 
+                        if (lst.options[i].selected)
                         {
                             var tempValue = lst.options[i].value;
                             var tempIndex = i-1;
@@ -821,12 +821,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             lst.options[tempIndex].selected = true;
                         }
                     }
-                    
-                }   
+
+                }
             }
-            
+
         }
-        
+
         function MoveDown()
         {
             var lst = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:SelectedLanguageId');
@@ -849,16 +849,16 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     }
                 }
             }
-            
+
         }
-    
+
         var strChosenCategoryGroups ="";
         window.onload= init;
-        
+
         function init(){
-	        var categoryGroup1Id= document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups1Id');
-	        var articleType1Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter1Id');
-	        var articleType2Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter2Id');
+            var categoryGroup1Id= document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups1Id');
+            var articleType1Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter1Id');
+            var articleType2Id = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter2Id');
             var availableLanguageOption = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:AvailableLanguageId');
             var selectedLanguageoption = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:SelectedLanguageId');
             var mappingroutingAddressList = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:ReplyToAddressLinks').options;
@@ -869,175 +869,175 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 //var selectedLanguages = '{!JSENCODE(selectedLanguages)}'.split(',');
                 var selectedLanguages = document.getElementById('HVEMPageId:hvemForm:selectedLanguagesId').value.split(',');
                 var articleTypes = document.getElementById('HVEMPageId:hvemForm:selectedArticleTypesId').value.split(',');
-                
+
                 for(var a=0;a<articleTypes.length;a++){
                     for(var i=(articleType1Id.options.length - 1);i>=0;i--){
                         if(articleType1Id.options[i].value == articleTypes[a])
                         {
                             articleType2Id[articleType2Id .length] = new Option(articleType1Id.options[i].text,articleType1Id.options[i].value,true,false);
                             articleType1Id.options[i] = null;
-                        } 
+                        }
                     }
                 }
-                
+
                 for(var a=0;a<selectedLanguages.length;a++){
                     for(var i=(availableLanguageOption.options.length - 1);i>=0;i--){
                         if(availableLanguageOption.options[i].value == selectedLanguages[a]){
                             selectedLanguageoption[selectedLanguageoption.length] = new Option(availableLanguageOption.options[i].text,availableLanguageOption.options[i].value,true,false);
                             availableLanguageOption.options[i] = null;
-                        } 
+                        }
                     }
                 }
-            }       
+            }
         }
-    
-	    function openPublicGroups(){       
-	        var path = window.location.protocol+'//'+window.location.host+'/p/own/OrgPublicGroupsPage';
-	        var newWindow = window.open(path, '_blank');
-	        newWindow.focus();
-	        return false;
-	    }
-	    
+
+        function openPublicGroups(){
+            var path = window.location.protocol+'//'+window.location.host+'/p/own/OrgPublicGroupsPage';
+            var newWindow = window.open(path, '_blank');
+            newWindow.focus();
+            return false;
+        }
+
         function openKnowledgeSettingsPage(){
             var path = window.location.protocol+'//'+window.location.host+'/_ui/support/knowledge/KnowledgeSettingsUI/d?setupid=KnowledgeSettings&retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DKnowledge';
             var newWindow = window.open(path, '_blank');
             newWindow.focus();
             return false;
         }
-        
-	    function fetchSelectedDataCategory(){
-	        var dataCategory = document.getElementById('dataCategorySelectLisrtId').value;
-	        addMappingAF(dataCategory);
-	    }
-	    
+
+        function fetchSelectedDataCategory(){
+            var dataCategory = document.getElementById('dataCategorySelectLisrtId').value;
+            addMappingAF(dataCategory);
+        }
+
         function categoryGroupPopulate(blnFromLeft){
-	        var finalString = '';
-	        var LeftTextBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:categoryGroupTextId');
-	        var RightListBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups2Id');
-	        var ListItems = new Array();
-	        var fullString = LeftTextBox.value;
-	        var finalcategoryGroup = new Array();
-	        var selectedCategoryGroups = "";
-	        
-	        FromList = (blnFromLeft ? LeftTextBox : RightListBox); 
-	        ToText = (blnFromLeft ? RightListBox : LeftTextBox);
-	        var optionsArrayFrmLst = FromList.options;
-	        var j= 0;
-	        for(var i=0;i<=(optionsArrayFrmLst.length - 1);i++){
-	            if(optionsArrayFrmLst[i].selected){
-	               if(fullString.indexOf(optionsArrayFrmLst[i].text + ',') != -1){
-	                   fullString = fullString.replace(optionsArrayFrmLst[i].text + ',','');
-	               }else if(fullString.indexOf(optionsArrayFrmLst[i].text) != -1){
-	                   fullString = fullString.replace(optionsArrayFrmLst[i].text,'');
-	               }
-	            }else{
-	                finalcategoryGroup[j++] = new Option(optionsArrayFrmLst[i].text,optionsArrayFrmLst[i].text,true,false);
-	            }
-	        }
-	        RightListBox.options.length = 0;
-	        
-	        for(var i=0; i<finalcategoryGroup.length;i++){
-	            RightListBox.options[i] = finalcategoryGroup[i];
-	            selectedCategoryGroups += RightListBox.options[i].text + ',';
-	        }
-	        LeftTextBox.value = fullString ;
-	        categoryGroupListAF(selectedCategoryGroups);
-	     
-	    } 
-	    function populateCategoryGroupSelected(){
-	        var LeftTextBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:categoryGroupTextId');
-	        var RightListBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups2Id');
-	        var categoryGroupList = LeftTextBox.value.split(",");
-	        var ListItems = new Array();
-	        var selectedCategoryGroups = "";
-	        for(var i=0; i< categoryGroupList.length; i++){
-	            if(categoryGroupList[i] != null && categoryGroupList[i] != ''){
-	                ListItems[i] = new Option(categoryGroupList[i],categoryGroupList[i],true,false);
-	            }
-	        }
-	        RightListBox.options.length = 0;
-	        for(var i=0;i<ListItems.length;i++){
-	          RightListBox.options[i]= ListItems[i];
-	          selectedCategoryGroups += RightListBox.options[i].text + ',';
-	        }
-	        categoryGroupListAF(selectedCategoryGroups);
-	        
-	    }
-        
+            var finalString = '';
+            var LeftTextBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:categoryGroupTextId');
+            var RightListBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups2Id');
+            var ListItems = new Array();
+            var fullString = LeftTextBox.value;
+            var finalcategoryGroup = new Array();
+            var selectedCategoryGroups = "";
+
+            FromList = (blnFromLeft ? LeftTextBox : RightListBox);
+            ToText = (blnFromLeft ? RightListBox : LeftTextBox);
+            var optionsArrayFrmLst = FromList.options;
+            var j= 0;
+            for(var i=0;i<=(optionsArrayFrmLst.length - 1);i++){
+                if(optionsArrayFrmLst[i].selected){
+                if(fullString.indexOf(optionsArrayFrmLst[i].text + ',') != -1){
+                    fullString = fullString.replace(optionsArrayFrmLst[i].text + ',','');
+                }else if(fullString.indexOf(optionsArrayFrmLst[i].text) != -1){
+                    fullString = fullString.replace(optionsArrayFrmLst[i].text,'');
+                }
+                }else{
+                    finalcategoryGroup[j++] = new Option(optionsArrayFrmLst[i].text,optionsArrayFrmLst[i].text,true,false);
+                }
+            }
+            RightListBox.options.length = 0;
+
+            for(var i=0; i<finalcategoryGroup.length;i++){
+                RightListBox.options[i] = finalcategoryGroup[i];
+                selectedCategoryGroups += RightListBox.options[i].text + ',';
+            }
+            LeftTextBox.value = fullString ;
+            categoryGroupListAF(selectedCategoryGroups);
+
+        }
+        function populateCategoryGroupSelected(){
+            var LeftTextBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:categoryGroupTextId');
+            var RightListBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups2Id');
+            var categoryGroupList = LeftTextBox.value.split(",");
+            var ListItems = new Array();
+            var selectedCategoryGroups = "";
+            for(var i=0; i< categoryGroupList.length; i++){
+                if(categoryGroupList[i] != null && categoryGroupList[i] != ''){
+                    ListItems[i] = new Option(categoryGroupList[i],categoryGroupList[i],true,false);
+                }
+            }
+            RightListBox.options.length = 0;
+            for(var i=0;i<ListItems.length;i++){
+            RightListBox.options[i]= ListItems[i];
+            selectedCategoryGroups += RightListBox.options[i].text + ',';
+            }
+            categoryGroupListAF(selectedCategoryGroups);
+
+        }
+
         function fetchRoutingAddressMappings(){
             var casePicklistFieldelement = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CasePicklistFieldsId');
             var casePicklistValueElement = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CasePicklistValuesReplyToId');
-            var routingAddressvalueElement = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:ReplyToAddressLinks');            
-            
+            var routingAddressvalueElement = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:ReplyToAddressLinks');
+
             var casePicklistFieldText = casePicklistFieldelement.options[casePicklistFieldelement.selectedIndex].text ;
             var casePicklistValueText = casePicklistValueElement.options[casePicklistValueElement.selectedIndex].text;
             var routingAddressvalueText = routingAddressvalueElement.options[routingAddressvalueElement.selectedIndex].text;
             var casePicklistFieldValue = casePicklistFieldelement.options[casePicklistFieldelement.selectedIndex].value;
             var casePicklistValueValue = casePicklistValueElement.options[casePicklistValueElement.selectedIndex].value;
             var routingAddressvalueValue = routingAddressvalueElement.options[routingAddressvalueElement.selectedIndex].value;
-            
+
             var routingMappingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:caseFilterMappingReplyToSelectListId');
             for(var i =0;i<routingMappingAddress.options.length;i++){
-            	if(routingMappingAddress.options[i].selected){
-            		routingMappingAddress.options[i].selected = false;
-            	}
+                if(routingMappingAddress.options[i].selected){
+                    routingMappingAddress.options[i].selected = false;
+                }
             }
             var routingAddress = casePicklistFieldValue + '||' + casePicklistFieldText + ':' + casePicklistValueValue + '||' + casePicklistValueText + ' >> ' + routingAddressvalueText;
             caseMapRoutingAddressAddAF(routingAddress);
         }
-        
-	    function freezeBackground(){
-	        document.getElementById('disablingDiv').className='blockDiv';
-	        document.getElementById('loadingImage').className='blockdisplay';
-	    }  
-	     
-	    function unFreezeBackground(){
-	        document.getElementById('disablingDiv').className='nonedisplay';
-	        document.getElementById('loadingImage').className='nonedisplay';
-	    }
-	       
+
+        function freezeBackground(){
+            document.getElementById('disablingDiv').className='blockDiv';
+            document.getElementById('loadingImage').className='blockdisplay';
+        }
+
+        function unFreezeBackground(){
+            document.getElementById('disablingDiv').className='nonedisplay';
+            document.getElementById('loadingImage').className='nonedisplay';
+        }
+
         function removeRoutingMapJS(){
-            var selectedMappingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:caseFilterMappingReplyToSelectListId');   
+            var selectedMappingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:caseFilterMappingReplyToSelectListId');
             var optionToRemoveValue = '';
-			var isAnyMappingSelected = 'false';
+            var isAnyMappingSelected = 'false';
             for(var i=0;i<selectedMappingAddress.options.length;i++){
                 if(selectedMappingAddress.options[i].selected){
                     optionToRemoveValue = selectedMappingAddress.options[i].value;
                     selectedMappingAddress.options[i].selected = false;
-					isAnyMappingSelected = 'true';
+                    isAnyMappingSelected = 'true';
                     break;
                 }
-            }  
-			if(isAnyMappingSelected == 'true'){  
+            }
+            if(isAnyMappingSelected == 'true'){
                 removeMappingRoutingAddressAF(optionToRemoveValue);
             }
-            
+
         }
-        
+
         function OnBtnSaveClick()
         {
         ListBox1 = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:CategoryGroups2Id');
         ListBox2 = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter2Id');
         selectedLanguages = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:SelectedLanguageId');
         var LeftTextBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:categoryGroupTextId');
-        var articleSelectedBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter2Id');    
-        var selectedRoutingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:AvailableEmailAddressId');    
-        var selectedMappingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:caseFilterMappingReplyToSelectListId');       
-              
+        var articleSelectedBox = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:articleTypesFilter2Id');
+        var selectedRoutingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:AvailableEmailAddressId');
+        var selectedMappingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:caseFilterMappingReplyToSelectListId');
+
           var strChosenCategoryGroups = "";
           var strChosenArticleTypes = "";
-          var strChosenLanguages = "";   
+          var strChosenLanguages = "";
           var strSelectedRoutingAddress = "";
           var strSelectedMappingAddress = "";
-          
+
           /**
           * For loop to remove any selected item in selected list
           **/
           for(var i=0;i<articleSelectedBox.options.length;i++){
             articleSelectedBox.options[i].selected = false;
           }
-          
-          
+
+
           for(var i=0;i<ListBox1.options.length;i++){
             strChosenCategoryGroups = strChosenCategoryGroups + ListBox1.options[i].value + ",";
           }
@@ -1049,20 +1049,20 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             strChosenLanguages = strChosenLanguages + selectedLanguages.options[i].value+ "," ;
             selectedLanguages.options[i].selected = false;
           }
-          
+
           for(var i=0;i<selectedRoutingAddress.options.length;i++){
             strSelectedRoutingAddress = strSelectedRoutingAddress + selectedRoutingAddress.options[i].value+ "," ;
             selectedRoutingAddress.options[i].selected = false;
           }
-          
+
           for(var i=0;i<selectedMappingAddress.options.length;i++){
-              
+
               strSelectedMappingAddress = strSelectedMappingAddress + selectedMappingAddress.options[i].value + ",";
               selectedMappingAddress.options[i].selected = false;
           }
           setFilters(strChosenCategoryGroups,strSelectedMappingAddress,strChosenArticleTypes,strChosenLanguages,strSelectedRoutingAddress ,LeftTextBox.value);
-        }   
-        
+        }
+
         function initializeCasePicListValuesReplyToJS(){
             var caseRoutingMapping = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:caseFilterMappingReplyToSelectListId');
             for(var i=0; i<caseRoutingMapping.options.length;i++){
@@ -1070,7 +1070,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             }
             initializeCasePicListValuesReplyToAF();
         }
-        
+
         function validateRoutingAddressJS(){
             var routingMappingAddress = document.getElementById('HVEMPageId:hvemForm:hvemPageBlockId:caseFilterMappingReplyToSelectListId');
             for(var i =0;i<routingMappingAddress.options.length;i++){
@@ -1080,7 +1080,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             }
             validateRoutingAddressAF();
         }
-        
-        
-	</script>
+
+
+    </script>
 </apex:page>

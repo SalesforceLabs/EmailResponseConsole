@@ -39,6 +39,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />
         <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMCaseListDetailsStyle.css')}" />
 
-        <c:HVEMCaseListLeftSidebar id="HVEMCaseListLeftSidebarId" />
+        <c:HVEMCaseList id="HVEMCaseListId" />
     </apex:outputPanel>
 </apex:page>

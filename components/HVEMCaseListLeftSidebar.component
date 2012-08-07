@@ -27,6 +27,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component controller="HVEMCaseListDetailsCtrl" allowDML="true">
+    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCaseListDetailsComponent.js')}" />
     <style type='text/css'>
         .hvemRefreshListButton,.rightArrowIcon {
             background:
@@ -34,56 +35,54 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 -5px -5px no-repeat transparent;
         }
     </style>
-    <script type='text/javascript'>
-        var selectedCaseId = '{!caseId}';
-        var currentCase = '';
-        var finalQueueId = '{!finalQueueId}';
-        var tabTitle = '{!JSENCODE(initialSelectedCase.CaseNumber)}';
-        var isHVEMUser = '{!loggedUserInstance.HVEM_User__c}';
+    <apex:outputPanel id="idPrimarytabPanel">
+        <script type='text/javascript'>
+            var selectedCaseId = '{!caseId}';
+            var currentCase = '';
+            var finalQueueId = '{!finalQueueId}';
+            var tabTitle = '{!JSENCODE(initialSelectedCase.CaseNumber)}';
+            var isHVEMUser = '{!loggedUserInstance.HVEM_User__c}';
 
-        function initConsole(){
-        document.getElementById('idSelectedQueue').value = finalQueueId;
-        currentCase = '{!caseId}';
-        if( document.getElementById('idSelectedCase_' + selectedCaseId) != '' && document.getElementById('idSelectedCase_' + selectedCaseId) != null){
-            document.getElementById('idSelectedCase_' + selectedCaseId).className='highLightSelection';
-        }
+            function initConsole(){
+                document.getElementById('idSelectedQueue').value = finalQueueId;
+                currentCase = '{!caseId}';
+                if( document.getElementById('idSelectedCase_' + selectedCaseId) != '' && document.getElementById('idSelectedCase_' + selectedCaseId) != null){
+                    document.getElementById('idSelectedCase_' + selectedCaseId).className='highLightSelection';
+                }
 
-        if(document.getElementById(finalQueueId) != '' && document.getElementById(finalQueueId) != null ){
-            document.getElementById(finalQueueId).style.backgroundColor = '#effaff';
-            document.getElementById(finalQueueId).style.border = '1px solid #b3c0c9';
-        }
-        if(tabTitle != undefined){
-                sforce.console.setTabTitle(tabTitle);
+                if(document.getElementById(finalQueueId) != '' && document.getElementById(finalQueueId) != null ){
+                    document.getElementById(finalQueueId).style.backgroundColor = '#effaff';
+                    document.getElementById(finalQueueId).style.border = '1px solid #b3c0c9';
+                }
+                if(tabTitle != undefined){
+                    sforce.console.setTabTitle(tabTitle);
+                }
             }
-        }
 
-        window.onload = initConsole;
-    </script>
-    <script type="text/javascript">
-        function openCaseDetailsPrimaryTab(type){
-            if(type == 'queue'){
-                if('{!casesInQueueList.size}' > 0){
+            window.onload = initConsole;
+
+            function openCaseDetailsPrimaryTab(type){
+                if(type == 'queue'){
+                    if({!casesInQueueList.size} > 0){
+                        sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
+                    }
+                }else{
                     sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
                 }
-            }else{
-                sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
             }
-        }
 
-        function changePrimaryFocus(){
-            var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
-            sforce.console.focusPrimaryTabByName(primaryTabName);
-        }
-    </script>
-    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCaseListDetailsComponent.js')}" />
-    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
+            function changePrimaryFocus(){
+                var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
+                sforce.console.focusPrimaryTabByName(primaryTabName);
+            }
+        </script>
+    </apex:outputPanel>
 
     <input type="hidden" id="idSelectedQueue" name="nameSelectedQueue" value="" />
     <input type="hidden" id="idSelectedCase" name="nameSelectedCase" value="" />
 
     <apex:form id="idMainPanel">
 
-        <apex:outputPanel id="idPrimarytabPanel"></apex:outputPanel>
         <apex:actionFunction name="assignCaseFromQueueAF"
             action="{!assignCaseFromQueue}"
             rerender="idPreviousCasePanel,idCaseoutputPanel,idQueueCaseCountPanel,idPrimarytabPanel,onloadScriptPanel"
@@ -254,8 +253,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         </table>
         <div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"></div>
         <div id="loadingImage" style="position: absolute; left: 40%; top: 40%;">
-            <apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
-            width="20px" height="20px" />
+            <apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}" width="20px" height="20px" />
         </div>
     </apex:form>
 </apex:component>

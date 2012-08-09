@@ -29,10 +29,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 <apex:component controller="HVEMCaseListDetailsCtrl" allowDML="true">
     <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCaseListDetailsComponent.js')}" />
     <style type='text/css'>
-        .hvemRefreshListButton,.rightArrowIcon {
-            background:
-                url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
-                -5px -5px no-repeat transparent;
+       .hvemRefreshListButton,.rightArrowIcon {
+           background:
+               url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
+               -5px -5px no-repeat transparent;
+        }
+        .hvemHigtlightedQueue {
+            background-color: #effaff;
+            border: 1px solid #b3c0c9;
         }
     </style>
     <apex:outputPanel id="idPrimarytabPanel">
@@ -40,26 +44,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             var selectedCaseId = '{!caseId}';
             var currentCase = '';
             var finalQueueId = '{!finalQueueId}';
-            var tabTitle = '{!JSENCODE(initialSelectedCase.CaseNumber)}';
             var isHVEMUser = '{!loggedUserInstance.HVEM_User__c}';
-
-            function initConsole(){
-                document.getElementById('idSelectedQueue').value = finalQueueId;
-                currentCase = '{!caseId}';
-                if( document.getElementById('idSelectedCase_' + selectedCaseId) != '' && document.getElementById('idSelectedCase_' + selectedCaseId) != null){
-                    document.getElementById('idSelectedCase_' + selectedCaseId).className='highLightSelection';
-                }
-
-                if(document.getElementById(finalQueueId) != '' && document.getElementById(finalQueueId) != null ){
-                    document.getElementById(finalQueueId).style.backgroundColor = '#effaff';
-                    document.getElementById(finalQueueId).style.border = '1px solid #b3c0c9';
-                }
-                if(tabTitle != undefined){
-                    sforce.console.setTabTitle(tabTitle);
-                }
-            }
-
-            window.onload = initConsole;
 
             function openCaseDetailsPrimaryTab(type){
                 if(type == 'queue'){
@@ -75,10 +60,32 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
                 sforce.console.focusPrimaryTabByName(primaryTabName);
             }
+
+            function selectQueue(queueId) {
+                document.getElementById('idSelectedQueue').value = queueId;
+                if(document.getElementById(queueId) != null && document.getElementById(queueId) != ''){
+                    //document.getElementById(queueId).className='hvemListItem hvemHigtlightedQueue';
+                    document.getElementById(queueId).style.backgroundColor = '#effaff';
+                    document.getElementById(queueId).style.border = '1px solid #b3c0c9';
+                }
+            }
+
+            function selectCase(selectCaseId, bOnload) {
+                document.getElementById('idSelectedCase').value = selectCaseId;
+                var caseContainerId = 'idSelectedCase_' + selectCaseId;
+
+                if (!bOnload) {
+                    // un-select the currently selected case
+                }
+                if(document.getElementById(caseContainerId) != null && document.getElementById(caseContainerId) != ''){
+                    document.getElementById(caseContainerId).className='highLightSelection';
+                }
+
+            }
         </script>
     </apex:outputPanel>
 
-    <input type="hidden" id="idSelectedQueue" name="nameSelectedQueue" value="" />
+    <input type="hidden" id="idSelectedQueue" name="nameSelectedQueue" value="{!finalQueueId}" />
     <input type="hidden" id="idSelectedCase" name="nameSelectedCase" value="" />
 
     <apex:form id="idMainPanel">
@@ -124,19 +131,24 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         <apex:pageBlock >
                             <apex:pageblockTable value="{!queueCountList}" var="queueCountVar">
                                 <apex:column >
-                                    <div id="facetDivId"><apex:facet name="header">
-                                    {!$Label.My_Assigned_Queues} : {!queueCountList.size} <input
-                                            type="button" id="refreshImageId"
-                                            onclick="refreshFull('fromRefresh');"
-                                            Class="hvemRefreshListButton" style="margin-top:-4px" title="Refresh" />
-                                    </apex:facet></div>
+                                    <div id="facetDivId">
+                                        <apex:facet name="header">
+                                            {!$Label.My_Assigned_Queues} : {!queueCountList.size}
+                                            <input
+                                                type="button" id="refreshImageId"
+                                                onclick="refreshFull('fromRefresh');"
+                                                class="hvemRefreshListButton" style="margin-top:-4px" title="Refresh" />
+                                        </apex:facet>
+                                    </div>
                                     <table width="100%;" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td align="left"
                                                 id="idSelectedQueue_{!queueCountVar.queueInstance.Group.Id}"
-                                                class="hvemListItem" style="border-bottom: 0px;"
-                                                onclick="showQueueSelected(this);"><apex:outputLabel styleClass="hvemLabel"
-                                                value="{!queueCountVar.queueInstance.Group.Name} : {!queueCountVar.caseCount}" />
+                                                class="hvemListItem"
+                                                style="{!IF('idSelectedQueue_'+queueCountVar.queueInstance.Group.Id==finalQueueId, 'background-color:#effaff;border:1px solid #b3c0c9;','border-bottom: 0px;')}"
+                                                onclick="showQueueSelected(this);">
+                                                    <apex:outputLabel styleClass="hvemLabel"
+                                                            value="{!queueCountVar.queueInstance.Group.Name} : {!queueCountVar.caseCount}" />
                                             </td>
                                             <td class="tdNone"
                                                 style="border-bottom: 0px; padding-right: 1 !important;"
@@ -232,20 +244,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     </apex:outputPanel>
                     <apex:outputPanel id="onloadScriptPanel">
                         <script type="text/javascript">
-                            var finalQueueId = '{!finalQueueId}';
-                            document.getElementById('idSelectedCase').value = currentCase;
-                            var caseId = 'idSelectedCase_' + document.getElementById('idSelectedCase').value;
-
-                            if(document.getElementById(caseId) != '' && document.getElementById(caseId) != null){
-                                document.getElementById(caseId).className='highLightSelection';
-                            }
-
-                            document.getElementById('idSelectedQueue').value = '{!finalQueueId}';
-                            if(document.getElementById(finalQueueId) != '' && document.getElementById(finalQueueId) != null ){
-                                document.getElementById(finalQueueId).style.backgroundColor = '#effaff';
-                                document.getElementById(finalQueueId).style.border = '1px solid #b3c0c9';
-                            }
-
+                            //selectCase('{!caseId}', true);
+                            //selectQueue('{!finalQueueId}'); // 'idSelectedQueue_<queue id>'
                         </script>
                     </apex:outputPanel>
                 </td>

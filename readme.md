@@ -40,8 +40,14 @@ Version History
 - Move the case list view information message (on previous) down a bit
 - Fix spacing issue in the case list view information message and make it black instead of red
 - Fix the redundant feed items when an article is attached more than one time to the case
-- Heavy refactoring of the KB component - wip
-
+- updated the packaging with sample app, tab, layout, etc. for an easier trial type installation
+- Heavy refactoring of the KB component
+- Added an event listener in th KB component for navigating the results list and for inserting link/content in the publisher
+- Added a sample console footer component with KB navigation links
+- Removed redondant components HVEMCaseList* 
+- Reformatted the source code: tabs --> 4 spaces, cleaner indentation, etc.
+- 
+ 
 *Version 3 - AppExchange Release: 2012/07/19*
 
 - Draft or rejected draft email icon in the case list view

@@ -39,8 +39,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         }
     </style>
 
+<!--
 <div><a href="" onclick="eventGoUp(); return false;">Up</a>&nbsp;&nbsp;<a href="" onclick="eventGoDown(); return false;">Down</a></div>
 <div><a href="" onclick="eventInsertArticleLink(); return false;">Insert Link</a>&nbsp;&nbsp;<a href="" onclick="eventInsertArticleContent(); return false;">Insert Content</a></div>
+-->
 
     <div class="hvemTable">
         <apex:form id="HVEMKnowledgeArticleFormId"

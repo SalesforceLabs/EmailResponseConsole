@@ -220,7 +220,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                             </apex:outputPanel>
                                         </apex:outputPanel>
                                     </apex:facet>
-                                    <div id="idSelectedCase_{!loggedInUserCaseVar.loggedUserCase.Id}" class="hvemCaseItem">
+                                    <div id="idSelectedCase_{!loggedInUserCaseVar.loggedUserCase.Id}" class="{!IF(loggedInUserCaseVar.loggedUserCase.Id==caseId,'highLightSelection','hvemCaseItem')}">
                                         <a onclick="openCaseDetailsPrimaryTabAF('{!loggedInUserCaseVar.loggedUserCase.Id}');">
                                             <apex:outputLabel style="cursor:pointer;text-decoration:underline;"
                                                 value="{!loggedInUserCaseVar.loggedUserCase.CaseNumber} - " />

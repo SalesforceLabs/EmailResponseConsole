@@ -304,6 +304,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         var iResultsListSize = {!filteredKnowledgeArticlesSize};
         var caseId = '{!caseId}';
 
+        var enclosingTabId = -1;
+
         var categoryGroupCount = {!categoryGroupCount};
         var categoryGroupNames = '{!JSENCODE(hvemSettingsIns.Data_Category_Group_Filter__c)}';
         var withDataCategoryClause = '';
@@ -332,11 +334,15 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 }
             }
 
+            sforce.console.getEnclosingPrimaryTabId(setEnclosingTabId);
 
             sforce.console.addEventListener('hvemKbUp', eventGoUp);
             sforce.console.addEventListener('hvemKbDown', eventGoDown);
             sforce.console.addEventListener('hvemKbInsertLink', eventInsertArticleLink);
             sforce.console.addEventListener('hvemKbInsertContent', eventInsertArticleContent);
+        }
+        var setEnclosingTabId = function(result) {
+            enclosingTabId = result.id;
         }
     </script>
 

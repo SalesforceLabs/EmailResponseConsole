@@ -26,7 +26,6 @@
         <members>HVEMCaseConversationComponent</members>
         <members>HVEMCaseFeedEmailPublisherComponent</members>
         <members>HVEMCaseList</members>
-        <members>HVEMCaseListDetails</members>
         <members>HVEMEmailEditorComponent</members>
         <members>HVEMKnowledgeArticleComp</members>
         <name>ApexComponent</name>

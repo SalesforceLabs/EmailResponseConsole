@@ -66,9 +66,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
 
 
     public HVEMCaseListDetailsCtrl(){
-        /*
-        * Get logged in user and assigning neccessary references
-        */
+        // Get logged in user and assigning neccessary references
         HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
         List<String> fields = new List<String>();
         loggedUserInstance = new User();
@@ -100,24 +98,19 @@ public with Sharing class HVEMCaseListDetailsCtrl {
         }
 
         refreshCaseQueueList();
-
     }
 
     /*
-    *  store selected queue id in cookie variable
-    */
+     * store selected queue id in cookie variable
+     */
     public void  storeSelectedQueuePageId(){
-
         Cookie queuePageCookie = ApexPages.currentPage().getCookies().get('queueId');
         queuePageCookie = new Cookie('queueId',queuePageId,null,-1,false);
         ApexPages.currentPage().setCookies(new Cookie[]{queuePageCookie});
-
     }
 
     public void assignCaseFromQueue(){
-        /*
-        * Get logged in user Case Count
-        */
+        // Get logged in user Case Count
         HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
         lCondition.setCondition('OwnerId = \'' + queueId + '\' AND Status != \'Closed\'');
         List<String> fields = new List<String>();
@@ -135,23 +128,22 @@ public with Sharing class HVEMCaseListDetailsCtrl {
         }else{
             queueListErrorMessage = Label.No_Case_In_Queue_Error_Message;
             refreshListParam = 'fromQueue';
-            refreshCaseQueueList();        }
+            refreshCaseQueueList();
+        }
     }
-    /**
-    * select case to open case details in new Primary tab
-    */
 
+    /*
+     * select case to open case details in new Primary tab
+     */
     public void openCaseDetailsPrimaryTab(){
         selectedCase = [SELECT Id,CaseNumber,Owner.Name,Subject FROM Case WHERE Id=:caseId];
         caseId = selectedCase.Id;
     }
-    /**
-    * function to repopulate parameters populated in constructor
-    */
+
+    /*
+     * function to repopulate parameters populated in constructor
+     */
     public void refreshCaseQueueList(){
-        /*
-        * Creating new references for variables
-        */
         //boolean varibles to control draft
         isfound = false;
         queueCountList = new List<QueueCount>();
@@ -160,9 +152,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
             queueListErrorMessage = '';
         }
 
-        /*
-        * Get all queues associated with logged in user
-        */
+        // Get all queues associated with logged in user
         HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
         List<String> fields = new List<String>();
         List<QueueSobject> queueSobjectList = [SELECT Queue.Id FROM QueueSobject WHERE SobjectType = 'Case'];
@@ -171,12 +161,9 @@ public with Sharing class HVEMCaseListDetailsCtrl {
             queueSobjIdList.add(queueInstance.Queue.Id);
         }
         loggedInUserQueueMap = new Map<Id,GroupMember>([SELECT Group.Name, Group.Id FROM GroupMember WHERE UserOrGroupId = : loggedUser AND Group.Type = 'Queue' AND Group.Id IN:queueSobjIdList ]);
-
         loggedUserInstance = [SELECT Id,Name,HVEM_User__c FROM User WHERE Id = : loggedUser];
         if(loggedInUserQueueMap !=null && !loggedInUserQueueMap.isEmpty()){
-            /*
-            * generate List in comma seperated format to be used for "IN" clause in DBHelper instance
-            */
+            // generate List in comma seperated format to be used for "IN" clause in DBHelper instance
             Map<Id,GroupMember> queueIdMap = new Map<Id,GroupMember>();
             String queueIds = '';
             Integer i = 0;
@@ -191,10 +178,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
             }
             if(queueIds != ''){
                 queueIds = '(' + queueIds + ')';
-
-                /*
-                * Query to retrieve Case Count associated with each queue
-                */
+                // Query to retrieve Case Count associated with each queue
                 lCondition = new HVEMConditionBuilder();
                 lCondition.setCondition('OwnerId IN ' + queueIds + ' AND Status != \'closed\' GROUP BY Owner.Id');
                 fields = new List<String>();
@@ -202,10 +186,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
                 caseCountQueue = dbHelper.getQueryResults(new Case(), fields, lCondition);
             }
 
-            /*
-            * Populate Wrapper with queue and count related details
-            */
-
+            // Populate Wrapper with queue and count related details
             for(Id queueId : queueIdMap.keySet()){
                 Boolean flag = false;
                 for(AggregateResult aggInstance : caseCountQueue){
@@ -225,9 +206,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
                 }
             }
         }
-        /*
-        * set cookies for the selected Queue Id
-        */
+        // set cookies for the selected Queue Id
         Cookie queuePageCookie = ApexPages.currentPage().getCookies().get('queueId');
         if(queuePageCookie  != null){
             finalQueueId = queuePageCookie.getValue();
@@ -237,14 +216,10 @@ public with Sharing class HVEMCaseListDetailsCtrl {
             }
         }
 
-
         if(isDrafts == true){
             draftsCaseListFunc();
         }else{
-
-            /*
-            * Get logged in user Case List
-            */
+            // Get logged in user Case List
             Map<Id,Case> loggedUserCaseMap = new Map<Id,Case>([SELECT caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE OwnerId =:loggedUser AND Status != 'Closed' ORDER BY LastModifiedDate DESC]);
             lCondition = new HVEMConditionBuilder();
             lCondition.setCondition('OwnerId = \'' + loggedUser + '\' AND Status != \'Closed\' ORDER BY LastModifiedDate DESC');
@@ -261,7 +236,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
             Map<Id,Boolean> inDraft = new Map<Id,Boolean>();
             loggedUserCaseInnerList = new List<AssignedCaseList>();
             for(Case caseInstance : loggedInUserCaseList ){
-                    loggedUserCaseInnerList.add(new AssignedCaseList(caseInstance , false, false));
+                loggedUserCaseInnerList.add(new AssignedCaseList(caseInstance , false, false));
             }
             for(DraftEmailMessage__c draftInstance : draftsEmailList ){
                 if(draftInstance.Status__c == 'Rejected'){
@@ -282,20 +257,14 @@ public with Sharing class HVEMCaseListDetailsCtrl {
         }
 
         if(loggedInUserCaseList.size() > 0){
-
-            /*
-             * Populate the recently visited case
-             */
+            // Populate the recently visited case
             selectedCase = loggedInUserCaseList[0];
-
         }else{
             if(isDrafts == false){
                 caseListErrorMessage = Label.No_Case_Assigned_Error_Message;
             }
         }
-        /**
-         *  Populate previous case logic for refresh link click
-         */
+        //  Populate previous case logic for refresh link click
         List<EmailMessage> latestEmailSentList =  new List<EmailMessage>();
         List<DraftEmailMessage__c> latestDraftApprovalList = new List<DraftEmailMessage__c>();
         latestEmailSentList = [SELECT Subject,SystemModstamp,parent.Status,parent.Owner.Name, parent.caseNumber, parent.Contact.Name,parent.IsEscalated, parent.Subject FROM EmailMessage WHERE parent.OwnerId =: loggedUserInstance.Id AND Incoming = false ORDER BY SystemModstamp DESC NULLS LAST LIMIT 1];
@@ -315,14 +284,12 @@ public with Sharing class HVEMCaseListDetailsCtrl {
                         previousCaseErrorMessage = Label.Error_emailMessage + ' ' + previousCase.CaseNumber + ' ' +  Label.Error_email;
                         isPreviousCasePresent = true;
                     }
-
                 }else{
                     previousCase = [select Status,caseNumber,Owner.Name,Contact.Name,IsEscalated, Subject from Case where id=:DEMInstance.case__c];
                     previousCaseErrorMessage = Label.Error_emailMessage + ' ' + DEMInstance.case__r.caseNumber + ' ' + Label.Email_underApproval ;
                     isPreviousCasePresent = true;
                 }
-            }
-            else{
+            }else{
                 if(latestEmailSentList.size() > 0 && latestEmailSentList != null){
                     EmailMessage latestEmailSent = latestEmailSentList.get(0);
                     previousCase = (Case)latestEmailSent.parent;
@@ -333,13 +300,12 @@ public with Sharing class HVEMCaseListDetailsCtrl {
                     isPreviousCasePresent = false;
                 }
             }
-        }
-        else{
+        }else{
             if(latestEmailSentList.size() > 0 && latestEmailSentList != null){
                 EmailMessage latestEmailSent = latestEmailSentList.get(0);
                 previousCase = (Case)latestEmailSent.parent;
-                if(System.now() > latestEmailSent.SystemModstamp.addMinutes(1)){}
-                else{
+                if(System.now() > latestEmailSent.SystemModstamp.addMinutes(1)){
+                }else{
                     previousCaseErrorMessage = Label.Error_emailMessage + ' ' + previousCase.CaseNumber + ' ' + Label.Error_email;
                     isPreviousCasePresent = true;
                 }
@@ -347,14 +313,12 @@ public with Sharing class HVEMCaseListDetailsCtrl {
                 previousCaseErrorMessage = 'Hello, ' + loggedUserInstance.Name;
                 isPreviousCasePresent = false;
             }
-
         }
-
     }
 
-    /**
-    * Inner class data structure to to populate queue and count for queues.
-    */
+    /*
+     * Inner class data structure to to populate queue and count for queues.
+     */
     public class QueueCount{
         public GroupMember queueInstance{get; set;}
         public Integer caseCount {get; set;}
@@ -376,7 +340,7 @@ public with Sharing class HVEMCaseListDetailsCtrl {
     }
 
 
-    /**
+    /*
      * Function to populate cases saved as a draft.
      */
     public void draftsCaseListFunc(){
@@ -401,13 +365,9 @@ public with Sharing class HVEMCaseListDetailsCtrl {
             draftsEmailList = [SELECT id,Case__c,Status__c FROM DraftEmailMessage__c WHERE (Status__c = 'Draft' OR Status__c='Rejected') AND Case__c IN :loggedInUserCaseList];
 
             List<Case> removeList = new List<Case>();
-
-            for(Integer j=0;j<draftsEmailList.size();j++)
-            {
-                for(Integer i=0;i<loggedInUserCaseList.size();i++)
-                {
-                    if(draftsEmailList[j].Case__c == loggedInUserCaseList[i].id)
-                    {
+            for(Integer j=0;j<draftsEmailList.size();j++) {
+                for(Integer i=0;i<loggedInUserCaseList.size();i++) {
+                    if(draftsEmailList[j].Case__c == loggedInUserCaseList[i].id) {
                         if(draftsEmailList[j].Status__c == 'Rejected'){
                            loggedUserCaseInnerList.add(new AssignedCaseList(loggedInUserCaseList[i],true,false));
                         }else if(draftsEmailList[j].Status__c == 'Draft'){
@@ -421,7 +381,6 @@ public with Sharing class HVEMCaseListDetailsCtrl {
             }
             loggedInUserCaseList = removeList;
         }
-
         if(loggedInUserCaseList.size() == 0){
             isFound=true;
         }

@@ -120,11 +120,11 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public boolean isTemplateDeleted{get;set;}
     public boolean isServiceCloud{get;set;}
     public String type{get;set;}
+    public List<EmailTemplate> emailTemplateList {get; set;}
 
     /**
     * Constructor
     */
-    public List<EmailTemplate> emailTemplateList {get; set;}
     public HVEMEmailEditorCompCtrl(){
         loggedUser  = Userinfo.getuserId();
         loggedInUserQueueList = new List<GroupMember>();
@@ -171,18 +171,15 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             selectedTemplate = configOptions.Default_Email_Template__c;
             enableDraftEmails = configOptions.Allow_Drafts__c;
             enableChangeCaseStatus = configOptions.Allow_changing_case_status__c;
-        }
-        else{
+        }else{
             selectedTemplate = 'none';
         }
         folderList = [Select Name,Id From Folder where Type='Email' AND AccessType='Public'];
-            try{
-                    folders = configOptions.Default_Email_Folder__c;
-
-            }
-            catch(Exception e){
-                selectedTemplate = 'None';
-                }
+        try{
+                folders = configOptions.Default_Email_Folder__c;
+        }catch(Exception e){
+            selectedTemplate = 'None';
+        }
 
         emailTemplateList = new List<EmailTemplate>();
         emailMessageList= new List<EmailMessage>();
@@ -208,16 +205,16 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         if(configOptions == null){
             caseInstance.contactId = null;
         }
-       emailSubject = 'Re: ' + caseInstance.Subject;
-       caseStatus = caseInstance.Status;
-       if(configOptions != null){
-           if(configOptions.Auto_Populate_To_Field_From_Case_Contact__c == false){
-               caseInstance.contactId = null;
-           }
-       }
-       editorHtmlValue = '';
+        emailSubject = 'Re: ' + caseInstance.Subject;
+        caseStatus = caseInstance.Status;
+        if(configOptions != null){
+            if(configOptions.Auto_Populate_To_Field_From_Case_Contact__c == false){
+                caseInstance.contactId = null;
+            }
+        }
+        editorHtmlValue = '';
 
-       // Phase II Implementation -- START
+        // Phase II Implementation -- START
         draftInstance = new DraftEmailMessage__c();
         List<String> activeStatus = String.valueOf(HVEMUtil.DraftEmailActiveStatus).split(',',-1);
         currentDraft = [SELECT id,BccAddress__c,Include_Thread__c,Case__c,CcAddress__c,FromAddress__c,FromName__c,FutureCaseStatus__c,HtmlBody__c,OldCaseStatus__c,Status__c,Subject__c,TemplateId__c,TextBody__c,ToAddress__c,FolderId__c FROM DraftEmailMessage__c WHERE Case__r.id =: caseId AND (Status__c IN : activeStatus )];
@@ -230,8 +227,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                 if(configOptions.Allow_Draft_Approval__c == true ){
                     if(draftInstance.Status__c == 'Approval'){
                         isUnderApproval = true;
-                    }
-                    else if(draftInstance.Status__c == 'Rejected'){
+                    }else if(draftInstance.Status__c == 'Rejected'){
                         List<ProcessInstance> processInstanceList = new List<ProcessInstance>();
                         ProcessInstance processInstanceIns = new ProcessInstance();
                         processInstanceList = [Select TargetObjectId, Status, IsDeleted, Id From ProcessInstance where Status='Rejected' AND TargetObjectId =:draftInstance.id ORDER BY SystemModstamp DESC];
@@ -316,20 +312,17 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                    bodyValue = finalContent;
                 }
             }
-        }
-        catch(Exception e){
+        }catch(Exception e){
             selectedTemplate = 'none';
             bodyValue ='';
-        }
-        Finally{
+        }Finally{
             try{
                  // Phase II Implementation -- START
                  if(currentDraft.size() == 1 && currentDraft[0].status__c != 'Approved'){
                     selectedTemplate = draftInstance.TemplateId__c;
                     if(selectedTemplate !='None'){
                       folders = draftInstance.FolderId__c;
-                    }
-                    else{
+                    }else{
                         folders='None';
                     }
 
@@ -353,17 +346,15 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                      }else{
                          folders = draftInstance.FolderId__c;
                         if(draftInstance.TextBody__c != null && draftInstance.TextBody__c!= ''){
-                                type = 'text';
-                                bodyValue =  String.valueOf(draftInstance.TextBody__c).replaceAll('\n','<br/>');
+                            type = 'text';
+                            bodyValue =  String.valueOf(draftInstance.TextBody__c).replaceAll('\n','<br/>');
                         }else if(draftInstance.HtmlBody__c != null && draftInstance.HtmlBody__c!= ''){
-                                type = 'custom';
-                                bodyValue = String.valueOf(draftInstance.HtmlBody__c);
-                           }
-
+                            type = 'custom';
+                            bodyValue = String.valueOf(draftInstance.HtmlBody__c);
+                        }
                      }
                  }
-            }
-            catch(Exception e){
+            }catch(Exception e){
                 selectedTemplate = 'none';
                 if(draftInstance.TextBody__c != null && draftInstance.TextBody__c!= ''){
                     type = 'text';
@@ -373,13 +364,10 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                     bodyValue = String.valueOf(draftInstance.HtmlBody__c);
                 }
             }
-
-             // Phase II Implementation -- END
+            // Phase II Implementation -- END
         }
-
         //temporary usage
         temporaryCase = new Case();
-
     }
 
     /**
@@ -452,124 +440,120 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             // If the user or group id is a user
             if (((String)m.UserOrGroupId).startsWith(userType)){
                 result.add(m.UserOrGroupId);
-            }
-            // If the user or group id is a group
-            else if (((String)m.UserOrGroupId).startsWith(groupType)){
+            }else if (((String)m.UserOrGroupId).startsWith(groupType)){
+                // If the user or group id is a group
                 // Call this function again but pass in the group found within this group
                 result.addAll(GetUserIdsFromGroup(m.UserOrGroupId));
             }
         }
-
         return result;
     }
-    /**
-    * Function to perform actions if Next Case Present in Queue
-    */
+
+    /*
+     * Function to perform actions if Next Case Present in Queue
+     */
     public void checkNextCasePresent(){
-       /*
-                 * retrieve cookie stored for queue id
-                 */
-                 noQueueAssigned = false;
-                 noCaseInQueueError  = false;
-                 List<QueueSobject> queueSobjectList = [SELECT Queue.Id FROM QueueSobject WHERE SobjectType = 'Case'];
-                 List<Id> queueSobjIdList = new List<Id>();
-                 for(QueueSobject queueInstance : queueSobjectList){
-                     queueSobjIdList.add(queueInstance.Queue.Id);
-                 }
+        /*
+         * retrieve cookie stored for queue id
+         */
+        noQueueAssigned = false;
+        noCaseInQueueError  = false;
+        List<QueueSobject> queueSobjectList = [SELECT Queue.Id FROM QueueSobject WHERE SobjectType = 'Case'];
+        List<Id> queueSobjIdList = new List<Id>();
+        for(QueueSobject queueInstance : queueSobjectList){
+            queueSobjIdList.add(queueInstance.Queue.Id);
+        }
 
-                 loggedInUserQueueList = [SELECT Group.Name, Group.Id FROM GroupMember WHERE UserOrGroupId = : loggedUser AND Group.Type = 'Queue' AND Group.Id IN:queueSobjIdList];
-                 Cookie queuePageCookie = ApexPages.currentPage().getCookies().get('queueId');
-                 if(queuePageCookie  != null){
-                    finalQueueId = queuePageCookie.getValue();
-                 }else{
-                    if(loggedInUserQueueList !=null && loggedInUserQueueList.size() > 0){
-                        finalQueueId =  loggedInUserQueueList[0].Group.Id;
-                    }else{
-                        noQueueAssigned = true;
-                    }
-                 }
+        loggedInUserQueueList = [SELECT Group.Name, Group.Id FROM GroupMember WHERE UserOrGroupId = : loggedUser AND Group.Type = 'Queue' AND Group.Id IN:queueSobjIdList];
+        Cookie queuePageCookie = ApexPages.currentPage().getCookies().get('queueId');
+        if(queuePageCookie  != null){
+            finalQueueId = queuePageCookie.getValue();
+        }else{
+            if(loggedInUserQueueList !=null && loggedInUserQueueList.size() > 0){
+                finalQueueId =  loggedInUserQueueList[0].Group.Id;
+            }else{
+                noQueueAssigned = true;
+            }
+        }
 
-                 if(finalQueueId != null && finalQueueId != ''){
-                     if(finalQueueId.contains('idSelectedQueue_')){
-                        finalQueueId = finalQueueId.replace('idSelectedQueue_', '');
-                     }
-                 }
-                 /**
-                 * code to check if queue saved in cookie still present
-                 **/
-                 Boolean isQueuePresent = false;
-                 if(loggedInUserQueueList.size() != null && loggedInUserQueueList.size() > 0){
-                     for(GroupMember loggedInUserQueueInstance : loggedInUserQueueList){
-                         if(loggedInUserQueueInstance.Group.Id == finalQueueId){
-                             isQueuePresent = true;
-                         }
-                     }
-                 }else{
-                     noQueueAssigned = true;
-                 }
-                 /*
-                 * get selected queue count list
-                 */
-                // Common code to be used in both If and Else
-
-                if(isQueuePresent){
-                    if(finalQueueId != null && finalQueueId != ''){
-                        HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
-                        lCondition.setCondition('OwnerId = \'' + finalQueueId + '\' AND Status != \'Closed\' ORDER BY LastModifiedDate ASC');
-                        List<String> fields = new List<String>();
-                        fields.add('caseNumber');
-                        fields.add('IsEscalated');
-                        fields.add('Owner.Name');
-                        fields.add('Subject');
-                        fields.add('Status');
-                        fields.add('Contact.Name');
-                        casesInQueueList = dbHelper.getQueryResults(new Case(), fields, lCondition);
-                        if(casesInQueueList.size() > 0){
-                            casesInQueueList[0].OwnerId = loggedUser;
-                            update casesInQueueList[0];
-                            caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE id=: casesInQueueList[0].Id];
-                        }else{
-                            noCaseInQueueError = true;
-                        }
-                    }
-                    else{
-                        noCaseInQueueError = true;
-                    }
-                }else{
-                    if(loggedInUserQueueList !=null && loggedInUserQueueList.size() > 0){
-                        finalQueueId =  loggedInUserQueueList[0].Group.Id;
-                        HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
-                        lCondition.setCondition('OwnerId = \'' + finalQueueId + '\' AND Status != \'Closed\' ORDER BY LastModifiedDate ASC');
-                        List<String> fields = new List<String>();
-                        fields.add('caseNumber');
-                        fields.add('IsEscalated');
-                        fields.add('Owner.Name');
-                        fields.add('Subject');
-                        fields.add('Status');
-                        fields.add('Contact.Name');
-                        casesInQueueList = dbHelper.getQueryResults(new Case(), fields, lCondition);
-
-                        if(casesInQueueList.size() > 0){
-                            casesInQueueList[0].OwnerId = loggedUser;
-                            update casesInQueueList[0];
-                            caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE id=: casesInQueueList[0].Id];
-                        }else{
-                            noCaseInQueueError = true;
-                        }
-                    }else{
-                        noQueueAssigned = true;
-                    }
+        if(finalQueueId != null && finalQueueId != ''){
+            if(finalQueueId.contains('idSelectedQueue_')){
+                finalQueueId = finalQueueId.replace('idSelectedQueue_', '');
+            }
+        }
+        /*
+        * code to check if queue saved in cookie still present
+        */
+        Boolean isQueuePresent = false;
+        if(loggedInUserQueueList.size() != null && loggedInUserQueueList.size() > 0){
+            for(GroupMember loggedInUserQueueInstance : loggedInUserQueueList){
+                if(loggedInUserQueueInstance.Group.Id == finalQueueId){
+                    isQueuePresent = true;
                 }
-                finalQueueId = 'idSelectedQueue_' + finalQueueId ;
-                Cookie queuePageCookieNew = ApexPages.currentPage().getCookies().get('queueId');
-                queuePageCookieNew = new Cookie('queueId',finalQueueId ,null,-1,false);
-                ApexPages.currentPage().setCookies(new Cookie[]{queuePageCookieNew});
+            }
+        }else{
+            noQueueAssigned = true;
+        }
+        /*
+        * get selected queue count list
+        */
+        // Common code to be used in both If and Else
+        if(isQueuePresent){
+            if(finalQueueId != null && finalQueueId != ''){
+                HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
+                lCondition.setCondition('OwnerId = \'' + finalQueueId + '\' AND Status != \'Closed\' ORDER BY LastModifiedDate ASC');
+                List<String> fields = new List<String>();
+                fields.add('caseNumber');
+                fields.add('IsEscalated');
+                fields.add('Owner.Name');
+                fields.add('Subject');
+                fields.add('Status');
+                fields.add('Contact.Name');
+                casesInQueueList = dbHelper.getQueryResults(new Case(), fields, lCondition);
+                if(casesInQueueList.size() > 0){
+                    casesInQueueList[0].OwnerId = loggedUser;
+                    update casesInQueueList[0];
+                    caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE id=: casesInQueueList[0].Id];
+                }else{
+                    noCaseInQueueError = true;
+                }
+            }else{
+                noCaseInQueueError = true;
+            }
+        }else{
+            if(loggedInUserQueueList !=null && loggedInUserQueueList.size() > 0){
+                finalQueueId =  loggedInUserQueueList[0].Group.Id;
+                HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
+                lCondition.setCondition('OwnerId = \'' + finalQueueId + '\' AND Status != \'Closed\' ORDER BY LastModifiedDate ASC');
+                List<String> fields = new List<String>();
+                fields.add('caseNumber');
+                fields.add('IsEscalated');
+                fields.add('Owner.Name');
+                fields.add('Subject');
+                fields.add('Status');
+                fields.add('Contact.Name');
+                casesInQueueList = dbHelper.getQueryResults(new Case(), fields, lCondition);
+
+                if(casesInQueueList.size() > 0){
+                    casesInQueueList[0].OwnerId = loggedUser;
+                    update casesInQueueList[0];
+                    caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE id=: casesInQueueList[0].Id];
+                }else{
+                    noCaseInQueueError = true;
+                }
+            }else{
+                noQueueAssigned = true;
+            }
+        }
+        finalQueueId = 'idSelectedQueue_' + finalQueueId ;
+        Cookie queuePageCookieNew = ApexPages.currentPage().getCookies().get('queueId');
+        queuePageCookieNew = new Cookie('queueId',finalQueueId ,null,-1,false);
+        ApexPages.currentPage().setCookies(new Cookie[]{queuePageCookieNew});
     }
 
-
-    /**
-    * Function to perform actions on click os 'Save n New' Button.
-    */
+    /*
+     * Function to perform actions on click os 'Save n New' Button.
+     */
     public void sendAndNextAction(){
         isSuperUser = false;
         isRejected = false;
@@ -597,72 +581,70 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                 }else{
                     thread = emailBody;
                 }
-            }
-            else{
+            }else{
                 thread = emailBody;
             }
-             String contactId = caseInstance.contactId;
-             /*
+            String contactId = caseInstance.contactId;
+            /*
              * querying current case instance to be used check 1. current case owner 2.change status
              */
-             Case lCaseInstance = [SELECT Id, Status, OwnerId FROM Case WHERE Id=: caseId];
-             emailBodyLengthExceededError = false;
-             changeCaseOwnerError = false;
-             bodyBlankError = false;
-             subjectblankError = false;
-             toEmailBlankError  = false;
-             draftSaved = false;
-             isAdditionalToAddressValid = false;
-             isCcAddressValid = false;
-             isBccAddressValid = false;
-             statusChanged = false;
-             draftSaved = false;
-             /**
-             ** Boolean list is local list which will have 0th postition for additional to,1st for cc and 2nd for bcc
-             **/
-             List<Boolean> emailAddressList = new List<Boolean>();
-             for(Integer i=0;i<3;i++){
-                 Boolean boolFalse = true;
-                 emailAddressList.add(boolFalse);
-             }
-              List<String> additionalToAddressList = additionalToAddress.split(';');
-             if(additionalToAddress != null && additionalToAddress != ''){
+            Case lCaseInstance = [SELECT Id, Status, OwnerId FROM Case WHERE Id=: caseId];
+            emailBodyLengthExceededError = false;
+            changeCaseOwnerError = false;
+            bodyBlankError = false;
+            subjectblankError = false;
+            toEmailBlankError  = false;
+            draftSaved = false;
+            isAdditionalToAddressValid = false;
+            isCcAddressValid = false;
+            isBccAddressValid = false;
+            statusChanged = false;
+            draftSaved = false;
+            /*
+             * Boolean list is local list which will have 0th postition for additional to,1st for cc and 2nd for bcc
+             */
+            List<Boolean> emailAddressList = new List<Boolean>();
+            for(Integer i=0;i<3;i++){
+                Boolean boolFalse = true;
+                emailAddressList.add(boolFalse);
+            }
+            List<String> additionalToAddressList = additionalToAddress.split(';');
+            if(additionalToAddress != null && additionalToAddress != ''){
+                emailAddressList[0] = HVEMUtil.validateEmail(additionalToAddressList);
+            }
 
-                 emailAddressList[0] = HVEMUtil.validateEmail(additionalToAddressList);
-             }
-
-             if(emailAddressList[0]){
-                 List<String> ccAddressList = ccAddress.split(';');
-                 if(ccAddress != null && ccAddress != ''){
-                     emailAddressList[1] = HVEMUtil.validateEmail(ccAddressList);
-                 }
-             }
-             if(emailAddressList[1]){
-                 List<String> bccAddressList = bccAddress.split(';');
-                 if(bccAddress != null && bccAddress != ''){
-                     emailAddressList[2] = HVEMUtil.validateEmail(bccAddressList);
-                 }
-             }
+            if(emailAddressList[0]){
+                List<String> ccAddressList = ccAddress.split(';');
+                if(ccAddress != null && ccAddress != ''){
+                    emailAddressList[1] = HVEMUtil.validateEmail(ccAddressList);
+                }
+            }
+            if(emailAddressList[1]){
+                List<String> bccAddressList = bccAddress.split(';');
+                if(bccAddress != null && bccAddress != ''){
+                    emailAddressList[2] = HVEMUtil.validateEmail(bccAddressList);
+                }
+            }
             //if-else to send email or raise error if body is blank
-             if(emailBody.length() > 32000){
-                emailBodyLengthExceededError = true;
-             }else if(lCaseInstance.OwnerId != loggedUser){
-                changeCaseOwnerError = true;
-             }else if(emailSubject.length() == 0){
-                 subjectblankError = true;
-             }else if( contactId== null  || contactId == ''){
-                 toEmailBlankError  = true;
-             }else if(!emailAddressList[0]){
-                 isAdditionalToAddressValid = true;
-             }else if(!emailAddressList[1]){
-                 isCcAddressValid = true;
-             }else if(!emailAddressList[2]){
-                 isBccAddressValid = true;
-             }else if(emailBody.length() == 0){
-                 bodyBlankError = true;
-             }else{
-                 if(configOptions.Allow_Draft_Approval__c == false || (configOptions.Allow_Draft_Approval__c == true && isSuperUser == true && superUserApproval == false)){
-                     /*
+            if(emailBody.length() > 32000){
+               emailBodyLengthExceededError = true;
+            }else if(lCaseInstance.OwnerId != loggedUser){
+               changeCaseOwnerError = true;
+            }else if(emailSubject.length() == 0){
+                subjectblankError = true;
+            }else if( contactId== null  || contactId == ''){
+                toEmailBlankError  = true;
+            }else if(!emailAddressList[0]){
+                isAdditionalToAddressValid = true;
+            }else if(!emailAddressList[1]){
+                isCcAddressValid = true;
+            }else if(!emailAddressList[2]){
+                isBccAddressValid = true;
+            }else if(emailBody.length() == 0){
+                bodyBlankError = true;
+            }else{
+                if(configOptions.Allow_Draft_Approval__c == false || (configOptions.Allow_Draft_Approval__c == true && isSuperUser == true && superUserApproval == false)){
+                    /*
                      * send email to recipient
                      * different function to reuse the send mail functionality
                      */
@@ -676,7 +658,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                         update lCaseInstance;
                     }
 
-               //insert the new Email message into Email Messge object
+                    //insert the new Email message into Email Messge object
                     emailMessageInstance = new EmailMessage();
 
                     Contact contactInstance = new Contact();
@@ -701,7 +683,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                     emailMessageInstance.BccAddress = bccAddress;
                     insert emailMessageInstance;
 
-                //insert the required fields to Task object
+                    //insert the required fields to Task object
                     taskInstance.WhatId = caseId;
                     taskInstance.WhoId = contactId ;
                     taskInstance.subject= emailSubject;
@@ -710,7 +692,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                     taskInstance.ActivityDate = date.today();
                     upsert taskInstance;
 
-                //Change status of DEM record if saved and Sent
+                    //Change status of DEM record if saved and Sent
                     List<DraftEmailMessage__c> DEMList = new List<DraftEmailMessage__c>();
                     DEMList = [Select id,status__c from DraftEmailMessage__c where case__c=:caseId ];
                     for(DraftEmailMessage__c DEMInstance : DEMList){
@@ -719,8 +701,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                             update DEMInstance;
                         }
                     }
-               }
-                else{
+                }else{
                     isUnderApproval = true;
                     saveDraft();
                     Approval.ProcessSubmitRequest submitRequest = new Approval.ProcessSubmitRequest();
@@ -731,7 +712,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                 }
                 //Function call to perform actions if Next Case Present in Queue
                 checkNextCasePresent();
-                     }
+            }
             isValidated = true;
             if(!isBccAddressValid  && !isAdditionalToAddressValid  && !bodyBlankError && !subjectblankError && !toEmailBlankError && !emailBodyLengthExceededError && !isCcAddressValid ){
                 isNoCustomError = true;
@@ -753,37 +734,35 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     }
 
     /*
-    * Functio to populate Email Editor
-    */
+     * Functio to populate Email Editor
+     */
     public void populateEditor(){
-         if(selectedTemplate != 'none' && selectedTemplate != ''){
-        /**
-        * Extract merge field values
-        */
-        selectedEmailTemplate = [Select e.HtmlValue,e.Id,e.FolderId,e.templateType,e.body  From EmailTemplate e WHERE e.Id = : selectedTemplate];
-        type = selectedEmailTemplate.templateType;
-        PageReference emailEditorPageRef = new PageReference(URL.getSalesforceBaseUrl().getProtocol() + '://' + URL.getSalesforceBaseUrl().getHost() + '/email/author/emailauthor.jsp?retURL=/' + caseId + '&p3_lkid=' + caseId + '&rtype=003&p2_lkid=' + caseInstance.ContactId + '&template_id=' + selectedTemplate);
-        String fullHtml  =  emailEditorPageRef.getContent().toString();
-        String finalContent = extractContent(selectedEmailTemplate.templateType , fullHtml);
-        bodyValue = finalContent;
+        if(selectedTemplate != 'none' && selectedTemplate != ''){
+            /*
+            * Extract merge field values
+            */
+            selectedEmailTemplate = [Select e.HtmlValue,e.Id,e.FolderId,e.templateType,e.body  From EmailTemplate e WHERE e.Id = : selectedTemplate];
+            type = selectedEmailTemplate.templateType;
+            PageReference emailEditorPageRef = new PageReference(URL.getSalesforceBaseUrl().getProtocol() + '://' + URL.getSalesforceBaseUrl().getHost() + '/email/author/emailauthor.jsp?retURL=/' + caseId + '&p3_lkid=' + caseId + '&rtype=003&p2_lkid=' + caseInstance.ContactId + '&template_id=' + selectedTemplate);
+            String fullHtml  =  emailEditorPageRef.getContent().toString();
+            String finalContent = extractContent(selectedEmailTemplate.templateType , fullHtml);
+            bodyValue = finalContent;
 
-        if(selectedEmailTemplate.templateType == 'text'){
-            bodyValue =  String.valueOf(bodyValue).replaceAll('\n','<br/>');
-        }else if(selectedEmailTemplate.templateType == 'Custom'){
-            bodyValue =  String.valueOf(bodyValue);
+            if(selectedEmailTemplate.templateType == 'text'){
+                bodyValue =  String.valueOf(bodyValue).replaceAll('\n','<br/>');
+            }else if(selectedEmailTemplate.templateType == 'Custom'){
+                bodyValue =  String.valueOf(bodyValue);
+            }
+        }else{
+            selectedEmailTemplate = new EmailTemplate();
+            bodyValue = '';
+            type='text';
         }
-      }else{
-        selectedEmailTemplate = new EmailTemplate();
-        bodyValue = '';
-        type='text';
-      }
-
-
     }
 
-    /**
-    * Function to Send Email.
-    */
+    /*
+     * Function to Send Email.
+     */
     public void sendEmail(){
         List<String> activeStatus = String.valueOf(HVEMUtil.DraftEmailActiveStatus).split(',',-1);
         List<DraftEmailMessage__c> previousSentDraft = [SELECT id,BccAddress__c,Reply_To_Address__c,Include_Thread__c,Case__c,CcAddress__c,FromAddress__c,FromName__c,FutureCaseStatus__c,HtmlBody__c,OldCaseStatus__c,Status__c,Subject__c,TemplateId__c,TextBody__c,ToAddress__c,FolderId__c FROM DraftEmailMessage__c WHERE Case__r.id =: caseId AND (Status__c = 'Approved' OR Status__c = 'Sent') ORDER BY SystemModstamp DESC LIMIT 1];
@@ -843,7 +822,6 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             mail.setBccAddresses(bccList);
         }
         mail.setSenderDisplayName(userName);
-
         mail.setUseSignature(false);
         /*
         * Populate ref field in email subject
@@ -853,65 +831,63 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         finalRef = ' [ref:'   + String.valueOf(orgins.Id).substring(0, 4) + String.valueOf(orgins.Id).substring(String.valueOf(orgins.Id).length() - 7,String.valueOf(orgins.Id).length() - 3) + '.';
         finalRef = finalRef + String.valueOf(caseId).substring(0, 4) + String.valueOf(caseId).substring(String.valueOf(caseId).length() - 8,String.valueOf(caseId).length() - 3) + ':ref]';
         mail.setSubject(emailSubject + finalRef );
-       mail.setHtmlBody(thread);
+        mail.setHtmlBody(thread);
 
         Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
-
     }
 
-    /**
-    * Function to add email Templates to the SelectList
-    * according to their respective folders.
-    */
+    /*
+     * Function to add email Templates to the SelectList
+     * according to their respective folders.
+     */
     public List<SelectOption> getEmailTemplates(){
-         List<SelectOption> options = new List<SelectOption>();
-         emailTemplateList = [Select Id, Name, TemplateType, Folder.Name From EmailTemplate where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true order by folderId];
-         String folderName;
-         ID folderId;
-         //if for null check on the emailTemplateList List
-         options.add(new SelectOption('None' ,'None'));
-         if(emailTemplateList != null && !emailTemplateList.isEmpty()){
-             folderId = emailTemplateList[0].folderId;
-             //if else to add The first folder Name to the selectList
-             if(emailTemplateList[0].folderId != orgIns.Id){
-                 if(emailTemplateList[0].folderId != UserInfo.getUserId()){
-                     folderInstance = [select Id,Name from folder where Id=:emailTemplateList[0].folderId];
-                     folderName = folderInstance.Name;
-                     options.add(new SelectOption(emailTemplateList[0].folderId ,folderName+':',true));
-                 }
-             }
-             else{
-                 folderName = Label.Unfiled_Public_Email_Templates;
-                 options.add(new SelectOption(emailTemplateList[0].folderId ,folderName+':',true));
-             }
+        List<SelectOption> options = new List<SelectOption>();
+        emailTemplateList = [Select Id, Name, TemplateType, Folder.Name From EmailTemplate where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true order by folderId];
+        String folderName;
+        ID folderId;
+        //if for null check on the emailTemplateList List
+        options.add(new SelectOption('None' ,'None'));
+        if(emailTemplateList != null && !emailTemplateList.isEmpty()){
+            folderId = emailTemplateList[0].folderId;
+            //if else to add The first folder Name to the selectList
+            if(emailTemplateList[0].folderId != orgIns.Id){
+                if(emailTemplateList[0].folderId != UserInfo.getUserId()){
+                    folderInstance = [select Id,Name from folder where Id=:emailTemplateList[0].folderId];
+                    folderName = folderInstance.Name;
+                    options.add(new SelectOption(emailTemplateList[0].folderId ,folderName+':',true));
+                }
+            }else{
+                folderName = Label.Unfiled_Public_Email_Templates;
+                options.add(new SelectOption(emailTemplateList[0].folderId ,folderName+':',true));
+            }
 
-             //for to add email templates and their respective folders to the SelectList
-             for(EmailTemplate emailInstance : emailTemplateList ){
-                 if(emailInstance.folderId != orgIns.Id){
-                     if(emailInstance.folderId != UserInfo.getUserId()){
-                         folderInstance = [select Id,Name from folder where Id=:emailInstance.folderId];
-                         folderName = folderInstance.Name;
-                     }
-                 }
-                 else{
-                     folderName =  Label.Unfiled_Public_Email_Templates;                 }
-                 //if loop to add remaining folder names to the SelectList
-                 if((folderId != emailInstance.FolderId) && (emailInstance.folderId != UserInfo.getUserId())){
-                     options.add(new SelectOption(emailInstance.FolderId ,folderName+':',true));
-                     folderId = emailInstance.FolderId;
-                 }
-                 //if to add email templated NOT belonging to the Personel Email Folders.
-                 if(emailInstance.folderId != UserInfo.getUserId()){
-                     options.add(new SelectOption(emailInstance.Id ,'- '+emailInstance.Name));
-                 }
+            //for to add email templates and their respective folders to the SelectList
+            for(EmailTemplate emailInstance : emailTemplateList ){
+                if(emailInstance.folderId != orgIns.Id){
+                    if(emailInstance.folderId != UserInfo.getUserId()){
+                        folderInstance = [select Id,Name from folder where Id=:emailInstance.folderId];
+                        folderName = folderInstance.Name;
+                    }
+                }else{
+                     folderName =  Label.Unfiled_Public_Email_Templates;
+                }
+                //if loop to add remaining folder names to the SelectList
+                if((folderId != emailInstance.FolderId) && (emailInstance.folderId != UserInfo.getUserId())){
+                    options.add(new SelectOption(emailInstance.FolderId ,folderName+':',true));
+                    folderId = emailInstance.FolderId;
+                }
+                //if to add email templated NOT belonging to the Personel Email Folders.
+                if(emailInstance.folderId != UserInfo.getUserId()){
+                    options.add(new SelectOption(emailInstance.Id ,'- '+emailInstance.Name));
+                }
              }//end of for
          }//end of if
          return options;
     }
 
-    /**
-    * Function to add options to the case's Status SelectList
-    */
+    /*
+     * Function to add options to the case's Status SelectList
+     */
     public List<SelectOption> getCaseStatusFieldValues(){
         Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Case.fields.getMap();
         List<SelectOption> options = new List<SelectOption>();
@@ -928,12 +904,9 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         return options;
     }
 
-    /**
-    * PHASE - II
-    */
-    /**
-    * function called on click of Save draft functionality
-    **/
+    /*
+     * function called on click of Save draft functionality
+     */
     public void saveDraft(){
         isRejected = false;
         isAdditionalToAddressValid = false;
@@ -1012,8 +985,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
 
             if(isUnderApproval == true){
                 lDraftEmailMessageInstance.Status__c = 'approval';
-            }
-            else{
+            }else{
                 lDraftEmailMessageInstance.Status__c = 'Draft';
             }
 
@@ -1027,17 +999,15 @@ public with Sharing class HVEMEmailEditorCompCtrl {
 
             if(isUnderApproval == true){
                  draftSaved = false;
-            }
-            else{
+            }else{
                 draftSaved = true;
             }
-
         }
     }
 
-    /**
-    * function called on click of Discard changes functionality
-    **/
+    /*
+     * function called on click of Discard changes functionality
+     */
     public void discardDraft(){
         isAdditionalToAddressValid = false;
         isCcAddressValid = false;
@@ -1083,12 +1053,12 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                 PageReference emailEditorPageRef;
 
                 if(configOptions.Default_Email_Template__c != '' && configOptions.Default_Email_Template__c != 'None'){
-                 emailEditorPageRef = new PageReference(URL.getSalesforceBaseUrl().getProtocol() + '://' + URL.getSalesforceBaseUrl().getHost() + '/email/author/emailauthor.jsp?retURL=/' + caseId + '&p3_lkid=' + caseId + '&rtype=003&p2_lkid=' + caseInstance.ContactId + '&template_id=' + configOptions.Default_Email_Template__c);
-                 String fullHtml  =  emailEditorPageRef.getContent().toString();
-                   String finalContent = extractContent(selectedEmailTemplate.templateType , fullHtml);
-                   bodyValue = finalContent;
+                    emailEditorPageRef = new PageReference(URL.getSalesforceBaseUrl().getProtocol() + '://' + URL.getSalesforceBaseUrl().getHost() + '/email/author/emailauthor.jsp?retURL=/' + caseId + '&p3_lkid=' + caseId + '&rtype=003&p2_lkid=' + caseInstance.ContactId + '&template_id=' + configOptions.Default_Email_Template__c);
+                    String fullHtml  =  emailEditorPageRef.getContent().toString();
+                    String finalContent = extractContent(selectedEmailTemplate.templateType , fullHtml);
+                    bodyValue = finalContent;
                     folders = configOptions.Default_Email_Folder__c;
-                   if(selectedEmailTemplate.templateType == 'text'){
+                    if(selectedEmailTemplate.templateType == 'text'){
                         bodyValue =  String.valueOf(bodyValue).replaceAll('\n','<br/>');
                         type = 'text';
                     }else if(selectedEmailTemplate.templateType == 'Custom'){
@@ -1096,9 +1066,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                         type = 'custom';
                     }
                 }
-
-            }
-            else{
+            }else{
                 selectedTemplate = 'none';
                 bodyValue = '';
                 type = 'text';
@@ -1109,15 +1077,13 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             bodyValue = '';
             isTemplateDeleted = true;
             folders = configOptions.Default_Email_Folder__c;
-
         }
-
     }
-    /**
-    * Function called for Initialiazing templates depending on folder
-    */
-    public pageReference initializeEmailTemplate(){
 
+    /*
+     * Function called for Initialiazing templates depending on folder
+     */
+    public pageReference initializeEmailTemplate(){
         if(folders != null){
             if(folders == 'None'){
                 Organization org  = [Select ID from Organization LIMIT 1];
@@ -1140,56 +1106,50 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         return null;
     }
 
-    /**
-    * Function to get Email Template Folder
-    */
+    /*
+     * Function to get Email Template Folder
+     */
     public void getEmailTemplatefolders(){
-
         folderList = [Select Name,Id From Folder where Type='Email' AND AccessType='Public'];
     }
 
-    /**
-    * Function to get Email Template Folder
-    */
-     public List<SelectOption> getEmailFolders() {
+    /*
+     * Function to get Email Template Folder
+     */
+    public List<SelectOption> getEmailFolders() {
         List<SelectOption> options = new List<SelectOption>();
-       Organization org  = [Select ID from Organization LIMIT 1];
+        Organization org  = [Select ID from Organization LIMIT 1];
         options.add(new SelectOption(org.Id,Label.Template_folder_option));
         options.add(new SelectOption(userInfo.getUserId(),Label.personal_email_templates));
-             for(folder f : folderList){
-                options.add(new SelectOption(f.Id,f.Name));
-            }
-
+        for(folder f : folderList){
+            options.add(new SelectOption(f.Id,f.Name));
+        }
         return options;
     }
 
-    /**
-    * Function to get Email Templates
-    */
+    /*
+     * Function to get Email Templates
+     */
     public List<SelectOption> getEmailTemplatesList() {
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('None',Label.Template_name));
-        if(folders=='None')
-        {
-        Organization org  = [Select ID from Organization LIMIT 1];
-        folders = org.Id;
-        templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
-        }
-        else
-        {
-        templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
+        if(folders=='None'){
+            Organization org  = [Select ID from Organization LIMIT 1];
+            folders = org.Id;
+            templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
+        }else{
+            templateList = [Select Subject, Name, TemplateType From EmailTemplate  where (TemplateType = 'Text' OR TemplateType = 'Custom' ) AND IsActive=true AND FolderId=:folders];
         }
         for(EmailTemplate t : templateList){
             options.add(new SelectOption(t.Id,t.Name));
         }
-
         return options;
     }
 
-    /**
-    * Function to Change the case status without sending an email
-    */
-     public void changeCaseStatus(){
+    /*
+     * Function to Change the case status without sending an email
+     */
+    public void changeCaseStatus(){
         emailBodyLengthExceededError = false;
         bodyBlankError = false;
         subjectblankError = false;
@@ -1203,26 +1163,25 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         changeCaseOwnerError = false;
         isUnderApproval = false;
         try{
-         if(configOptions != null){
-            if(enableChangeCaseStatus == true){
-                caseInstance.status = caseStatus;
-                update caseInstance;
-                statusChanged = true;
+            if(configOptions != null){
+                if(enableChangeCaseStatus == true){
+                    caseInstance.status = caseStatus;
+                    update caseInstance;
+                    statusChanged = true;
                     isNoCustomError = true;
+                }
             }
-            }
-                //Function call to perform actions if Next Case Present in Queue
-        checkNextCasePresent();
+            //Function call to perform actions if Next Case Present in Queue
+            checkNextCasePresent();
         }catch(Exception e){
             ApexPages.addMessages(e);
-       }
+        }
     }
 
-    /**
-    * Function to verify reply to address corresponding to ERC Setting mapping
-    **/
+    /*
+     * Function to verify reply to address corresponding to ERC Setting mapping
+     */
     public String replyToAddressToUse(){
-
         String replyToAddress = '';
         List<HVEM_Email_Routing_Address__c> routingAddressList = new List<HVEM_Email_Routing_Address__c>();
         List<HVEM_Email_Routing_Mapping__c> routingAddressMappingList = new List<HVEM_Email_Routing_Mapping__c>();
@@ -1250,9 +1209,9 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         return replyToAddress;
     }
 
-    /**
-    * Function to insert article content
-    **/
+    /*
+     * Function to insert article content
+     */
     public void insertArticleContent() {
         bodyValue = '';
         articleContentList = new List<String>();
@@ -1277,9 +1236,9 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                     articleContentList.add('<b>' + articleTitle + '</b>');
                     articleContentList.add('<br/><br/>');
                 }else{
-                articleContentList.add('Title<br/>');
-                articleContentList.add(articleTitle);
-                articleContentList.add('<br/><br/>');
+                    articleContentList.add('Title<br/>');
+                    articleContentList.add(articleTitle);
+                    articleContentList.add('<br/><br/>');
                 }
                 if(articleSummary != null && articleSummary != ''){
                     articleContentList.add('Summary<br/>');
@@ -1297,21 +1256,21 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                         String fieldCustomLabel = String.valueOf(fieldResultCustom.getLabel());
                         String fieldCustomValue = String.valueOf(articleTypeList[0].get(key));
                         if((fieldCustomValue!= null) && (fieldCustomValue!= ' ')){
-                           if(!(fieldResultCustom.isHtmlFormatted() == true && templateType != 'Custom') && fieldCustomValue != ''){
-                               articleContentList.add(fieldCustomLabel+ '<br/>');
-                               if(fieldCustomValue.contains('\r\n')){
-                                   articleContentList.add(fieldCustomValue.replaceAll('\r\n','<br/>'));
-                               }else{
-                                   articleContentList.add(fieldCustomValue + '<br/>');
-                               }
-                               articleContentList.add('<br/>');
+                            if(!(fieldResultCustom.isHtmlFormatted() == true && templateType != 'Custom') && fieldCustomValue != ''){
+                                articleContentList.add(fieldCustomLabel+ '<br/>');
+                                if(fieldCustomValue.contains('\r\n')){
+                                    articleContentList.add(fieldCustomValue.replaceAll('\r\n','<br/>'));
+                                }else{
+                                    articleContentList.add(fieldCustomValue + '<br/>');
+                                }
+                                articleContentList.add('<br/>');
                             }
                         }
-                     }
-                 }
-             }
+                    }
+                }
+            }
 
-             for(String articleFieldValue : articleContentList){
+            for(String articleFieldValue : articleContentList){
                  // update img src value to point to the external url
                  String pkbUrl = configOptions.Article_Link_Base_URL__c;
                  String replace = '<img src=\"' + pkbUrl + '/servlet';
@@ -1322,12 +1281,10 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                  matcher myMatcher = mypattern.matcher(articleFieldValue);
                  String output = myMatcher.replaceAll(replace);
 
-                bodyValue = bodyValue + output;
-             }
-        }
-        catch(Exception e){
+                 bodyValue = bodyValue + output;
+            }
+        }catch(Exception e){
             ApexPages.addMessages(e);
         }
     }
-
 }

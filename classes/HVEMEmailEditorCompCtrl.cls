@@ -850,11 +850,14 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         if(emailTemplateList != null && !emailTemplateList.isEmpty()){
             folderId = emailTemplateList[0].folderId;
             //if else to add The first folder Name to the selectList
-            if(emailTemplateList[0].folderId != orgIns.Id){
-                if(emailTemplateList[0].folderId != UserInfo.getUserId()){
-                    folderInstance = [select Id,Name from folder where Id=:emailTemplateList[0].folderId];
-                    folderName = folderInstance.Name;
-                    options.add(new SelectOption(emailTemplateList[0].folderId ,folderName+':',true));
+            if(folderId != orgIns.Id){
+                if(folderId != UserInfo.getUserId()){
+                    List<Folder> folders;
+                    folders = [select Id,Name from folder where Id=:folderId];
+                    if (folders!=null && !folders.isempty()) {
+                        folderName = folders[0].Name;
+                        options.add(new SelectOption(folderId ,folderName+':',true));
+                    }
                 }
             }else{
                 folderName = Label.Unfiled_Public_Email_Templates;
@@ -863,10 +866,13 @@ public with Sharing class HVEMEmailEditorCompCtrl {
 
             //for to add email templates and their respective folders to the SelectList
             for(EmailTemplate emailInstance : emailTemplateList ){
-                if(emailInstance.folderId != orgIns.Id){
-                    if(emailInstance.folderId != UserInfo.getUserId()){
-                        folderInstance = [select Id,Name from folder where Id=:emailInstance.folderId];
-                        folderName = folderInstance.Name;
+                if(folderId != orgIns.Id){
+                    if(folderId != UserInfo.getUserId()){
+                        List<Folder> folders;
+                        folders = [select Id,Name from folder where Id=:folderId];
+                        if (folders!=null && !folders.isempty()) {
+                            folderName = folders[0].Name;
+                        }
                     }
                 }else{
                      folderName =  Label.Unfiled_Public_Email_Templates;

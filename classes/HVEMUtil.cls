@@ -33,9 +33,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 public Class HVEMUtil {
     public Static String DraftEmailActiveStatus = 'Draft,Approval,Rejected,Approved';
 
-    /**
-    * Function to handle
-    **/
+    /*
+     * Email address validation
+     */
     public Static Boolean validateEmail(List<String> emailAddressList){
         Boolean isValid = true;
         Pattern emailPattern= Pattern.compile('([a-zA-Z0-9_\\-\\.]+)@((\\[a-z]{1,3}\\.[a-z]{1,3}\\.[a-z]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})');
@@ -57,7 +57,6 @@ public Class HVEMUtil {
         }else{
             return true;
         }
-
     }
 
 }

@@ -27,32 +27,22 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-/* HVEMEmailEditorCompCtrl Class
-* This Class is used to populate default values and perform all functionalities related to Deatil Email Editor Component
-*/
+/*
+ * HVEMEmailEditorCompCtrl Class
+ * This Class is used to populate default values and perform all functionalities related to Deatil Email Editor Component
+ */
 public with Sharing class HVEMEmailEditorCompCtrl {
     public Id caseId{get; set;}
-    public EmailMessage finalEmail {get; set;}
-    public Folder folderInstance{get;set;}
     public Organization orgIns{get;set;}
     public Case caseInstance{get; set;}
     public Case caseFromQueue{get; set;}
-    public Task taskInstance {get; set;}
-    public EmailMessage emailMessageInstance{get;set;}
     public HVEM_Config_Options__c configOptions{get;set;}
-    public EmailTemplate emailtemplate{get; set;}
-    //Case Instance for temporary usage.
-    public Case temporaryCase{get;set;}
 
-    public List<Case> caseList{get;set;}
     public List<EmailMessage>emailMessageList{get;set;}
-    public List<GroupMember> loggedInUserQueueList {get; set;}
-    public List<Case> casesInQueueList{get; set;}
     public List<boolean> incomingMail{get;set;}
-    public List<folder> folderList{get;set;}
-    public List<EmailTemplate> templateList{get;set;}
+    public List<folder> folderList;
+    private List<EmailTemplate> templateList;
     public List<DraftEmailMessage__c> currentDraft {get; set;}
-    public List<String> articleContentList{get;set;}
 
 
     public boolean isValidated {get; set;}
@@ -93,7 +83,6 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public String bccAddress {get; set;}
     public String additionalToAddress {get; set;}
     private HVEMDBhelper dbHelper {get; set;}
-    public boolean superUserApprovalRendered{get;set;}
     public Boolean superUserApproval {get; set;}
     public boolean isSuperUser{get;set;}
     public boolean statusChanged{get;set;}
@@ -109,9 +98,9 @@ public with Sharing class HVEMEmailEditorCompCtrl {
 
     /** Phase II Variable declaration -- START */
 
-    public Boolean isActiveStatus {get; set;}
+    public Boolean isActiveStatus {get; set;} // is this ever set to false?
     public Boolean draftSaved {get; set;}
-    public DraftEmailMessage__c draftInstance {get; set;}
+    private DraftEmailMessage__c draftInstance;
     public Boolean isUnderApproval {get;set;}
     public boolean isRejected{get;set;}
     public String HTMLValue {get; set;}
@@ -127,9 +116,6 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     */
     public HVEMEmailEditorCompCtrl(){
         loggedUser  = Userinfo.getuserId();
-        loggedInUserQueueList = new List<GroupMember>();
-        articleContentList = new List<String>();
-        casesInQueueList = new List<Case>();
         folderList = new List<folder>();
         selectedEmailTemplate = new EmailTemplate();
         dbHelper = new HVEMDBhelper();
@@ -138,10 +124,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         isServiceCloud = false;
         orgIns  = new Organization();
         orgIns = [Select Id From Organization LIMIT 1];
-        folderInstance = new folder();
         caseInstance = new Case();
-        finalEmail = new EmailMessage();
-        taskInstance = new Task();
         configOptions = new HVEM_Config_Options__c();
         thread='';
         rejectionComment = '';
@@ -154,7 +137,6 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         isUnderApproval = false;
         isRejected = false;
         isTemplateDeleted = false;
-        superUserApprovalRendered = false;
         enableDraftEmails=false;
         enableChangeCaseStatus = false;
         // Get full user instance
@@ -176,7 +158,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         }
         folderList = [Select Name,Id From Folder where Type='Email' AND AccessType='Public'];
         try{
-                folders = configOptions.Default_Email_Folder__c;
+            folders = configOptions.Default_Email_Folder__c;
         }catch(Exception e){
             selectedTemplate = 'None';
         }
@@ -191,7 +173,6 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         }
 
         // Get full case Instance
-        //caseInstance = [Select Type, PotentialLiability__c ,SLAViolation__c,SystemModstamp, SuppliedPhone, SuppliedName, SuppliedEmail, SuppliedCompany, Subject, Status, Reason, Priority, ParentId, OwnerId, Origin, LastModifiedDate, LastModifiedById, IsEscalated, IsDeleted, IsClosed, Id,  Description, CreatedDate, CreatedById, ContactId, ClosedDate, CaseNumber, AssetId, AccountId From Case where Id=:caseId];
         List<Case> caseListLocal  = new List<Case>();
         HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
         lCondition.setCondition('Id=\'' + caseId + '\'');
@@ -283,9 +264,6 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         }
         lDraftEmailMessageInstance = new DraftEmailMessage__c();
         isSuperUser = verifyUser();
-        if(isSuperUser){
-            superUserApprovalRendered = true;
-        }
 
          // Phase II Implementation -- END
 
@@ -366,8 +344,6 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             }
             // Phase II Implementation -- END
         }
-        //temporary usage
-        temporaryCase = new Case();
     }
 
     /**
@@ -453,9 +429,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
      * Function to perform actions if Next Case Present in Queue
      */
     public void checkNextCasePresent(){
-        /*
-         * retrieve cookie stored for queue id
-         */
+        // retrieve cookie stored for queue id
         noQueueAssigned = false;
         noCaseInQueueError  = false;
         List<QueueSobject> queueSobjectList = [SELECT Queue.Id FROM QueueSobject WHERE SobjectType = 'Case'];
@@ -463,7 +437,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         for(QueueSobject queueInstance : queueSobjectList){
             queueSobjIdList.add(queueInstance.Queue.Id);
         }
-
+        List<GroupMember> loggedInUserQueueList;
         loggedInUserQueueList = [SELECT Group.Name, Group.Id FROM GroupMember WHERE UserOrGroupId = : loggedUser AND Group.Type = 'Queue' AND Group.Id IN:queueSobjIdList];
         Cookie queuePageCookie = ApexPages.currentPage().getCookies().get('queueId');
         if(queuePageCookie  != null){
@@ -481,9 +455,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                 finalQueueId = finalQueueId.replace('idSelectedQueue_', '');
             }
         }
-        /*
-        * code to check if queue saved in cookie still present
-        */
+        // code to check if queue saved in cookie still present
         Boolean isQueuePresent = false;
         if(loggedInUserQueueList.size() != null && loggedInUserQueueList.size() > 0){
             for(GroupMember loggedInUserQueueInstance : loggedInUserQueueList){
@@ -494,53 +466,17 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         }else{
             noQueueAssigned = true;
         }
-        /*
-        * get selected queue count list
-        */
-        // Common code to be used in both If and Else
+        // get selected queue count list
         if(isQueuePresent){
             if(finalQueueId != null && finalQueueId != ''){
-                HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
-                lCondition.setCondition('OwnerId = \'' + finalQueueId + '\' AND Status != \'Closed\' ORDER BY LastModifiedDate ASC');
-                List<String> fields = new List<String>();
-                fields.add('caseNumber');
-                fields.add('IsEscalated');
-                fields.add('Owner.Name');
-                fields.add('Subject');
-                fields.add('Status');
-                fields.add('Contact.Name');
-                casesInQueueList = dbHelper.getQueryResults(new Case(), fields, lCondition);
-                if(casesInQueueList.size() > 0){
-                    casesInQueueList[0].OwnerId = loggedUser;
-                    update casesInQueueList[0];
-                    caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE id=: casesInQueueList[0].Id];
-                }else{
-                    noCaseInQueueError = true;
-                }
+                noCaseInQueueError = fetchNextCase(finalQueueId);
             }else{
                 noCaseInQueueError = true;
             }
         }else{
             if(loggedInUserQueueList !=null && loggedInUserQueueList.size() > 0){
                 finalQueueId =  loggedInUserQueueList[0].Group.Id;
-                HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
-                lCondition.setCondition('OwnerId = \'' + finalQueueId + '\' AND Status != \'Closed\' ORDER BY LastModifiedDate ASC');
-                List<String> fields = new List<String>();
-                fields.add('caseNumber');
-                fields.add('IsEscalated');
-                fields.add('Owner.Name');
-                fields.add('Subject');
-                fields.add('Status');
-                fields.add('Contact.Name');
-                casesInQueueList = dbHelper.getQueryResults(new Case(), fields, lCondition);
-
-                if(casesInQueueList.size() > 0){
-                    casesInQueueList[0].OwnerId = loggedUser;
-                    update casesInQueueList[0];
-                    caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE id=: casesInQueueList[0].Id];
-                }else{
-                    noCaseInQueueError = true;
-                }
+                noCaseInQueueError = fetchNextCase(finalQueueId);
             }else{
                 noQueueAssigned = true;
             }
@@ -549,6 +485,29 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         Cookie queuePageCookieNew = ApexPages.currentPage().getCookies().get('queueId');
         queuePageCookieNew = new Cookie('queueId',finalQueueId ,null,-1,false);
         ApexPages.currentPage().setCookies(new Cookie[]{queuePageCookieNew});
+    }
+
+    private boolean fetchNextCase(String queueId) {
+        HVEMConditionBuilder lCondition = new HVEMConditionBuilder();
+        lCondition.setCondition('OwnerId = \'' + queueId + '\' AND Status != \'Closed\' ORDER BY LastModifiedDate ASC');
+        List<String> fields = new List<String>();
+        fields.add('caseNumber');
+        fields.add('IsEscalated');
+        fields.add('Owner.Name');
+        fields.add('Subject');
+        fields.add('Status');
+        fields.add('Contact.Name');
+        fields.add('HVEMPreviousQueue__c');
+        List<Case> casesInQueueList;
+        casesInQueueList = dbHelper.getQueryResults(new Case(), fields, lCondition);
+        if(casesInQueueList.size() > 0){
+            casesInQueueList[0].HVEMPreviousQueue__c = casesInQueueList[0].OwnerId;
+            casesInQueueList[0].OwnerId = loggedUser;
+            update casesInQueueList[0];
+            caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE id=: casesInQueueList[0].Id];
+            return false;
+        }
+        return true;
     }
 
     /*
@@ -585,9 +544,8 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                 thread = emailBody;
             }
             String contactId = caseInstance.contactId;
-            /*
-             * querying current case instance to be used check 1. current case owner 2.change status
-             */
+
+            // querying current case instance to be used check 1. current case owner 2.change status
             Case lCaseInstance = [SELECT Id, Status, OwnerId FROM Case WHERE Id=: caseId];
             emailBodyLengthExceededError = false;
             changeCaseOwnerError = false;
@@ -600,9 +558,8 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             isBccAddressValid = false;
             statusChanged = false;
             draftSaved = false;
-            /*
-             * Boolean list is local list which will have 0th postition for additional to,1st for cc and 2nd for bcc
-             */
+
+            // Boolean list is local list which will have 0th postition for additional to,1st for cc and 2nd for bcc
             List<Boolean> emailAddressList = new List<Boolean>();
             for(Integer i=0;i<3;i++){
                 Boolean boolFalse = true;
@@ -644,71 +601,22 @@ public with Sharing class HVEMEmailEditorCompCtrl {
                 bodyBlankError = true;
             }else{
                 if(configOptions.Allow_Draft_Approval__c == false || (configOptions.Allow_Draft_Approval__c == true && isSuperUser == true && superUserApproval == false)){
-                    /*
-                     * send email to recipient
-                     * different function to reuse the send mail functionality
-                     */
+                    // send email to recipient
+                    //    reuse existing methods as much as possible
                     sendEmail();
                     saveDraft();
                     draftSaved = false;
-                    //function to send Email
                       //update Status of the case if changed.
                     if(caseInstance.Status != caseStatus){
                         lCaseInstance.Status = caseStatus;
                         update lCaseInstance;
                     }
 
-                    //insert the new Email message into Email Messge object
-                    emailMessageInstance = new EmailMessage();
-
-                    Contact contactInstance = new Contact();
-                    contactInstance = [Select Email from Contact where Id =:contactId ];
-                    String contactEmailAddress = contactInstance.Email;
-                    emailMessageInstance.ToAddress = contactEmailAddress;
-                    if(selectedEmailTemplate.TemplateType == 'custom'){
-                        emailBody = emailBody.replaceAll('<br/>','\n');
-                        emailMessageInstance.HtmlBody = emailBody;
-                    }else  if(selectedEmailTemplate.TemplateType == 'text'){
-                        emailBody = emailBody.replaceAll('<br/>','\n');
-                        emailMessageInstance.TextBody = emailBody;
-                    }else{
-                        emailBody = emailBody.replaceAll('<br/>','\n');
-                        emailMessageInstance.TextBody = emailBody;
-                    }
-                    emailMessageInstance.Subject = emailSubject;
-                    emailMessageInstance.ParentId = caseId;
-                    emailMessageInstance.FromName = userName;
-                    emailMessageInstance.FromAddress = userEmailAddress;
-                    emailMessageInstance.CcAddress = ccAddress;
-                    emailMessageInstance.BccAddress = bccAddress;
-                    insert emailMessageInstance;
-
-                    //insert the required fields to Task object
-                    taskInstance.WhatId = caseId;
-                    taskInstance.WhoId = contactId ;
-                    taskInstance.subject= emailSubject;
-                    taskInstance.status = 'Completed';
-                    taskInstance.Description = 'Additional To:'+additionalTo;
-                    taskInstance.ActivityDate = date.today();
-                    upsert taskInstance;
-
-                    //Change status of DEM record if saved and Sent
-                    List<DraftEmailMessage__c> DEMList = new List<DraftEmailMessage__c>();
-                    DEMList = [Select id,status__c from DraftEmailMessage__c where case__c=:caseId ];
-                    for(DraftEmailMessage__c DEMInstance : DEMList){
-                        if(DEMList != null && DEMInstance.status__c == 'Draft'){
-                            DEMInstance.status__c = 'Sent';
-                            update DEMInstance;
-                        }
-                    }
+                    insertEmailMessage(contactId);
+                    upsertTask(contactId);
+                    updateDraftMessageStatus();
                 }else{
-                    isUnderApproval = true;
-                    saveDraft();
-                    Approval.ProcessSubmitRequest submitRequest = new Approval.ProcessSubmitRequest();
-                    submitRequest.setComments(Label.Email_draft_approval);
-                    submitRequest.setObjectId(lDraftEmailMessageInstance.id);
-                    Approval.ProcessResult result = Approval.process(submitRequest);
-                    Case caseInstance = [SELECT Id, Status, OwnerId FROM Case WHERE Id=: caseId];
+                    submitForApproval();
                 }
                 //Function call to perform actions if Next Case Present in Queue
                 checkNextCasePresent();
@@ -717,30 +625,88 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             if(!isBccAddressValid  && !isAdditionalToAddressValid  && !bodyBlankError && !subjectblankError && !toEmailBlankError && !emailBodyLengthExceededError && !isCcAddressValid ){
                 isNoCustomError = true;
             }
-        }
-        catch(EmailException e){
+        }catch(EmailException e){
             ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.ERROR,Label.Invalid_email);
             ApexPages.addMessage(myMsg);
-        }
-        catch(DmlException e){
+        }catch(DmlException e){
             ApexPages.addMessages(e);
             isUnderApproval = false;
             lDraftEmailMessageInstance.status__c = 'Draft';
             update lDraftEmailMessageInstance;
-        }
-        catch(Exception e){
+        }catch(Exception e){
             ApexPages.addMessages(e);
         }
     }
 
+    private void submitForApproval() {
+        isUnderApproval = true;
+        saveDraft();
+        Approval.ProcessSubmitRequest submitRequest = new Approval.ProcessSubmitRequest();
+        submitRequest.setComments(Label.Email_draft_approval);
+        submitRequest.setObjectId(lDraftEmailMessageInstance.id);
+        Approval.ProcessResult result = Approval.process(submitRequest);
+        Case caseInstance = [SELECT Id, Status, OwnerId FROM Case WHERE Id=: caseId];
+    }
+
+    private void updateDraftMessageStatus() {
+        //Change status of DEM record if saved and Sent
+        List<DraftEmailMessage__c> DEMList = new List<DraftEmailMessage__c>();
+        DEMList = [Select id,status__c from DraftEmailMessage__c where case__c=:caseId ];
+        for(DraftEmailMessage__c DEMInstance : DEMList){
+            if(DEMList != null && DEMInstance.status__c == 'Draft'){
+                DEMInstance.status__c = 'Sent';
+                update DEMInstance;
+            }
+        }
+    }
+
+    private void insertEmailMessage(Id contactId) {
+        //insert the new Email message into Email Messge object
+        EmailMessage emailMessageInstance;
+        emailMessageInstance = new EmailMessage();
+
+        Contact contactInstance = new Contact();
+        contactInstance = [Select Email from Contact where Id =:contactId ];
+        String contactEmailAddress = contactInstance.Email;
+        emailMessageInstance.ToAddress = contactEmailAddress;
+        if(selectedEmailTemplate.TemplateType == 'custom'){
+            emailBody = emailBody.replaceAll('<br/>','\n');
+            emailMessageInstance.HtmlBody = emailBody;
+        }else if(selectedEmailTemplate.TemplateType == 'text'){
+            emailBody = emailBody.replaceAll('<br/>','\n');
+            emailMessageInstance.TextBody = emailBody;
+        }else{
+            emailBody = emailBody.replaceAll('<br/>','\n');
+            emailMessageInstance.TextBody = emailBody;
+        }
+        emailMessageInstance.Subject = emailSubject;
+        emailMessageInstance.ParentId = caseId;
+        emailMessageInstance.FromName = userName;
+        emailMessageInstance.FromAddress = userEmailAddress;
+        emailMessageInstance.CcAddress = ccAddress;
+        emailMessageInstance.BccAddress = bccAddress;
+        insert emailMessageInstance;
+    }
+
+    private void upsertTask(Id contactId) {
+        //insert the required fields to Task object
+        Task taskInstance;
+        taskInstance = new Task();
+        taskInstance.WhatId = caseId;
+        taskInstance.WhoId = contactId ;
+        taskInstance.subject= emailSubject;
+        taskInstance.status = 'Completed';
+        taskInstance.Description = 'Additional To:'+additionalTo;
+        taskInstance.ActivityDate = date.today();
+        upsert taskInstance;
+    }
+
     /*
-     * Functio to populate Email Editor
+     * Function to populate Email Editor
      */
     public void populateEditor(){
         if(selectedTemplate != 'none' && selectedTemplate != ''){
-            /*
-            * Extract merge field values
-            */
+            // Extract merge field values
             selectedEmailTemplate = [Select e.HtmlValue,e.Id,e.FolderId,e.templateType,e.body  From EmailTemplate e WHERE e.Id = : selectedTemplate];
             type = selectedEmailTemplate.templateType;
             PageReference emailEditorPageRef = new PageReference(URL.getSalesforceBaseUrl().getProtocol() + '://' + URL.getSalesforceBaseUrl().getHost() + '/email/author/emailauthor.jsp?retURL=/' + caseId + '&p3_lkid=' + caseId + '&rtype=003&p2_lkid=' + caseInstance.ContactId + '&template_id=' + selectedTemplate);
@@ -1220,6 +1186,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
      */
     public void insertArticleContent() {
         bodyValue = '';
+        List<String> articleContentList;
         articleContentList = new List<String>();
         List<CaseArticle> ca = [select ID from CaseArticle where CaseId =: caseId and KnowledgeArticleId =: selectedKnowledgeArticleId];
         if (ca.isEmpty()) {

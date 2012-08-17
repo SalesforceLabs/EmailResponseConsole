@@ -27,6 +27,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component controller="HVEMCaseListDetailsCtrl" allowDML="true">
+    <apex:includeScript value="/support/console/25.0/integration.js"/>
     <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCaseListDetailsComponent.js')}" />
     <style type='text/css'>
        .hvemRefreshListButton,.rightArrowIcon {
@@ -60,30 +61,103 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
                 sforce.console.focusPrimaryTabByName(primaryTabName);
             }
-
-            function selectQueue(queueId) {
-                document.getElementById('idSelectedQueue').value = queueId;
-                if(document.getElementById(queueId) != null && document.getElementById(queueId) != ''){
-                    //document.getElementById(queueId).className='hvemListItem hvemHigtlightedQueue';
-                    document.getElementById(queueId).style.backgroundColor = '#effaff';
-                    document.getElementById(queueId).style.border = '1px solid #b3c0c9';
-                }
-            }
-
-            function selectCase(selectCaseId, bOnload) {
-                document.getElementById('idSelectedCase').value = selectCaseId;
-                var caseContainerId = 'idSelectedCase_' + selectCaseId;
-
-                if (!bOnload) {
-                    // un-select the currently selected case
-                }
-                if(document.getElementById(caseContainerId) != null && document.getElementById(caseContainerId) != ''){
-                    document.getElementById(caseContainerId).className='highLightSelection';
-                }
-
-            }
         </script>
     </apex:outputPanel>
+    <script type='text/javascript'>
+         function selectQueue(queueId) {
+            document.getElementById('idSelectedQueue').value = queueId;
+            if(document.getElementById(queueId) != null && document.getElementById(queueId) != ''){
+                //document.getElementById(queueId).className='hvemListItem hvemHigtlightedQueue';
+                document.getElementById(queueId).style.backgroundColor = '#effaff';
+                document.getElementById(queueId).style.border = '1px solid #b3c0c9';
+            }
+        }
+
+        function selectCase(selectCaseId, bOnload) {
+            document.getElementById('idSelectedCase').value = selectCaseId;
+            var caseContainerId = 'idSelectedCase_' + selectCaseId;
+            if (prevFocusedTabId != -1 && prevFocusedTabId != selectCaseId) {
+                // un-select the currently selected case
+                unSelectCase();
+            }
+            if(document.getElementById(caseContainerId) != null && document.getElementById(caseContainerId) != ''){
+                document.getElementById(caseContainerId).className='highLightSelection';
+            }
+        }
+        function unSelectCase() {
+            var prevCaseContainerId = 'idSelectedCase_' + prevFocusedTabId;
+            if(document.getElementById(prevCaseContainerId) != null && document.getElementById(prevCaseContainerId) != ''){
+                document.getElementById(prevCaseContainerId).className='';
+            }
+        }
+
+        var enclosingTabObjId = -1;
+        var focusedTabObjId = -1;
+        var prevFocusedTabId = -1;
+        var focusChecker;
+
+        window.onload = init;
+        function init(){
+            focusChecker = setInterval(checkFocusedTab, 1000);
+
+            sforce.console.getEnclosingPrimaryTabObjectId(setEnclosingTabObjId);
+            sforce.console.getFocusedPrimaryTabObjectId(setFocusedTabObjId);
+        }
+        var setEnclosingTabObjId = function(result) {
+            enclosingTabObjId = normaliseSforceID(result.id);
+        }
+        var setFocusedTabObjId = function(result) {
+            prevFocusedTabId = focusedTabObjId;
+            focusedTabObjId = normaliseSforceID(result.id);
+            if(focusedTabObjId!=null && focusedTabObjId!="null" && focusedTabObjId!=-1) {
+                if (focusedTabObjId!=prevFocusedTabId) {
+                    selectCase(focusedTabObjId, false);
+                }
+            } else {
+                if (focusedTabObjId!=null && focusedTabObjId!="null" && focusedTabObjId!=-1) {
+                    unSelectCase();
+                    //prevFocusedTabId = -1;
+                } else if (prevFocusedTabId != null && prevFocusedTabId != "null" && prevFocusedTabId != -1 ) {
+                    unSelectCase();
+                }
+            }
+        }
+        var checkFocusedTab = function() {
+            if (enclosingTabObjId==null || enclosingTabObjId=="null" || enclosingTabObjId==-1) {
+                sforce.console.getFocusedPrimaryTabObjectId(setFocusedTabObjId);
+            } else {
+                // not a pinned list view, no need to highlight the focused tab
+                clearInterval(focusChecker);
+            }
+        }
+        function normaliseSforceID( id) { // fluff up a 15 char id to return an 18 char id
+            if (id == null) return id;
+            id = id.replace(/\"/g, ''); // scrub quotes from this id
+            if (id.length == 18) {
+                return id;
+            }
+            if (id.length != 15) {
+                //print('well, id is not 15, bye' + id + ' ' + id.length);
+                return null;
+            }
+            var suffix = "";
+            for (var i = 0; i < 3; i++) {
+                var flags = 0;
+                for (var j = 0; j < 5; j++) {
+                    var c = id.charAt(i * 5 + j);
+                    if (c >= 'A' && c <= 'Z') {
+                        flags += 1 << j;
+                    }
+                }
+                if (flags <= 25) {
+                    suffix += "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(flags);
+                } else {
+                    suffix += "012345".charAt(flags-26);
+                }
+            }
+            return id + suffix;
+        }
+    </script>
 
     <input type="hidden" id="idSelectedQueue" name="nameSelectedQueue" value="{!finalQueueId}" />
     <input type="hidden" id="idSelectedCase" name="nameSelectedCase" value="" />

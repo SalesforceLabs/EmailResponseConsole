@@ -102,6 +102,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
             sforce.console.getEnclosingPrimaryTabObjectId(setEnclosingTabObjId);
             sforce.console.getFocusedPrimaryTabObjectId(setFocusedTabObjId);
+
+            sforce.console.addEventListener('HVEM:::CaseList:::Refresh', refreshEventHandler);
+        }
+
+        var refreshEventHandler = function() {
+            refreshFull('fromRefresh');
         }
         var setEnclosingTabObjId = function(result) {
             enclosingTabObjId = normaliseSforceID(result.id);

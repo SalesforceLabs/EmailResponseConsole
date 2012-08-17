@@ -210,54 +210,66 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
             width="20px" height="20px" />
     </div>
-    <apex:actionFunction name="populateEditorAF" status="loadingStatus"
-        action="{!populateEditor}" reRender="idEditorPanel"
-        oncomplete="populateEditorJS();" />
-    <apex:actionFunction name="sendAndNextActionAF" status="loadingStatus"
-        action="{!sendAndNextAction}"
-        rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel"
-        oncomplete="handleTabs();">
-        <apex:param name="nameEmailContent" id="idEmailContent" value=""
-            assignTo="{!emailBody}" />
-        <apex:param name="additionalToAddress" id="idAdditionalToAddress"
-            value="" assignTo="{!additionalToAddress}" />
-        <apex:param name="ccAddress" id="idCcAddress" value=""
-            assignTo="{!ccAddress}" />
-        <apex:param name="bccAddress" id="idBccAddress" value=""
-            assignTo="{!bccAddress}" />
-        <apex:param name="superUserApproval" id="idSuperUserApproval" value=""
-            assignTo="{!superUserApproval}" />
+    <apex:actionFunction name="populateEditorAF"
+            status="loadingStatus"
+            action="{!populateEditor}"
+            reRender="idEditorPanel"
+            oncomplete="populateEditorJS();" />
+    <apex:actionFunction name="sendAndNextActionAF"
+            status="loadingStatus"
+            action="{!sendAndNextAction}"
+            rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel"
+            oncomplete="handleTabs();">
+        <apex:param name="nameEmailContent"     id="idEmailContent"         value="" assignTo="{!emailBody}" />
+        <apex:param name="additionalToAddress"  id="idAdditionalToAddress"  value="" assignTo="{!additionalToAddress}" />
+        <apex:param name="ccAddress"            id="idCcAddress"            value="" assignTo="{!ccAddress}" />
+        <apex:param name="bccAddress"           id="idBccAddress"           value="" assignTo="{!bccAddress}" />
+        <apex:param name="superUserApproval"    id="idSuperUserApproval"    value="" assignTo="{!superUserApproval}" />
     </apex:actionFunction>
-    <apex:actionFunction name="discardDraftAF" status="loadingStatus"
-        action="{!discardDraft}"
-        rerender="idfullBodyPanel,idEditorPanel,errorPanel"
-        oncomplete="reloadCKEditor();" />
-    <apex:actionFunction name="saveDraftAF" status="loadingStatus"
-        action="{!saveDraft}" oncomplete="saveDiscardLink();"
-        rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,saveDiscardId">
-        <apex:param name="nameEmailContent" id="EmailContent" value=""
-            assignTo="{!emailBody}" />
-        <apex:param name="additionalToAddress" id="AdditionalToAddress"
-            value="" assignTo="{!additionalToAddress}" />
-        <apex:param name="ccAddress" id="CcAddress" value=""
-            assignTo="{!ccAddress}" />
-        <apex:param name="bccAddress" id="BccAddress" value=""
-            assignTo="{!bccAddress}" />
+    <apex:actionFunction name="sendCaseBackToQueueAF"
+            status="loadingStatus"
+            action="{!sendCaseBackToQueue}"
+            rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel"
+            oncomplete="handleTabs();">
     </apex:actionFunction>
-    <apex:actionFunction name="insertArticleContentAF" status="loadingStatus" action="{!insertArticleContent}" rerender="idEditorPanel" oncomplete="loadEditor();">
-        <apex:param assignTo="{!templateType}" name="templateType" value="" />
-        <apex:param value="" assignTo="{!selectedKnowledgeArticleId}" name="selectedKnowledgeArticleId" />
-        <apex:param value="" assignTo="{!selectedKnowledgeArticleFrameSourceId}" name="selectedKnowledgeArticleFrameSourceId" />
-        <apex:param value="" assignTo="{!selectedKnowledgeArticleFrameSource}" name="selectedKnowledgeArticleFrameSource" />
-        <apex:param value="" assignTo="{!articleTypeOfSelectedArticle}" name="articleTypeOfSelectedArticle" />
-        <apex:param assignTo="{!articleTitle}" value="" name="articleTitle" />
-        <apex:param assignTo="{!articleSummary}" value="" name="articleSummary" />
+    <apex:actionFunction name="discardDraftAF"
+            status="loadingStatus"
+            action="{!discardDraft}"
+            rerender="idfullBodyPanel,idEditorPanel,errorPanel"
+            oncomplete="reloadCKEditor();" />
+    <apex:actionFunction name="saveDraftAF"
+            status="loadingStatus"
+            action="{!saveDraft}"
+            oncomplete="saveDiscardLink();"
+            rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,saveDiscardId">
+        <apex:param name="nameEmailContent"     id="EmailContent"           value="" assignTo="{!emailBody}" />
+        <apex:param name="additionalToAddress"  id="AdditionalToAddress"    value="" assignTo="{!additionalToAddress}" />
+        <apex:param name="ccAddress"            id="CcAddress"              value="" assignTo="{!ccAddress}" />
+        <apex:param name="bccAddress"           id="BccAddress"             value="" assignTo="{!bccAddress}" />
+    </apex:actionFunction>
+    <apex:actionFunction name="insertArticleContentAF"
+            status="loadingStatus"
+            action="{!insertArticleContent}"
+            rerender="idEditorPanel"
+            oncomplete="loadEditor();">
+        <apex:param name="templateType"                             value="" assignTo="{!templateType}" />
+        <apex:param name="selectedKnowledgeArticleId"               value="" assignTo="{!selectedKnowledgeArticleId}" />
+        <apex:param name="selectedKnowledgeArticleFrameSourceId"    value="" assignTo="{!selectedKnowledgeArticleFrameSourceId}" />
+        <apex:param name="selectedKnowledgeArticleFrameSource"      value="" assignTo="{!selectedKnowledgeArticleFrameSource}" />
+        <apex:param name="articleTypeOfSelectedArticle"             value="" assignTo="{!articleTypeOfSelectedArticle}" />
+        <apex:param name="articleTitle"                             value="" assignTo="{!articleTitle}" />
+        <apex:param name="articleSummary"                           value="" assignTo="{!articleSummary}" />
     </apex:actionfunction>
-    <apex:actionFunction name="initializeEmailTemplateAF" status="loadingStatus"
-         action="{!initializeEmailTemplate}" reRender="emailTemplateId" />
-    <apex:actionFunction name="changeCaseStausAF" status="loadingStatus"
-         action="{!changeCaseStatus}" oncomplete="handleTabs();"
-         rerender="idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,spanId,errorPanel"/>
+    <apex:actionFunction name="initializeEmailTemplateAF"
+            status="loadingStatus"
+            action="{!initializeEmailTemplate}"
+            reRender="emailTemplateId" />
+    <apex:actionFunction name="changeCaseStatusAF"
+            status="loadingStatus"
+            action="{!changeCaseStatus}"
+            oncomplete="handleTabs();"
+            rerender="idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,spanId,errorPanel"/>
+
     <apex:outputPanel id="idfullBodyPanel" rendered="{!isServiceCloud}">
         <table class="hvemPubTable" width="100%;">
             <tr>
@@ -370,8 +382,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <apex:inputCheckbox disabled="{!isUnderApproval}"
                         id="includeThreadCheckBoxId" value="{!includeThread}"
                         selected="false" />
-                        <apex:outputLabel style="font-weight:bold;">Include Thread</apex:outputLabel>
-                     <apex:outputPanel id="saveDiscardId" style="float:right;width:302px">
+                    <apex:outputLabel style="font-weight:bold;">Include Thread</apex:outputLabel>
+
+                    <apex:outputPanel id="saveDiscardId" style="float:right;width:302px">
                         <apex:commandLink styleClass="discardLink" rendered="{!configOptions.Allow_Drafts__c}" id="DiscardId" value="{!$Label.Discard_Changes}" onclick="discardDraftAF();" oncomplete="return false;"/>&nbsp;
                         <label id="discardChangesSpan" Class="disableDiscard" >{!$Label.Discard_Changes}</label>&nbsp;
 
@@ -379,19 +392,43 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         <apex:commandLink styleClass="activeSaveLink" rendered="{!configOptions.Allow_Drafts__c && !isUnderApproval}" id="SaveId" onclick="saveDraftJS();" oncomplete="return false;">{!$Label.Save}</apex:commandLink>&nbsp;&nbsp;
 
                         <apex:outputLabel styleClass="disableSave" value="{!$Label.Save}" rendered="{!isUnderApproval}"></apex:outputLabel>
-                        <span id="spanId" style="width:100px"> <apex:commandButton disabled="{!isUnderApproval}" value="{!$Label.Send_and_Next_Case}"
-                            onclick="sendAndNextActionJS('NormalSend');" oncomplete="return false;" style="margin-left:0px;position:absolute;right:29px;"/>
-                            <apex:commandButton id="showOptionsId" rendered="{!If(enableChangeCaseStatus || isSuperUser,true,false)}" disabled="{!isUnderApproval}" value="▼" onclick="showOptions();"
-                            onblur="hideDropDownOptions();" oncomplete="return false;" style="width:6%;float:right;margin-left:-5px;" /><br />
+                        <span id="spanId" style="width:100px">
+                            <apex:commandButton disabled="{!isUnderApproval}"
+                                    value="{!$Label.Send_and_Next_Case}"
+                                    onclick="sendAndNextActionJS('NormalSend');"
+                                    oncomplete="return false;"
+                                    style="margin-left:0px;position:absolute;right:29px;"/>
+                            <apex:commandButton id="showOptionsId"
+                                    rendered="{!If(enableChangeCaseStatus || isSuperUser || allowSendBackToQueue, true,false)}"
+                                    disabled="{!isUnderApproval}"
+                                    value="▼"
+                                    onclick="showOptions();"
+                                    onblur="hideDropDownOptions();"
+                                    oncomplete="return false;"
+                                    style="width:6%;float:right;margin-left:-5px;" />
+                            <br />
                             <div class="divClass" id="DivId" style="margin-top: 7.5px;position: absolute;right: 10px;">
-                                <span onmouseover="populateMouseVar('in','changeCaseId');" onblur="hideOptions('other');"
-                                      onmouseout="populateMouseVar('out','changeCaseId')" id="changeCaseId" class="dropdownSelection"
-                                      style="width:132px; height:18px;" onclick = "hideOptions('spam');">
-                                      <apex:outputLabel styleClass="labelStyle" style="Bottom:-2px;" value="{!$Label.Change_status}" title="Change status"></apex:outputLabel></span>
-                                <span onmouseover="populateMouseVar('in','superUserApproval');" onblur="hideOptions('other');"
-                                      onmouseout="populateMouseVar('out','superUserApproval');" id="superUserApproval" class="dropdownSelection"
-                                      style="width:132px; height: 18px;margin-right:1px;margin-top: -1px;" onclick="hideOptions('review');">
-                                      <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="{!$Label.Submit_for_Review}" title="Submit for Review"></apex:outputLabel></span>
+                                <apex:outputPanel rendered="{!If(enableChangeCaseStatus, true,false)}">
+                                    <span onmouseover="populateMouseVar('in','changeCaseId');" onblur="hideOptions('other');"
+                                            onmouseout="populateMouseVar('out','changeCaseId')" id="changeCaseId" class="dropdownSelection"
+                                            style="width:132px; height:18px;" onclick = "hideOptions('spam');">
+                                        <apex:outputLabel styleClass="labelStyle" style="Bottom:-2px;" value="{!$Label.Change_status}" title="Change status"></apex:outputLabel>
+                                    </span>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!If(isSuperUser, true,false)}">
+                                    <span onmouseover="populateMouseVar('in','superUserApproval');" onblur="hideOptions('other');"
+                                            onmouseout="populateMouseVar('out','superUserApproval');" id="superUserApproval" class="dropdownSelection"
+                                            style="width:132px; height: 18px;margin-right:1px;margin-top: -1px;" onclick="hideOptions('review');">
+                                        <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="{!$Label.Submit_for_Review}" title="Submit for Review"></apex:outputLabel>
+                                    </span>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!If(allowSendBackToQueue, true,false)}">
+                                    <span onmouseover="populateMouseVar('in','sendBackToQueue');" onblur="hideOptions('other');"
+                                            onmouseout="populateMouseVar('out','sendBackToQueue');" id="sendBackToQueue" class="dropdownSelection"
+                                            style="width:132px; height: 18px;margin-right:1px;margin-top: -1px;" onclick="hideOptions('sendback');" oncomplete="return false;">
+                                        <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="Send Back To Queue" title="Submit for Review"></apex:outputLabel>
+                                    </span>
+                                </apex:outputPanel>
                             </div>
                         </span>
                     </apex:outputPanel>
@@ -436,13 +473,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </apex:outputPanel>
     <apex:outputPanel id="idEditorPanel">
         <apex:inputHidden value="{!isTemplateDeleted}" id="TemplateDeleted" />
-        <apex:inputHidden value="{!selectedEmailTemplate.HtmlValue}"
-            id="htmlValue" />
+        <apex:inputHidden value="{!selectedEmailTemplate.HtmlValue}" id="htmlValue" />
         <apex:inputHidden value="{!type}" id="templateType" />
         <apex:inputHidden value="{!bodyValue}" id="textValue" />
         <apex:inputHidden value="{!caseFromQueue.Id}" id="nextCaseId" />
-        <apex:inputHidden value="{!caseFromQueue.caseNumber}"
-            id="nextCasenumber" />
+        <apex:inputHidden value="{!caseFromQueue.caseNumber}" id="nextCasenumber" />
         <apex:inputHidden value="{!isValidated}" id="isValidated" />
         <apex:inputHidden value="{!isNoCustomError}" id="isNoCustomError" />
     </apex:outputPanel>
@@ -637,18 +672,22 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
              }
          }
 
-         function hideOptions(type){
-                 if(type == 'review'){
-                     sendAndNextActionJS('SuperUserApproval');
-                 isActionComplete = 'true';
-                 isoptionsVisible = 'false';
-                }else if(type == 'spam'){
-                 changeCaseStausAF();
-                 isActionComplete = 'true';
-                 isoptionsVisible = 'false';
-                 }
-             document.getElementById('DivId').style.display='none';
-                 }
+        function hideOptions(type){
+            if(type == 'review'){
+                sendAndNextActionJS('SuperUserApproval');
+                isActionComplete = 'true';
+                isoptionsVisible = 'false';
+            }else if(type == 'spam'){
+                changeCaseStatusAF();
+                isActionComplete = 'true';
+                isoptionsVisible = 'false';
+            }else if(type == 'sendback'){
+                sendCaseBackToQueueAF();
+                isActionComplete = 'true';
+                isoptionsVisible = 'false';
+            }
+            document.getElementById('DivId').style.display='none';
+        }
 
          function hideDropDownOptions(){
              if(isActionComplete == 'false' && isMouseOver == 'false'){

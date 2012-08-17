@@ -111,6 +111,8 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public String type{get;set;}
     public List<EmailTemplate> emailTemplateList {get; set;}
 
+    public boolean allowSendBackToQueue{get;set;}
+
     /**
     * Constructor
     */
@@ -344,6 +346,12 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             }
             // Phase II Implementation -- END
         }
+
+        if (caseInstance.HVEMPreviousQueue__c!=null && caseInstance.HVEMPreviousQueue__c!='') {
+            allowSendBackToQueue = true;
+        } else {
+            allowSendBackToQueue = false;
+        }
     }
 
     /**
@@ -504,10 +512,21 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             casesInQueueList[0].HVEMPreviousQueue__c = casesInQueueList[0].OwnerId;
             casesInQueueList[0].OwnerId = loggedUser;
             update casesInQueueList[0];
-            caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name FROM Case WHERE id=: casesInQueueList[0].Id];
+            caseFromQueue = [SELECT id,caseNumber,IsEscalated,Owner.Name,Subject,Status,Contact.Name,HVEMPreviousQueue__c FROM Case WHERE id=: casesInQueueList[0].Id];
             return false;
         }
         return true;
+    }
+
+    /*
+    * Function to perform the 'Send Case Back To Queue' button action
+    */
+    public void sendCaseBackToQueue(){
+        caseInstance.OwnerId = caseInstance.HVEMPreviousQueue__c;
+        caseInstance.HVEMPreviousQueue__c = '';
+        update caseInstance;
+        isNoCustomError = true;
+        checkNextCasePresent();
     }
 
     /*

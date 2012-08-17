@@ -120,8 +120,10 @@ public with Sharing class HVEMCaseListDetailsCtrl {
         fields.add('Subject');
         fields.add('Status');
         fields.add('Contact.Name');
+        fields.add('HVEMPreviousQueue__c');
         casesInQueueList = dbHelper.getQueryResults(new Case(), fields, lCondition);
         if(casesInQueueList.size() > 0){
+            casesInQueueList[0].HVEMPreviousQueue__c = casesInQueueList[0].OwnerId;
             casesInQueueList[0].OwnerId = loggedUser;
             update casesInQueueList[0];
             refreshCaseQueueList();

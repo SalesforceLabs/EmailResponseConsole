@@ -53,6 +53,7 @@
         <name>CustomApplicationComponent</name>
     </types>
     <types>
+        <members>Case.HVEMPreviousQueue__c</members>
         <members>User.HVEM_User__c</members>
         <name>CustomField</name>
     </types>

@@ -111,6 +111,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
     public String type{get;set;}
     public List<EmailTemplate> emailTemplateList {get; set;}
 
+    private boolean enableSendBackToQueue;
     public boolean allowSendBackToQueue{get;set;}
 
     /**
@@ -140,6 +141,8 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         isRejected = false;
         isTemplateDeleted = false;
         enableDraftEmails=false;
+        enableSendBackToQueue=false;
+        allowSendBackToQueue=false;
         enableChangeCaseStatus = false;
         // Get full user instance
         userName = UserInfo.getUserName();
@@ -154,6 +157,8 @@ public with Sharing class HVEMEmailEditorCompCtrl {
         if(configOptions != null){
             selectedTemplate = configOptions.Default_Email_Template__c;
             enableDraftEmails = configOptions.Allow_Drafts__c;
+            enableSendBackToQueue = configOptions.Allow_sending_cases_back_to_queue__c;
+            allowSendBackToQueue = configOptions.Allow_sending_cases_back_to_queue__c;
             enableChangeCaseStatus = configOptions.Allow_changing_case_status__c;
         }else{
             selectedTemplate = 'none';
@@ -347,7 +352,7 @@ public with Sharing class HVEMEmailEditorCompCtrl {
             // Phase II Implementation -- END
         }
 
-        if (caseInstance.HVEMPreviousQueue__c!=null && caseInstance.HVEMPreviousQueue__c!='') {
+        if (enableSendBackToQueue && caseInstance.HVEMPreviousQueue__c!=null && caseInstance.HVEMPreviousQueue__c!='') {
             allowSendBackToQueue = true;
         } else {
             allowSendBackToQueue = false;

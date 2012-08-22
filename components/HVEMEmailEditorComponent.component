@@ -426,7 +426,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                     <span onmouseover="populateMouseVar('in','sendBackToQueue');" onblur="hideOptions('other');"
                                             onmouseout="populateMouseVar('out','sendBackToQueue');" id="sendBackToQueue" class="dropdownSelection"
                                             style="width:132px; height: 18px;margin-right:1px;margin-top: -1px;" onclick="hideOptions('sendback');" oncomplete="return false;">
-                                        <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="Send Back To Queue" title="Submit for Review"></apex:outputLabel>
+                                        <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="{!$Label.Send_back_to_queue}" title="Submit for Review"></apex:outputLabel>
                                     </span>
                                 </apex:outputPanel>
                             </div>

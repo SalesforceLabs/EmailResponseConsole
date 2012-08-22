@@ -56,6 +56,7 @@ public with Sharing class HVEMSettingsCtrl{
     public boolean autoPopulate{get;set;}
     public boolean enableDraftEmails{get;set;}
     public boolean enableApprovalProcess{get;set;}
+    public boolean enableSendBackToQueue{get;set;}
     public String caseStatusUnderApproval{get;set;}
     public String searchGroupText{get;set;}
     public String selectedPublicGroups{get;set;}
@@ -124,7 +125,7 @@ public with Sharing class HVEMSettingsCtrl{
     /**
      * Constructor
      */
-     public HVEMSettingsCtrl(){
+    public HVEMSettingsCtrl(){
         caseApiLabelMap = new Map<String, String>();
         categoryGroupApiLabelMap = new Map<String, String>();
         dataCategoryApiLabelMap = new Map<String, String>();
@@ -150,6 +151,7 @@ public with Sharing class HVEMSettingsCtrl{
         enableDraftEmails=false;
         enableApprovalProcess = false;
         enableChangeCaseStatus = false;
+        enableSendBackToQueue = false;
         caseStatusUnderApproval='';
         strChosenCategoryGroups = '';
         routingEmailInput  = '';
@@ -512,6 +514,7 @@ public with Sharing class HVEMSettingsCtrl{
          chosenCategoryGroups = strChosenCategoryGroups;
          enableDraftEmails = configOptions.Allow_Drafts__c;
          enableApprovalProcess = configOptions.Allow_Draft_Approval__c;
+         enableSendBackToQueue = configOptions.Allow_sending_cases_back_to_queue__c;
          caseStatusUnderApproval = configOptions.Under_Approval_Case_Status__c;
          enableChangeCaseStatus = configOptions.Allow_changing_case_status__c;
          IsVisibleInPRM = configOptions.Check_PRM_Channel__c;
@@ -645,6 +648,7 @@ public with Sharing class HVEMSettingsCtrl{
                         configOptions.Default_Email_Folder__c=folders;
                         configOptions.Allow_Drafts__c = enableDraftEmails;
                         configOptions.Allow_Draft_Approval__c = enableApprovalProcess;
+                        configOptions.Allow_sending_cases_back_to_queue__c = enableSendBackToQueue;
                         configOptions.Allow_changing_case_status__c = enableChangeCaseStatus;
 
 
@@ -685,6 +689,7 @@ public with Sharing class HVEMSettingsCtrl{
                         configOptions.Allow_Drafts__c = enableDraftEmails;
                         configOptions.Allow_Draft_Approval__c = enableApprovalProcess;
                         configOptions.Allow_changing_case_status__c = enableChangeCaseStatus;
+                        configOptions.Allow_sending_cases_back_to_queue__c = enableSendBackToQueue;
 
 
                      }

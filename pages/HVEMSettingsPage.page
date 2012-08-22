@@ -170,6 +170,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                      <td colspan="2"><apex:inputCheckbox value="{!enableChangeCaseStatus}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Allow_changing_case_status}" /></td>
                 </tr>
                 <tr>
+                     <td colspan="2"><apex:inputCheckbox value="{!enableSendBackToQueue}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Allow_send_back_to_queue}" /></td>
+                </tr>
+                <tr>
                     <td colspan="2"><apex:inputCheckbox value="{!enableApprovalProcess}" onclick="enableApproval();" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/> <apex:outputText value="{!$Label.Enable_Approval_process}" /></td>
                 </tr>
                 <tr>

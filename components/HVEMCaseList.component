@@ -82,6 +82,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             }
             if(document.getElementById(caseContainerId) != null && document.getElementById(caseContainerId) != ''){
                 document.getElementById(caseContainerId).className='highLightSelection';
+            } else {
+                // the case is not in the list, let's refresh the list (after a "send and next")
+                // TODO: check that the list won't refresh constinuously
+                //       if the open case is not assigned to the current user (shold not happen, but...)
+                refreshFull('fromRefresh');
             }
         }
         function unSelectCase() {
@@ -95,6 +100,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         var focusedTabObjId = -1;
         var prevFocusedTabId = -1;
         var focusChecker;
+        function resetSelection() {
+            enclosingTabObjId = -1;
+            focusedTabObjId = -1;
+            prevFocusedTabId = -1;
+        }
 
         window.onload = init;
         function init(){
@@ -164,6 +174,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             return id + suffix;
         }
     </script>
+    <apex:outputPanel id="onloadScriptPanel">
+    </apex:outputPanel>
 
     <input type="hidden" id="idSelectedQueue" name="nameSelectedQueue" value="{!finalQueueId}" />
     <input type="hidden" id="idSelectedCase" name="nameSelectedCase" value="" />
@@ -172,7 +184,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
         <apex:actionFunction name="assignCaseFromQueueAF"
             action="{!assignCaseFromQueue}"
-            rerender="idPreviousCasePanel,idCaseoutputPanel,idQueueCaseCountPanel,idPrimarytabPanel,onloadScriptPanel"
+            rerender="idPreviousCasePanel,idCaseoutputPanel,idQueueCaseCountPanel,idPrimarytabPanel"
             oncomplete="openCaseDetailsPrimaryTab('queue');">
             <apex:param name="QueueId" assignTo="{!queueId}" value="" />
         </apex:actionFunction>
@@ -183,7 +195,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         </apex:actionFunction>
         <apex:actionFunction name="refreshFull" status="loadingStatus"
             action="{!refreshCaseQueueList}"
-            rerender="idQueueCaseCountPanel,onloadScriptPanel,idPreviousCasePanel,idCaseoutputPanel">
+            oncomplete="resetSelection();"
+            rerender="idQueueCaseCountPanel,idPreviousCasePanel,idCaseoutputPanel">
             <apex:param name="refreshParam" assignTo="{!refreshListParam}" value="" />
         </apex:actionFunction>
         <apex:actionFunction name="storeSelectedQueuePageId"
@@ -192,7 +205,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         </apex:actionFunction>
         <apex:actionFunction name="showDraftsOnlyCaseListAF"
             status="loadingStatus" action="{!draftsCaseListFunc}"
-            rerender="messageId,idCaseoutputPanel,idQueueCaseCountPanel,onloadScriptPanel"
+            rerender="messageId,idCaseoutputPanel,idQueueCaseCountPanel"
             oncomplete="initConsole();">
             <apex:param assignTo="{!isDrafts}" name="isDrafts" value="" />
         </apex:actionFunction>
@@ -321,12 +334,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             </apex:outputPanel>
                         </apex:pageBlock>
                         <br />
-                    </apex:outputPanel>
-                    <apex:outputPanel id="onloadScriptPanel">
-                        <script type="text/javascript">
-                            //selectCase('{!caseId}', true);
-                            //selectQueue('{!finalQueueId}'); // 'idSelectedQueue_<queue id>'
-                        </script>
                     </apex:outputPanel>
                 </td>
             </tr>

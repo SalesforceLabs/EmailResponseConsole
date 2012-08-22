@@ -10,8 +10,8 @@
     <label>Email Response Console</label>
     <listPlacement>
         <location>left</location>
-        <units>percent</units>
-        <width>15</width>
+        <units>pixels</units>
+        <width>200</width>
     </listPlacement>
     <listRefreshMethod>none</listRefreshMethod>
     <tab>HVEM_Cases</tab>

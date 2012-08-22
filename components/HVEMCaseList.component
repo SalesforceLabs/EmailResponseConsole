@@ -48,18 +48,19 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             var isHVEMUser = '{!loggedUserInstance.HVEM_User__c}';
 
             function openCaseDetailsPrimaryTab(type){
-                if(type == 'queue'){
-                    if({!casesInQueueList.size} > 0){
-                        sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
-                    }
-                }else{
-                    sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',changePrimaryFocus,'{!JSENCODE(selectedCase.CaseNumber)}');
+                if(type == 'queue' && {!casesInQueueList.size} == 0){
+                    return;
                 }
+                sforce.console.focusPrimaryTabByName('{!JSENCODE(selectedCase.CaseNumber)}', focusTabCallback);
             }
 
-            function changePrimaryFocus(){
-                var primaryTabName = '{!JSENCODE(selectedCase.CaseNumber)}';
-                sforce.console.focusPrimaryTabByName(primaryTabName);
+            function focusTabCallback(result) {
+                if (result.success != true) {
+                    // setting the focus failed, let's try to open the tab
+                    sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',null,'{!JSENCODE(selectedCase.CaseNumber)}');
+                    refreshFull('fromRefresh');
+                }
+                selectCase(selectCaseId, bOnload);
             }
         </script>
     </apex:outputPanel>

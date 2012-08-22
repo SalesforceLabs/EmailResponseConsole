@@ -92,7 +92,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         function unSelectCase() {
             var prevCaseContainerId = 'idSelectedCase_' + prevFocusedTabId;
             if(document.getElementById(prevCaseContainerId) != null && document.getElementById(prevCaseContainerId) != ''){
-                document.getElementById(prevCaseContainerId).className='';
+                document.getElementById(prevCaseContainerId).className='hvemCaseItem';
             }
         }
 

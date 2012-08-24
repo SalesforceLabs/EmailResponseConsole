@@ -57,10 +57,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             function focusTabCallback(result) {
                 if (result.success != true) {
                     // setting the focus failed, let's try to open the tab
-                    sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',null,'{!JSENCODE(selectedCase.CaseNumber)}');
+                    sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',openPrimaryTabSuccess,'{!JSENCODE(selectedCase.CaseNumber)}');
                     refreshFull('fromRefresh');
                 }
-                selectCase(selectCaseId, bOnload);
+                selectCase(selectedCaseId, false);
+            }
+            function openPrimaryTabSuccess(result) {
+                // nothing really to do...
             }
         </script>
     </apex:outputPanel>

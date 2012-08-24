@@ -155,7 +155,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
                                 <apex:outputPanel rendered="{!!isInsertingContent}">
                                     <a href=""
-                                            onclick="insertArticleLinkById('{!article.knowledgeArticle.id}');return false;"
+                                            onclick="insertArticleById('{!article.knowledgeArticle.id}');return false;"
                                             style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;"
                                             >
                                         <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/>
@@ -164,7 +164,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                     &nbsp;&nbsp;
                                 <apex:outputPanel rendered="{!isInsertingContent}">
                                     <a href=""
-                                            onclick="insertArticleContentById('{!article.knowledgeArticle.id}');return false;"
+                                            onclick="insertArticleById('{!article.knowledgeArticle.id}');return false;"
                                             style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;"
                                             >
                                         <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/>
@@ -243,6 +243,49 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <apex:param value=""
                     assignTo="{!articleSummary}"
                     name="articleSummary" />
+            </apex:actionFunction>
+<script type="text/javascript">
+    function insertArticleInEditor(articleTitleForUrl,url){
+        sforce.console.fireEvent('hvemInsertInEditor', 'Link:::' + articleTitleForUrl + '][' + url);
+        console.log("Fired hvemInsertInEditor");
+    }
+
+    function insertArticle(idx) {
+        var articleId = getArticleIdFromIdx(idx);
+        insertArticleAF(
+                'en_US',
+                document.getElementById("articleId2_" + idx).value,
+                document.getElementById("urlname_" + articleId).value,
+                document.getElementById("type_" + articleId).value,
+                document.getElementById("title_" + articleId).value
+                );
+    }
+
+    function insertArticleById(id) {
+        insertArticle(getArticleIdxFromId(id));
+    }
+</script>
+            <apex:actionFunction name="insertArticleAF"
+                    status="loadingStatus"
+                    action="{!attachArticle}"
+                    oncomplete="insertArticleInEditor('{!JSINHTMLENCODE(articleTitle)}','{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
+                    rerender="hiddenPanelId"
+                    >
+                <apex:param value=""
+                    assignTo="{!selectedKnowledgeArticleLanguage}"
+                    name="slectedKnowledgeArticlelanguage" />
+                <apex:param value=""
+                    assignTo="{!selectedKnowledgeArticleId}"
+                    name="selectedKnowledgeArticleId" />
+                <apex:param value=""
+                    assignTo="{!selectedKnowledgeArticleURL}"
+                    name="selectedKnowledgeArticleURL" />
+                <apex:param value=""
+                    assignTo="{!articleName}"
+                    name="selectedKnowledgeArticleFrameSource" />
+                <apex:param value=""
+                    assignTo="{!articleTitle}"
+                    name="articleTitle" />
             </apex:actionFunction>
             <apex:actionFunction name="insertArticleLinkAF"
                     status="loadingStatus"

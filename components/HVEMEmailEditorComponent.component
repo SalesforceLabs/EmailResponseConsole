@@ -28,7 +28,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <apex:component access="global" id="hvemEmailEditoComponentId"
     controller="HVEMEmailEditorCompCtrl" allowDML="true">
-    <apex:includeScript value="/support/console/22.0/integration.js" />
+    <apex:includeScript value="/support/console/25.0/integration.js" />
     <apex:includeScript value="{!URLFOR($Resource.HVEMCKEditor,'/ckeditor/ckeditor.js')}" />
     <style>
         .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton
@@ -162,6 +162,39 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         right: 10px;
     }
     </style>
+    <script type="text/javascript">
+        console.log("adding listener for hvemInsertInEditor");
+        sforce.console.addEventListener('hvemInsertInEditor', eventInsertInEditor);
+        console.log("added listener for hvemInsertInEditor");
+
+        var eventInsertInEditor = function(result) {
+            console.log("received hvemInsertInEditor");
+            // message format:
+            //   for links:
+            //     Link:::<article title>][<article url>
+            var msg = result.message.split(":::");
+            if (msg.length<2) {
+                console.log("Error 1: " + result.message);
+                return;
+            }
+            // TODO if length>2 then "join"
+            if (msg[0]==="Link") {
+                var data = msg[1].split("][");
+                if (data.length<2) {
+                    console.log("Error 2: " + result.message);
+                    return;
+                }
+                // TODO if length>2 then "join"
+
+                insertURL(data[0],data[1],'url');
+                return;
+            }
+            if (msg[0]==="Content") {
+                return;
+            }
+            console.log("Error 3: " + result.message);
+        }
+    </script>
     <apex:outputPanel id="errorPanel" rendered="{!isServiceCloud}">
         <apex:pageMessages />
         <apex:pageMessage id="bodyBlankErrorId" rendered="{!bodyBlankError}"

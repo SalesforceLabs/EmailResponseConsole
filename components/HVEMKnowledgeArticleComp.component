@@ -152,24 +152,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <input type="hidden" id="summary_{!article.knowledgeArticle.id}" value="{!article.knowledgeArticle.summary}" />
                                 <input type="hidden" id="urlname_{!article.knowledgeArticle.id}" value="{!article.knowledgeArticle.urlname}" />
 
-                                <apex:outputPanel rendered="{!!isInsertingContent}">
-                                    <a href=""
-                                            onclick="insertArticleById('{!article.knowledgeArticle.id}');return false;"
-                                            style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;"
-                                            >
-                                        <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/>
-                                    </a>
-                                </apex:outputPanel>
-                                    &nbsp;&nbsp;
-                                <apex:outputPanel rendered="{!isInsertingContent}">
-                                    <a href=""
-                                            onclick="insertArticleById('{!article.knowledgeArticle.id}');return false;"
-                                            style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;"
-                                            >
-                                        <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/>
-                                    </a>
-                                </apex:outputPanel>
-                                    &nbsp;&nbsp;
+                                <a href=""
+                                        onclick="insertArticleById('{!article.knowledgeArticle.id}');return false;"
+                                        style="color:#0055e3 ;text-decoration:none;cursor:pointer;display:inline;"
+                                        >
+                                    <apex:image value="{!If(article.isAttached,URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticle.png'),URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/AttachArticleOnHover.png'))}" width="7%" title="{!If(article.isAttached,'Send article (already sent)','Send article')}"/>
+                                </a>
+                                &nbsp;&nbsp;
                                 <a href=""
                                         onclick="displayArticleById('{!article.knowledgeArticle.id}');return false;"
                                         style="color:#0055e3 ;text-decoration:none;cursor:pointer;font-weight:bold;display:inline;margin-right:5px;"
@@ -240,10 +229,34 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     name="articleSummary" />
             </apex:actionFunction>
 <script type="text/javascript">
-    function insertArticleInEditor(articleTitleForUrl,url){
-        sforce.console.fireEvent('hvemInsertInEditor', 'Link:::' + articleTitleForUrl + '][' + url);
-        console.log("Fired hvemInsertInEditor");
+    function insertArticleInEditor(articleId,articleTitleForUrl,url){
+        var bInsertContent = {!isInsertingContent};
+        if (bInsertContent) {
+            console.log("Firing hvemInsertInEditor -content");
+            var renderer = document.getElementById("articleRenderer");
+            if (renderer!=null) {
+                selectedArticleId = getArticleIdFromIdx(idxCurrentArticle);
+                if (articleId!=selectedArticleId) {
+                    // TODO need to display the selected article
+                }
+                var content = renderer.innerHTML;
+                sforce.console.fireEvent('hvemInsertInEditor', 'Content:::' + content, callback);
+
+            } else {
+                console.log("HVEM--Can't get article renderer content");
+            }
+        } else {
+            console.log("Firing hvemInsertInEditor -link");
+            sforce.console.fireEvent('hvemInsertInEditor', 'Link:::' + articleTitleForUrl + '][' + url, callback);
+        }
     }
+    var callback = function(result) {
+        if (result.success) {
+            console.log("Fired hvemInsertInEditor");
+        } else {
+            console.log("NOT fired hvemInsertInEditor");
+        }
+    };
 
     function insertArticle(idx) {
         var articleId = getArticleIdFromIdx(idx);
@@ -263,12 +276,16 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             <apex:actionFunction name="insertArticleAF"
                     status="loadingStatus"
                     action="{!attachArticle}"
-                    oncomplete="insertArticleInEditor('{!JSINHTMLENCODE(articleTitle)}','{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
+                    oncomplete="insertArticleInEditor(
+                                        '{!selectedKnowledgeArticleId}',
+                                        '{!JSINHTMLENCODE(articleTitle)}',
+                                        '{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}'
+                                        );"
                     rerender="hiddenPanelId"
                     >
                 <apex:param value=""
                     assignTo="{!selectedKnowledgeArticleLanguage}"
-                    name="slectedKnowledgeArticlelanguage" />
+                    name="selectedKnowledgeArticlelanguage" />
                 <apex:param value=""
                     assignTo="{!selectedKnowledgeArticleId}"
                     name="selectedKnowledgeArticleId" />
@@ -281,53 +298,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <apex:param value=""
                     assignTo="{!articleTitle}"
                     name="articleTitle" />
-            </apex:actionFunction>
-            <apex:actionFunction name="insertArticleLinkAF"
-                    status="loadingStatus"
-                    action="{!attachArticle}"
-                    oncomplete="insertArticleLinkInEditor('{!JSINHTMLENCODE(articleTitle)}','{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}');"
-                    rerender="hiddenPanelId"
-                    >
-                <apex:param value=""
-                    assignTo="{!selectedKnowledgeArticleLanguage}"
-                    name="slectedKnowledgeArticlelanguage" />
-                <apex:param value=""
-                    assignTo="{!selectedKnowledgeArticleId}"
-                    name="selectedKnowledgeArticleId" />
-                <apex:param value=""
-                    assignTo="{!selectedKnowledgeArticleURL}"
-                    name="selectedKnowledgeArticleURL" />
-                <apex:param value=""
-                    assignTo="{!articleName}"
-                    name="selectedKnowledgeArticleFrameSource" />
-                <apex:param value=""
-                    assignTo="{!articleTitle}"
-                    name="articleTitle" />
-            </apex:actionFunction>
-            <apex:actionFunction name="insertArticleContentAF"
-                    status="loadingStatus"
-                    action="{!attachArticle}"
-                    oncomplete="insertArticleContentInEditor('{!selectedKnowledgeArticleId}','{!selectedKnowledgeArticleFrameSourceId}','{!JSENCODE(LEFT(articleName,LEN(articleName)-5)+'/'+selectedKnowledgeArticleURL)}','{!JSENCODE(articleName)}','{!JSENCODE(articleTitle)}','{!JSENCODE(articleSummary)}');return false;"
-                    rerender="hiddenPanelId"
-                    >
-                <apex:param value=""
-                    assignTo="{!selectedKnowledgeArticleLanguage}"
-                    name="slectedKnowledgeArticlelanguage" />
-                <apex:param value=""
-                    assignTo="{!selectedKnowledgeArticleId}"
-                    name="selectedKnowledgeArticleId" />
-                <apex:param value=""
-                    assignTo="{!selectedKnowledgeArticleURL}"
-                    name="selectedKnowledgeArticleURL" />
-                <apex:param value=""
-                    assignTo="{!articleName}"
-                    name="selectedKnowledgeArticleFrameSource" />
-                <apex:param value=""
-                    assignTo="{!articleTitle}"
-                    name="articleTitle" />
-                <apex:param value=""
-                    assignTo="{!articleSummary}"
-                    name="articleSummary" />
             </apex:actionFunction>
         </apex:form>
     </div>

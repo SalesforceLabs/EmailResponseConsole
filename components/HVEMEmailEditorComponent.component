@@ -166,9 +166,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         }
     </style>
     <script type="text/javascript">
-        console.log("adding listener for hvemInsertInEditor");
-        sforce.console.addEventListener('hvemInsertInEditor', eventInsertInEditor);
-        console.log("added listener for hvemInsertInEditor");
 
         var eventInsertInEditor = function(result) {
             console.log("received hvemInsertInEditor");
@@ -193,9 +190,23 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 return;
             }
             if (msg[0]==="Content") {
+                // TODO if length>2 then "join"
+                insertURL('',msg[1],'content');
                 return;
             }
             console.log("Error 3: " + result.message);
+        }
+
+        //window.onload = init;
+        if (window.addEventListener) {
+            window.addEventListener('load', init, false);
+        } else if (window.attachEvent) {
+            window.attachEvent('onload', init );
+        }
+
+        function init(){
+            console.log("onload...");
+            sforce.console.addEventListener('hvemInsertInEditor', eventInsertInEditor);
         }
     </script>
     <apex:outputPanel id="errorPanel" rendered="{!isServiceCloud}">

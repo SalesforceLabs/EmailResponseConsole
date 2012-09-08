@@ -31,11 +31,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <apex:includeScript value="/support/console/25.0/integration.js" />
     <apex:includeScript value="{!URLFOR($Resource.HVEMCKEditor,'/ckeditor/ckeditor.js')}" />
     <style>
-        .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton
-            {
-            background:
-                url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
-                -65px -7px no-repeat transparent;
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton {
+            background: url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}") -65px -7px no-repeat transparent;
         }
 
         .LabelStyle {
@@ -59,7 +56,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         }
 
         .btnvisible {
-
             color: #333333;
             font-size: 0.9em;
             font-weight: bold;
@@ -78,14 +74,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             text-decoration: none;
         }
 
-        .labelStyle{
+        .labelStyle {
             left: 10px;
             margin-right: 1px;
             position: relative;
             cursor: pointer;
-
         }
-        .divClass{
+
+        .divClass {
             border: 1px solid;
             border-color: #B5B5B5 #B5B5B5 #7F7F7F;
             border-radius: 5px 5px 5px 5px;
@@ -95,7 +91,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             display: none;
         }
 
-      .highLightSelection {
+        .highLightSelection {
             background-color: #effaff;
             cursor: pointer;
             display: block;
@@ -104,8 +100,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             font-size: 0.9em;
             font-weight: bold;
             height:18px;
-       }
-       .removeHighLight {
+        }
+
+        .removeHighLight {
             background-color: #ffffff;
             cursor: pointer;
             display: block;
@@ -114,53 +111,59 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             font-size: 0.9em;
             font-weight: bold;
             height:18px;
-       }
+        }
 
-     .dropdownSelection{
-        background-color: #ffffff;
-        cursor: pointer;
-        display: block;
-        width:133px;
-        border-radius: 5px 5px 5px 5px;
-        font-size: 0.9em;
-        font-weight: bold;
-        height:18px;
-     }
-    .discardLink {
-        color:blue;
-        margin-top:4px;
-        position: absolute;
-        right: 194px;
-    }
-    .disableDiscard{
-        display:none;
-        color:grey;
-        margin-top: -10px;
-        position: absolute;
-        right: 194px;
-    }
-    .singleLine{
-        position:absolute;
-        margin-top: 4px;
-        right: 182px;
-    }
-    .activeSaveLink{
-        color:blue;
-        margin-top: 4px;
-        position: absolute;
-        right: 144px;
-    }
-    .disableSave{
-         color:grey;
-         margin-top: 4px;
-         position: absolute;
-         right: 149px;
-    }
-    .showOptionDiv{
-        margin-top: 7.5px;
-        position: absolute;
-        right: 10px;
-    }
+        .dropdownSelection {
+            background-color: #ffffff;
+            cursor: pointer;
+            display: block;
+            width:133px;
+            border-radius: 5px 5px 5px 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            height:18px;
+        }
+
+        .discardLink {
+            color:blue;
+            margin-top:4px;
+            position: absolute;
+            right: 194px;
+        }
+
+        .disableDiscard {
+            display:none;
+            color:grey;
+            margin-top: -10px;
+            position: absolute;
+            right: 194px;
+        }
+
+        .singleLine {
+            position:absolute;
+            margin-top: 4px;
+            right: 182px;
+        }
+
+        .activeSaveLink {
+            color:blue;
+            margin-top: 4px;
+            position: absolute;
+            right: 144px;
+        }
+
+        .disableSave {
+            color:grey;
+            margin-top: 4px;
+            position: absolute;
+            right: 149px;
+        }
+
+        .showOptionDiv {
+            margin-top: 7.5px;
+            position: absolute;
+            right: 10px;
+        }
     </style>
     <script type="text/javascript">
         console.log("adding listener for hvemInsertInEditor");
@@ -530,30 +533,28 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 var editorValue = editorElement.value ;
 
                 if(templateType == 'text'){
-                editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
-                var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
-                   decoded = decoded.replace('<![CDATA[', '');
-                decoded = decoded.replace(']]>', '');
-                var beforeString = editorElement.value.substring(0,editorElement.selectionStart);
-                   var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length);
-                   editorElement.value =   beforeString + decoded + '  ' + afterString;
+                    editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    var beforeString = editorElement.value.substring(0,editorElement.selectionStart);
+                    var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length);
+                    editorElement.value =   beforeString + decoded + '  ' + afterString;
                 }else if(templateType == 'custom'){
-                   var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
-                   decoded = decoded.replace('<![CDATA[', '');
-                   decoded = decoded.replace(']]>', '');
-                   var element = CKEDITOR.dom.element.createFromHtml('<table><tr><td>' + decoded + '</table></tr></td>');
-                   CKEDITOR.instances.idMainEmailBody.insertElement( element );
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    var element = CKEDITOR.dom.element.createFromHtml('<table><tr><td>' + decoded + '</table></tr></td>');
+                    CKEDITOR.instances.idMainEmailBody.insertElement( element );
                 }else{
-                   editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
-                var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
-                   decoded = decoded.replace('<![CDATA[', '');
-                decoded = decoded.replace(']]>', '');
-                var beforeString = editorElement.value.substring(0,editorElement.selectionStart);
-                   var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length);
-                   editorElement.value =   beforeString + decoded + '  ' + afterString;
+                    editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    var beforeString = editorElement.value.substring(0,editorElement.selectionStart);
+                    var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length);
+                    editorElement.value =   beforeString + decoded + '  ' + afterString;
                 }
-
-
             }
 
             var isTemplateDeleted = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:TemplateDeleted').value;
@@ -565,24 +566,23 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             var inConsole = testIsInConsole();
             if(isHVEMUser == 'true' && inConsole == 1){
                 if(templateType == 'custom'){
-                        var editor = CKEDITOR.replace( 'nameMainEmailBody' );
-                        CKEDITOR.instances.idMainEmailBody.setData('');
-                        // Decode the now encoded text
-                        var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
-                        decoded = decoded.replace('<![CDATA[', '');
-                        decoded = decoded.replace(']]>', '');
-                        decoded = trim(decoded.replace( '<p>', '' ));
-                        decoded = trim(decoded.replace( '</p>', '' ));
-                        CKEDITOR.instances.idMainEmailBody.setData(decoded);
+                    var editor = CKEDITOR.replace( 'nameMainEmailBody' );
+                    CKEDITOR.instances.idMainEmailBody.setData('');
+                    // Decode the now encoded text
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    decoded = trim(decoded.replace( '<p>', '' ));
+                    decoded = trim(decoded.replace( '</p>', '' ));
+                    CKEDITOR.instances.idMainEmailBody.setData(decoded);
                 }else{
-                        editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
-                        var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
-                        decoded = decoded.replace('<![CDATA[', '');
-                        decoded = decoded.replace(']]>', '');
-                        if(inConsole == 1){
-                            document.getElementById('idMainEmailBody').value = editorTextValue;
-                        }
-
+                    editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    if(inConsole == 1){
+                        document.getElementById('idMainEmailBody').value = editorTextValue;
+                    }
                 }
            }
           //changes

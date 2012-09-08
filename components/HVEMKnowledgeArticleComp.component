@@ -141,9 +141,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         value="{!filteredKnowledgeArticles}" var="article" border="1"
                         style="overflow:auto;height:210px;">
                         <apex:column id="idArticleColumn"
-                            headerValue="{!$Label.Suggested_Articles} : {!filteredKnowledgeArticlesSize}">
-                            <apex:outputPanel id="idSingleArticlePanel" layout="block"
-                                styleClass="hvemCaseItem">
+                                headerValue="{!$Label.Suggested_Articles} : {!filteredKnowledgeArticlesSize}">
+                            <apex:outputPanel id="idSingleArticlePanel" layout="block" styleClass="hvemCaseItem">
 
                                 <input type="hidden" id="articleIdx_{!article.knowledgeArticle.id}" value="{!article.idx}" />
                                 <input type="hidden" id="articleId_{!article.idx}" value="{!article.knowledgeArticle.id}" />
@@ -190,37 +189,33 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             </apex:pageBlock>
 
             <div class="hvemBasicPanel hvemArticleViewer">
-                <apex:pageBlock id="customArticle_id">
+                <apex:pageBlock id="customArticle_id"><div id="articleRenderer">
                     <apex:outputLabel rendered="{!IF((filteredKnowledgeArticlesSize == 0),false,true)}">
-                        <h2 style="font-size: 15px; margin-right: 5px;"><apex:outputLabel value="{!articleTitle}" /></h2>&nbsp;
-                            <apex:outputLabel value="{!articleSummary}"
-                            style="font-style:italic;font-size:11px;" />
+                        <h2 style="font-size: 15px; margin-right: 5px;"><apex:outputLabel value="{!articleTitle}" /></h2>
+                        &nbsp;
+                        <apex:outputLabel value="{!articleSummary}" style="font-style:italic;font-size:11px;" />
                         <br />
                         <br />
-                        <apex:repeat value="{!knowledgeArticleLabelValueList}"
-                            var="customField">
-                            <apex:outputText value="{!customField.fieldLabel}"
-                                style="font-weight:bold;font-size:13px;" />
-                            <p><apex:outputText escape="false"
-                                value="{!customField.fieldValue}" /></p>
+                        <apex:repeat value="{!knowledgeArticleLabelValueList}" var="customField">
+                            <apex:outputText value="{!customField.fieldLabel}" style="font-weight:bold;font-size:13px;" />
+                            <p>
+                                <apex:outputText escape="false" value="{!customField.fieldValue}" />
+                            </p>
                             <br />
                         </apex:repeat>
                     </apex:outputLabel>
-                </apex:PageBlock>
+                </div></apex:PageBlock>
             </div>
 
             <apex:actionFunction name="refreshSearchResultAF"
-                status="loadingStatus" action="{!filterArticleList}"
-                reRender="SearchResultId,customArticle_id,ErrorId"
-                oncomplete="setFirstArticleStyle();">
-                <apex:param assignTo="{!withDataCategoryClause}"
-                    name="withDataCategoryClauseName" value="" />
+                    status="loadingStatus" action="{!filterArticleList}"
+                    reRender="SearchResultId,customArticle_id,ErrorId"
+                    oncomplete="setFirstArticleStyle();">
+                <apex:param assignTo="{!withDataCategoryClause}" name="withDataCategoryClauseName" value="" />
                 <apex:param assignTo="{!calledFrom}" name="calledFromName" value="" />
-
             </apex:actionfunction>
 
-            <apex:actionStatus id="loadingStatus" onstart="freezeBackground();"
-                    onstop="unFreezeBackground();"/>
+            <apex:actionStatus id="loadingStatus" onstart="freezeBackground();" onstop="unFreezeBackground();"/>
 
             <apex:actionFunction name="displayCustomArticleAF"
                     status="loadingStatus"

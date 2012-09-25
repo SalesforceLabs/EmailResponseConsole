@@ -75,8 +75,8 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
     private List<HVEM_Config_Options__c> hvemCaseFilterList{get;set;}
 
     public ID caseId {get; set;}
-    public ID selectedKnowledgeArticleId{get;set;}
-    public ID selectedKnowledgeArticleFrameSourceId{get;set;}
+    public ID selectedKaId{get;set;}
+    public ID selectedKavId{get;set;}
     public Boolean isAttached{get; set;}
     public String articleName {get; set;}
 
@@ -183,14 +183,14 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
      * Functon to attach Article to Case in CaseArticle object
      */
     public void attachArticle(){
-        List<CaseArticle> ca = [select ID from CaseArticle where CaseId =: caseId and KnowledgeArticleId =: selectedKnowledgeArticleId];
+        List<CaseArticle> ca = [select ID from CaseArticle where CaseId =: caseId and KnowledgeArticleId =: selectedKaId];
         if (!ca.isEmpty()) {
             // the link already exist, we should not insert a new one
             return;
         }
         CaseArticle caseArticleInstance = new CaseArticle();
         caseArticleInstance.CaseId = caseId;
-        caseArticleInstance.KnowledgeArticleId = selectedKnowledgeArticleId;
+        caseArticleInstance.KnowledgeArticleId = selectedKaId;
         insert caseArticleInstance;
 
     }
@@ -316,7 +316,7 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
         String channelString = '';
         subjectBlankError=false;
         filteredKnowledgeArticlesSize = 0;
-        selectedKnowledgeArticleFrameSourceId = null;
+        selectedKavId = null;
         String articleTypeToQuery = prepareArticleTypeToQuery();
         filteredKnowledgeArticles = new List<HVEMKnowledgeArticleStructure>();
         List<KnowledgeArticleVersion> KnowledgeArticlesList;
@@ -393,7 +393,7 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
 
             filteredKnowledgeArticlesSize = filteredKnowledgeArticles.size();
             if((filteredKnowledgeArticles != null) && (filteredKnowledgeArticles.size() > 0)){
-                selectedKnowledgeArticleFrameSourceId = filteredKnowledgeArticles[0].getKnowledgeArticle().id;
+                selectedKavId = filteredKnowledgeArticles[0].getKnowledgeArticle().id;
                 selectedKnowledgeArticleFrameSource = filteredKnowledgeArticles[0].getArticleName().subString(0,(filteredKnowledgeArticles[0].getArticleName().length()-5))+'/'+filteredKnowledgeArticles[0].getKnowledgeArticle().UrlName;
                 articleTypeOfSelectedArticle = filteredKnowledgeArticles[0].getArticleName();
                 articleTitle = filteredKnowledgeArticles[0].getKnowledgeArticle().title;
@@ -424,14 +424,14 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
      * function to display the custom Knowledge Article Content.
      */
     public void displayCustomArticle() {
-        try{
+        try {
             knowledgeArticleLabelValueList = new List<KnowledgeArticleLabelValue>{};
-            String ConditionForArticleObject = 'SELECT Id, title, Summary from '+articleTypeOfSelectedArticle+' WHERE Id=\''+selectedKnowledgeArticleFrameSourceId+'\'';
+            String ConditionForArticleObject = 'SELECT Id, title, Summary from '+articleTypeOfSelectedArticle+' WHERE Id=\''+selectedKavId+'\'';
 
-            if((String.valueOf(selectedKnowledgeArticleFrameSourceId) != null) && (String.valueOf(selectedKnowledgeArticleFrameSourceId) != '')){
+            if((String.valueOf(selectedKavId) != null) && (String.valueOf(selectedKavId) != '')){
                 List<sObject> articleTypeIns = DataBase.query(ConditionForArticleObject);
                 HVEMConditionBuilder lConditionForArticleObject = new HVEMConditionBuilder();
-                lConditionForArticleObject.setCondition('Id=\''+selectedKnowledgeArticleFrameSourceId+'\'');
+                lConditionForArticleObject.setCondition('Id=\''+selectedKavId+'\'');
                 List<sObject> articleTypeList = dbHelper.getQueryResults(articleTypeIns.getSObjectType().newSObject(),null,lConditionForArticleObject);
 
                 Map<String, Schema.SObjectField> fieldMap = articleTypeIns.getSObjectType().getDescribe().fields.getMap();
@@ -448,8 +448,7 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
                     }
                 }
             }
-        }
-        catch(Exception e){
+        } catch(Exception e){
             ApexPages.addMessages(e);
         }
     }

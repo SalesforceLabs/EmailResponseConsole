@@ -144,9 +144,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 headerValue="{!$Label.Suggested_Articles} : {!filteredKnowledgeArticlesSize}">
                             <apex:outputPanel id="idSingleArticlePanel" layout="block" styleClass="hvemCaseItem">
 
+                                <input type="hidden" id="{!article.knowledgeArticle.KnowledgeArticleId}" value="{!article.idx}" />
                                 <input type="hidden" id="articleIdx_{!article.knowledgeArticle.id}" value="{!article.idx}" />
-                                <input type="hidden" id="articleId_{!article.idx}" value="{!article.knowledgeArticle.id}" />
-                                <input type="hidden" id="articleId2_{!article.idx}" value="{!article.knowledgeArticle.KnowledgeArticleId}" />
+                                <input type="hidden" id="kavId_{!article.idx}" value="{!article.knowledgeArticle.id}" />
+                                <input type="hidden" id="kaId_{!article.idx}" value="{!article.knowledgeArticle.KnowledgeArticleId}" />
                                 <input type="hidden" id="type_{!article.knowledgeArticle.id}" value="{!article.articleName}" />
                                 <input type="hidden" id="title_{!article.knowledgeArticle.id}" value="{!article.knowledgeArticle.title}" />
                                 <input type="hidden" id="summary_{!article.knowledgeArticle.id}" value="{!article.knowledgeArticle.summary}" />
@@ -213,8 +214,31 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     rerender="idSingleArticlePanel,customArticle_id"
                     >
                 <apex:param value=""
-                    assignTo="{!selectedKnowledgeArticleFrameSourceId}"
-                    name="selectedKnowledgeArticleFrameSourceId" />
+                    assignTo="{!selectedKavId}"
+                    name="selectedKavId" />
+                <apex:param value=""
+                    assignTo="{!selectedKnowledgeArticleFrameSource}"
+                    name="selectedKnowledgeArticleFrameSource" />
+                <apex:param value=""
+                    assignTo="{!articleTypeOfSelectedArticle}"
+                    name="articleTypeOfSelectedArticle" />
+                <apex:param value=""
+                    assignTo="{!articleTitle}"
+                    name="articleTitle" />
+                <apex:param value=""
+                    assignTo="{!articleSummary}"
+                    name="articleSummary" />
+            </apex:actionFunction>
+
+            <apex:actionFunction name="displayAndInsertArticleContentAF"
+                    status="loadingStatus"
+                    action="{!displayCustomArticle}"
+                    oncomplete="insertArticleContentInEditor(this);"
+                    rerender="idSingleArticlePanel,customArticle_id"
+                    >
+                <apex:param value=""
+                    assignTo="{!selectedKavId}"
+                    name="selectedKavId" />
                 <apex:param value=""
                     assignTo="{!selectedKnowledgeArticleFrameSource}"
                     name="selectedKnowledgeArticleFrameSource" />
@@ -229,6 +253,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     name="articleSummary" />
             </apex:actionFunction>
 <script type="text/javascript">
+<<<<<<< HEAD
     function insertArticleInEditor(articleId,articleTitleForUrl,url){
         var bInsertContent = {!isInsertingContent};
         if (bInsertContent) {
@@ -240,6 +265,29 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     // TODO need to display the selected article
                 }
                 var content = renderer.innerHTML;
+=======
+    function insertArticleInEditor(kaId,articleTitleForUrl,url,articleType,articleSummary){
+        var bInsertContent = {!isInsertingContent};
+        if (bInsertContent) {
+            console.log("Preparing hvemInsertInEditor -content");
+            var renderer = document.getElementById("articleRenderer");
+            if (renderer!=null) {
+                var selectedArticleId = getKavIdFromIdx(idxCurrentArticle);
+                var kavId = getKavIdFromIdx(getArticleIdxFromKaId(kaId));
+                if (kavId!=selectedArticleId) {
+                    console.log("Preparing hvemInsertInEditor -content (loading article)");
+                    setCurrentArticle(getArticleIdxFromKavId(kavId));
+                    displayAndInsertArticleContentAF(
+                            kavId,
+                            "n/a",
+                            articleType,
+                            articleTitleForUrl,
+                            articleSummary);
+                    return;
+                }
+                var content = renderer.innerHTML;
+                console.log("Firing hvemInsertInEditor -content (1)");
+>>>>>>> added support for inserting the content of the-non selected article form the result list. The code still needs to be polished
                 sforce.console.fireEvent('hvemInsertInEditor', 'Content:::' + content, callback);
 
             } else {
@@ -249,6 +297,21 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             console.log("Firing hvemInsertInEditor -link");
             sforce.console.fireEvent('hvemInsertInEditor', 'Link:::' + articleTitleForUrl + '][' + url, callback);
         }
+<<<<<<< HEAD
+=======
+    }
+
+    function insertArticleContentInEditor(obj) {
+        console.log("Firing hvemInsertInEditor -content (2)");
+        setStyleClass(obj);
+        var renderer = document.getElementById("articleRenderer");
+        if (renderer!=null) {
+            var selectedArticleId = getKavIdFromIdx(idxCurrentArticle);
+            var content = renderer.innerHTML;
+            console.log("Firing hvemInsertInEditor -content (3)");
+            sforce.console.fireEvent('hvemInsertInEditor', 'Content:::' + content, callback);
+        }
+>>>>>>> added support for inserting the content of the-non selected article form the result list. The code still needs to be polished
     }
     var callback = function(result) {
         if (result.success) {
@@ -258,11 +321,20 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         }
     };
 
+    var callback = function(result) {
+        if (result.success) {
+            console.log("Fired hvemInsertInEditor");
+        } else {
+            console.log("NOT fired hvemInsertInEditor");
+        }
+    };
+
     function insertArticle(idx) {
-        var articleId = getArticleIdFromIdx(idx);
+        var articleId = getKavIdFromIdx(idx);
         insertArticleAF(
                 'en_US',
-                document.getElementById("articleId2_" + idx).value,
+                document.getElementById("kavId_" + idx).value,
+                document.getElementById("kaId_" + idx).value,
                 document.getElementById("urlname_" + articleId).value,
                 document.getElementById("type_" + articleId).value,
                 document.getElementById("title_" + articleId).value
@@ -270,25 +342,47 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     }
 
     function insertArticleById(id) {
-        insertArticle(getArticleIdxFromId(id));
+        insertArticle(getArticleIdxFromKavId(id));
     }
 </script>
             <apex:actionFunction name="insertArticleAF"
                     status="loadingStatus"
                     action="{!attachArticle}"
                     oncomplete="insertArticleInEditor(
+<<<<<<< HEAD
                                         '{!selectedKnowledgeArticleId}',
                                         '{!JSINHTMLENCODE(articleTitle)}',
                                         '{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}'
+=======
+                                        '{!selectedKavId}',
+                                        '{!JSINHTMLENCODE(articleTitle)}',
+                                        '{!hvemsettingsIns.Article_Link_Base_URL__c}' + '/articles/'  + '{!selectedKnowledgeArticleLanguage}' + '/' + '{!articleName}' + '/' + '{!selectedKnowledgeArticleURL}',
+                                        '{!articleName}',
+                                        '{!JSINHTMLENCODE(articleSummary)}'
+>>>>>>> added support for inserting the content of the-non selected article form the result list. The code still needs to be polished
                                         );"
                     rerender="hiddenPanelId"
                     >
                 <apex:param value=""
                     assignTo="{!selectedKnowledgeArticleLanguage}"
                     name="selectedKnowledgeArticlelanguage" />
+<<<<<<< HEAD
                 <apex:param value=""
                     assignTo="{!selectedKnowledgeArticleId}"
                     name="selectedKnowledgeArticleId" />
+                <apex:param value=""
+                    assignTo="{!selectedKnowledgeArticleURL}"
+                    name="selectedKnowledgeArticleURL" />
+=======
+>>>>>>> added support for inserting the content of the-non selected article form the result list. The code still needs to be polished
+                <apex:param value=""
+                    assignTo="{!selectedKavId}"
+                    name="selectedKavId" />
+                <apex:param value=""
+<<<<<<< HEAD
+=======
+                    assignTo="{!selectedKaId}"
+                    name="selectedKaId" />
                 <apex:param value=""
                     assignTo="{!selectedKnowledgeArticleURL}"
                     name="selectedKnowledgeArticleURL" />
@@ -296,6 +390,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     assignTo="{!articleName}"
                     name="selectedKnowledgeArticleFrameSource" />
                 <apex:param value=""
+>>>>>>> added support for inserting the content of the-non selected article form the result list. The code still needs to be polished
                     assignTo="{!articleTitle}"
                     name="articleTitle" />
             </apex:actionFunction>

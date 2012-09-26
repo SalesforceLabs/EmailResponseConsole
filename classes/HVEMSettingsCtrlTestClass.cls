@@ -658,7 +658,6 @@ private class HVEMSettingsCtrlTestClass {
             configOptions.Case_Mappin_API__c='text1';
             configOptions.Case_Mapping_Label__c='text2';
             configOptions.Languages_Selected__c = 'English,French,Hindi';
-            configOptions.IsCustomEmailPublisher__c = true;
             insert configOptions;
         }
         else{
@@ -706,8 +705,8 @@ private class HVEMSettingsCtrlTestClass {
       setDataSaveToCustomSettings();
       Test.startTest();
       hvemSettings.disableEnableEmailPublisherOptions();
-      List<SelectOption> selectList = hvemSettings.getEmailPublisherSelectionOptions();
-      System.assertEquals(true,selectList.size()>0);
+//      List<SelectOption> selectList = hvemSettings.getEmailPublisherSelectionOptions();
+//      System.assertEquals(true,selectList.size()>0);
       ApexPages.StandardController controller;
       HVEMCaseFeedEmailPublisherCntrl hVEMCaseFeedEmailPublisherCntrlInstance = new HVEMCaseFeedEmailPublisherCntrl(controller);
       Test.stopTest();

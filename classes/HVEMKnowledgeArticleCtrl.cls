@@ -39,7 +39,6 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
     public HVEMConditionBuilder lConditionForCase{get;set;}
 
     public boolean noArticlesToFilterError{get;set;}
-    public boolean isCustomEmailPublisher {get; set;}
 
     public String subjectFilter{get;set;}
     public String articleTypesForFilter{get;set;}
@@ -131,11 +130,6 @@ public with Sharing class HVEMKnowledgeArticleCtrl{
 
         if(hvemSettingsIns != null){
 
-            if(hvemSettingsIns.IsCustomEmailPublisher__c){
-                isCustomEmailPublisher = true;
-            }else{
-                isCustomEmailPublisher = false;
-            }
             articleTypesForFilter = hvemSettingsIns.Article_Types_Filter__c;
             categoryGroupsForFilter = hvemSettingsIns.Data_Category_Group_Filter__c;
 

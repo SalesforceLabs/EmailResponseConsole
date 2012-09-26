@@ -152,15 +152,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        <apex:selectRadio value="{!emailPublisherSelection}" onclick="disableEnableEmailPublisherOptionsAF();">
-                            <apex:selectoptions value="{!emailPublisherSelectionOptions}" />
-                        </apex:selectRadio>
-                    </td>
-                </tr>
-                <tr>
                     <td>
-                        <br/><br/>
                         <apex:outputText value="{!$Label.Email_Publisher_Options}" style="font-weight:bold;" />
                     </td>
                 </tr>
@@ -168,7 +160,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <td><apex:outputLabel value="{!$Label.Template_Folder}" /></td>
                     <td>
                         <apex:selectList id="folderSelectListId"
-                                disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                 style="width:250px" size="1" value="{!folders}"
                                 onchange="initializeEmailTemplate()">
                             <apex:selectOptions value="{!emailFolders}" />
@@ -181,7 +172,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <td>
                         <apex:selectList id="emailTemplateId"
                                 style="width:250px"
-                                disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                 size="1"
                                 value="{!templates}">
                             <apex:selectOptions value="{!emailTemplates}" />
@@ -191,31 +181,31 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <apex:inputCheckbox value="{!autoPopulate}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/>
+                        <apex:inputCheckbox value="{!autoPopulate}" />
                         <apex:outputText value="{!$Label.Auto_populate}" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <apex:inputCheckbox value="{!enableDraftEmails}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/>
+                        <apex:inputCheckbox value="{!enableDraftEmails}" />
                         <apex:outputText value="{!$Label.Enable_Draft_Emails}" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <apex:inputCheckbox value="{!enableChangeCaseStatus}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/>
+                        <apex:inputCheckbox value="{!enableChangeCaseStatus}" />
                         <apex:outputText value="{!$Label.Allow_changing_case_status}" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <apex:inputCheckbox value="{!enableSendBackToQueue}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/>
+                        <apex:inputCheckbox value="{!enableSendBackToQueue}" />
                         <apex:outputText value="{!$Label.Allow_send_back_to_queue}" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <apex:inputCheckbox value="{!enableApprovalProcess}" onclick="enableApproval();" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"/>
+                        <apex:inputCheckbox value="{!enableApprovalProcess}" onclick="enableApproval();" />
                         <apex:outputText value="{!$Label.Enable_Approval_process}" />
                     </td>
                 </tr>
@@ -223,7 +213,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <td colspan="2">
                         <apex:outputText style="margin-left:50px;" value="{!$Label.New_case_status_when_sending_an_email_to_approval}" />
                         <apex:selectList id="caseStatusListId"
-                                disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                                disabled="{!IF(enableApprovalProcess ,false,true)}"
                                 style="margin-left:5px;min-width:110px;"
                                 size="1"
                                 value="{!caseStatusUnderApproval}">
@@ -240,12 +230,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <td colspan="2">
                         <apex:outputText style="margin-left:100px;font-weight:bold;" value="{!$Label.Search_for_public_Groups} " />
                         <apex:inputText id="searchTextId"
-                                disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                                disabled="{!IF(enableApprovalProcess ,false,true)}"
                                 style="margin-left:2px;margin-right:5px;"
                                 value="{!searchGroupText}"
                                 onkeypress="if (event.keyCode == 13) {enterHit(); return false;}" />
                         <apex:commandButton id="SearchButtonId" title="Filter"
-                                disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                                disabled="{!IF(enableApprovalProcess ,false,true)}"
                                 value="{!$Label.Find}" action="{!filterGroups}"
                                 reRender="PublicGroupSelectList1Id" status="loadingStatus" />
                     </td>
@@ -256,11 +246,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         <apex:outputPanel id="createGroupId">
                             <apex:commandLink title="{!$Label.Create_New_Public_Group}"
                                     onclick="openPublicGroups();" oncomplete="return false;"
-                                    rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
+                                    rendered="{!IF(enableApprovalProcess ,true,false)}">
                                 {!$Label.Setup_Manage_Users_Public_Groups}
                             </apex:commandLink>
                             <apex:outputLabel style="text-decoration:underline;color:#787878;"
-                                    rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
+                                    rendered="{!IF(enableApprovalProcess ,false,true)}">
                                 {!$Label.Setup_Manage_Users_Public_Groups}
                             </apex:outputLabel>
                         </apex:outputPanel>
@@ -274,7 +264,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <td>
                                     <apex:selectList id="PublicGroupSelectList1Id"
                                             title="{!$Label.Channel_Available}"
-                                            disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                                            disabled="{!IF(enableApprovalProcess ,false,true)}"
                                             value="{!selectedPubliGroupsList}"
                                             multiselect="true"
                                             size="5"
@@ -291,11 +281,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                                             action="{!addOption}"
                                                             reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id"
                                                             status="loadingStatus"
-                                                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
+                                                            rendered="{!IF(enableApprovalProcess ,true,false)}">
                                                         <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif" />
                                                     </apex:commandLink>
                                                     <apex:outputLabel style="color:#787878;"
-                                                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
+                                                            rendered="{!IF(enableApprovalProcess ,false,true)}">
                                                         <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif" />
                                                     </apex:outputLabel>
                                                 </apex:outputPanel>
@@ -308,11 +298,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                                             action="{!removeOption}"
                                                             reRender="PublicGroupSelectList1Id,PublicGroupSelectList2Id"
                                                             status="loadingStatus"
-                                                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,true,false)}">
+                                                            rendered="{!IF(enableApprovalProcess ,true,false)}">
                                                         <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif" />
                                                     </apex:commandLink>
                                                     <apex:outputLabel style="color:#787878;"
-                                                            rendered="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}">
+                                                            rendered="{!IF(enableApprovalProcess ,false,true)}">
                                                         <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif" />
                                                     </apex:outputLabel>
                                                 </apex:outputPanel>
@@ -323,7 +313,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <td>
                                     <apex:selectList id="PublicGroupSelectList2Id"
                                             title="Selected"
-                                            disabled="{!IF(emailPublisherSelection == 'Customemailpublisher' && enableApprovalProcess ,false,true)}"
+                                            disabled="{!IF(enableApprovalProcess ,false,true)}"
                                             value="{!saveGroupList}"
                                             multiselect="true"
                                             size="5"
@@ -345,7 +335,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             <tr>
                                 <td>
                                     <apex:inputText id="routingEmailAddresAdd"
-                                            disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                             styleClass="borderStyle"
                                             title="Available"
                                             style="width:110px;resize:none;"
@@ -354,23 +343,19 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                 <td>
                                     <apex:commandLink style="margin-bottom:7px;"
                                             id="EmailAddressAddId"
-                                            rendered="{!If(emailPublisherSelection == 'Customemailpublisher',true,false)}"
                                             onclick="validateRoutingAddressJS();return false;">
                                         <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif" />
                                     </apex:commandLink>
                                     <apex:outputPanel style="margin-bottom:7px;"
-                                            id="EmailAddressAddIdPanel"
-                                            rendered="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}">
+                                            id="EmailAddressAddIdPanel">
                                         <img class="rightArrowIcon" title="{!$Label.Add}" alt="Add" src="/s.gif" />
                                     </apex:outputPanel>
                                     <br />
                                     <apex:commandLink id="EmailAddressRemoveId"
-                                            onclick="populateRoutingAddress('remove');return false;"
-                                            rendered="{!If(emailPublisherSelection == 'Customemailpublisher',true,false)}">
+                                            onclick="populateRoutingAddress('remove');return false;">
                                         <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif" />
                                     </apex:commandLink>
-                                    <apex:outputPanel id="EmailAddressRemovepanelId"
-                                            rendered="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}">
+                                    <apex:outputPanel id="EmailAddressRemovepanelId">
                                         <img class="leftArrowIcon" title="{!$Label.Remove}" alt="Remove" src="/s.gif" />
                                     </apex:outputPanel>
                                 </td>
@@ -378,7 +363,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                     <apex:outputPanel id="availableroutingAddresspanel">
                                         <apex:selectList id="AvailableEmailAddressId"
                                                 title="Selected"
-                                                disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                                 multiselect="true"  size="5"
                                                 style="min-width:110px">
                                             <apex:selectoptions value="{!selectedRoutingAddress}" />
@@ -396,7 +380,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <td>
                         <apex:selectList id="CasePicklistFieldsId"
                                 title="Case Field"
-                                disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                 value="{!selectedCaseFieldReplyTo}" multiselect="false" size="1"
                                 style="width:110px" onchange="initializeCasePicListValuesReplyToJS();">
                             <apex:selectOptions value="{!casePickListFields}" />
@@ -404,7 +387,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         &nbsp;&nbsp;
                         <apex:selectList id="CasePicklistValuesReplyToId"
                                 title="{!$Label.Selected_Field_s_values}"
-                                disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                 value="{!selectedCasePicklistReplyTo}"
                                 multiselect="false"
                                 size="1"
@@ -416,7 +398,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         &nbsp;&nbsp;
                         <apex:outputPanel id="mappingReplyToValuesPanel">
                             <apex:selectList id="ReplyToAddressLinks"
-                                    disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                     title="Available Reply To Address"
                                     multiselect="false"
                                     size="1"
@@ -426,7 +407,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                             </apex:selectList>
                         </apex:outputPanel>
                         <apex:commandButton onclick="fetchRoutingAddressMappings();return false;"
-                                disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
                                 status="loadingStatus"
                                 style="width:100px;margin-left:5px;"
                                 id="AddCaseMappingReplyToId"
@@ -439,8 +419,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <td>
                         <apex:outputPanel id="caseRoutingEmailMappingId">
                             <apex:selectList style="width:460px;"
-                                    disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
-                                    id="caseFilterMappingReplyToSelectListId" value="{!caseReplyToMapSelected}"
+                                    id="caseFilterMappingReplyToSelectListId"
+                                    value="{!caseReplyToMapSelected}"
                                     multiselect="false" size="6">
                                 <apex:selectOptions value="{!caseReplyToFilterMapEntry}" />
                             </apex:selectList>
@@ -448,7 +428,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         </apex:outputPanel>
                         <apex:commandButton style="width:100px"
                                 id="RemoveFiltersReplyToButtonId"
-                                value="{!$Label.Remove}" disabled="{!If(emailPublisherSelection == 'Customemailpublisher',false,true)}"
+                                value="{!$Label.Remove}"
                                 title="{!$Label.Removes_the_contents_from_mapping}"
                                 onclick="removeRoutingMapJS();return false;" >
                         </apex:commandButton>

@@ -26,7 +26,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
-<apex:page id="HVEMEmailEditorPublishierPageId" standardController="Case" extensions="HVEMCaseFeedEmailPublisherCntrl">
+<apex:page id="HVEMEmailEditorPublishierPageId" standardController="Case">
     <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMEmailEditorComponentStyle.css')}" />
     <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMCaseConversationComponentStyle.css')}" />
@@ -37,8 +37,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMString.js')}"/>
 
     <apex:form id="HVEMEmailPublisierForm">
-        <c:HVEMEmailEditorComponent id="com1" rendered="{!!isCaseFeedEmailPublisherEnabled}"/>
-        <c:HVEMCaseFeedEmailPublisherComponent id="caseFeedEmailPublisherComponentId" rendered="{!isCaseFeedEmailPublisherEnabled}"/>
-
+        <c:HVEMEmailEditorComponent id="com1" />
     </apex:form>
 </apex:page>

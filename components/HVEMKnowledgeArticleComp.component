@@ -47,9 +47,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="hvemTable">
         <apex:form id="HVEMKnowledgeArticleFormId"
             onkeypress="if (event.keyCode == 13) {fetchSelection(); return false;}">
-            <apex:outputPanel id="hiddenPanelId">
-                <apex:inputHidden id="isCustomEmailPublisher" value="{!isCustomEmailPublisher}" />
-            </apex:outputPanel>
             <apex:outputPanel id="ErrorId">
                 <apex:pageMessages />
             </apex:outputPanel>
@@ -263,7 +260,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                                         '{!articleName}',
                                         '{!JSINHTMLENCODE(articleSummary)}'
                                         );"
-                    rerender="hiddenPanelId"
                     >
                 <apex:param value=""
                     assignTo="{!selectedKnowledgeArticleLanguage}"

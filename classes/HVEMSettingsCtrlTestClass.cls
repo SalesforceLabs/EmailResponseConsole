@@ -701,6 +701,7 @@ private class HVEMSettingsCtrlTestClass {
 
   }
 
+/*
    public static testMethod void testdisableEnableEmailPublisherOptions(){
       setDataSaveToCustomSettings();
       Test.startTest();
@@ -712,7 +713,7 @@ private class HVEMSettingsCtrlTestClass {
       Test.stopTest();
 
   }
-
+*/
 
 
 }

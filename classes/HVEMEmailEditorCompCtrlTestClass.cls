@@ -262,7 +262,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         System.assertEquals(true,emailTemplateList1.size() > 0);
     }
 
-    public static testMethod void populateEditorTest(){
+    /*public static testMethod void populateEditorTest(){
         setupDataPopulateEditor();
         Test.startTest();
         emailEditor.populateEditor();
@@ -271,7 +271,7 @@ private class HVEMEmailEditorCompCtrlTestClass {
         emailEditor.populateEditor();
         Test.stopTest();
 
-    }
+    }*/
 
     public static testMethod void testdiscardDraft(){
         setupDataInit();

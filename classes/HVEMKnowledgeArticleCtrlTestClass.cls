@@ -36,53 +36,9 @@ private class HVEMKnowledgeArticleCtrlTestClass {
     static HVEM_Config_Options__c configOptions;
     static String prepareWithDataCategoryString;
     static HVEM_Config_Options__c configIns;
+    static ID kaID;
+    static ID caseID;
 
-    public static testMethod void setupDataInitPositive(){
-        configIns = new HVEM_Config_Options__c();
-        configIns.name = 'Case Mapping';
-        configIns.Case_Mappin_API__c = 'Status:New >> CategoryTest:All' ;
-        configIns.Case_Mapping_Label__c = 'Status:New >> CategoryTest:All' ;
-        configIns.Languages_Selected__c = 'English,en_US';
-        insert configIns;
-        String apiName = 'Status:New >> Category1:A;;';
-        caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
-        insert caseInstance;
-        ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
-        HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
-        HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
-        System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
-        HVEMKnowledgeArticleCtrlInstance.IsVisiblePKB = true;
-        HVEMKnowledgeArticleCtrlInstance.IsVisiblePRM  = true;
-        HVEMKnowledgeArticleCtrlInstance.IsVisibleCSP  = true;
-        HVEMKnowledgeArticleCtrlInstance.PKBChannelVisible = 'Available';
-        HVEMKnowledgeArticleCtrlInstance.PRMChannelVisible = 'Available';
-        HVEMKnowledgeArticleCtrlInstance.CSPChannelVisible = 'Available';
-    }
-
-    public static testMethod void setupDataInit(){
-        User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
-        caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
-        insert caseInstance;
-        EmailMessage emailmsg = new EmailMessage(ParentId=caseInstance.Id,HtmlBody ='This is HTML Body');
-        insert emailmsg;
-        EmailTemplate testTemp = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body');
-        selectedEmailTemplate = testTemp;
-        System.runAs(u){
-            insert testTemp;
-        }
-        if(HVEM_Config_Options__c.getInstance('HVEM') == null){
-            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id, Data_Category_Group_Filter__c = 'ABC , DEF', Article_Types_Filter__c = 'FAQ__kav',Languages_Selected__c='English,en_US');
-            insert configOptions;
-        }
-        else{
-            configOptions = HVEM_Config_Options__c.getInstance('HVEM');
-        }
-
-        ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
-        HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
-        System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
-        HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
-     }
      public static testMethod void testchannelVisibility(){
         setupDataInitPositive();
         Test.startTest();
@@ -146,4 +102,100 @@ private class HVEMKnowledgeArticleCtrlTestClass {
         System.assertEquals(true,configOptions!=null);
         Test.stopTest();
      }
+
+    public static testMethod void testAttachArticle(){
+        setupDataInit();
+        HVEMKnowledgeArticleCtrlInstance.CaseId = caseID;
+        HVEMKnowledgeArticleCtrlInstance.selectedKaId = kaID;
+        Test.startTest();
+        HVEMKnowledgeArticleCtrlInstance.attachArticle();
+
+        List<CaseArticle> ca = [select id from CaseArticle where CaseId = :caseID and KnowledgeArticleId = :kaID];
+
+        System.assertEquals(true,ca.size()==1);
+        Test.stopTest();
+    }
+
+    private static void setupDataInitPositive(){
+        configIns = new HVEM_Config_Options__c();
+        configIns.name = 'Case Mapping';
+        configIns.Case_Mappin_API__c = 'Status:New >> CategoryTest:All' ;
+        configIns.Case_Mapping_Label__c = 'Status:New >> CategoryTest:All' ;
+        configIns.Languages_Selected__c = 'English,en_US';
+        insert configIns;
+        String apiName = 'Status:New >> Category1:A;;';
+        caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
+        insert caseInstance;
+        ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
+        HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
+        HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
+        System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
+        HVEMKnowledgeArticleCtrlInstance.IsVisiblePKB = true;
+        HVEMKnowledgeArticleCtrlInstance.IsVisiblePRM  = true;
+        HVEMKnowledgeArticleCtrlInstance.IsVisibleCSP  = true;
+        HVEMKnowledgeArticleCtrlInstance.PKBChannelVisible = 'Available';
+        HVEMKnowledgeArticleCtrlInstance.PRMChannelVisible = 'Available';
+        HVEMKnowledgeArticleCtrlInstance.CSPChannelVisible = 'Available';
+    }
+
+    private static void setupDataInit(){
+        User u = [SELECT id,name FROM User WHERE id = :userInfo.getUserid()];
+        caseInstance = new Case(status='New',Origin='Phone',Subject = 'Test Subject');
+        insert caseInstance;
+        EmailMessage emailmsg = new EmailMessage(ParentId=caseInstance.Id,HtmlBody ='This is HTML Body');
+        insert emailmsg;
+        EmailTemplate testTemp = new EmailTemplate(FolderId = u.Id,TemplateType = 'text',DeveloperName = 'TestDeveloper',Name= 'Test name',Subject = 'Test Subject',Body = 'Hello This is test body');
+        selectedEmailTemplate = testTemp;
+        System.runAs(u){
+            insert testTemp;
+        }
+        if(HVEM_Config_Options__c.getInstance('HVEM') == null){
+            configOptions = new HVEM_Config_Options__c(name='HVEM',Default_Email_Template__c = selectedEmailTemplate.Id, Data_Category_Group_Filter__c = 'ABC , DEF', Article_Types_Filter__c = 'FAQ__kav',Languages_Selected__c='English,en_US');
+            insert configOptions;
+        }
+        else{
+            configOptions = HVEM_Config_Options__c.getInstance('HVEM');
+        }
+
+        ApexPages.currentPage().getParameters().put('Id',caseInstance.Id);
+        HVEMKnowledgeArticleCtrlInstance = new HVEMKnowledgeArticleCtrl();
+        System.assertEquals(caseInstance.id,HVEMKnowledgeArticleCtrlInstance.caseId);
+        HVEMKnowledgeArticleCtrlInstance.getArticleTypesDevName();
+
+        kaID = createArticle();
+        caseID = createCase();
+     }
+    private static ID createArticle() {
+        String objType;
+        List<String> kavNames = new List<String>(pkb_Controller.kavNames);
+        if (kavNames.isEmpty()){
+            return null;
+        }
+        objType = kavNames.get(0);
+
+        SObject kavObj = Schema.getGlobalDescribe().get(objType).newSObject();
+        kavObj.put('Title','Foo Foo Foo!!!');
+        kavObj.put('UrlName', 'foo-foo-foo');
+        kavObj.put('Summary', 'This is a summary!!! Foo. Foo. Foo.');
+        kavObj.put('Language', 'en_US');
+        insert kavObj;
+
+        // requery the kavObj to get the KnowledgeArticleId on it that is created automatically
+        String q = 'select id, KnowledgeArticleId from ' +objType+ ' where Id = \'' +kavObj.get('Id')+  '\' and PublishStatus = \'Draft\' and Language = \'en_US\'';
+        List<SObject> kavs = Database.query(q);
+        if (kavs.isempty()) {
+            return null;
+        }
+        kavObj = kavs[0];
+        KbManagement.PublishingService.publishArticle((ID)(kavObj.get('KnowledgeArticleId')),true);
+        return (ID)(kavObj.get('KnowledgeArticleId'));
+    }
+    private static ID createCase() {
+
+        Case c = new Case();
+        c.Subject = 'foo';
+        insert c;
+
+        return c.Id;
+    }
 }

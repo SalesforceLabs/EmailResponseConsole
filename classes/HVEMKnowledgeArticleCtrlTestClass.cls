@@ -167,7 +167,7 @@ private class HVEMKnowledgeArticleCtrlTestClass {
      }
     private static ID createArticle() {
         String objType;
-        List<String> kavNames = new List<String>(pkb_Controller.kavNames);
+        List<String> kavNames = new List<String>(getKavNames());
         if (kavNames.isEmpty()){
             return null;
         }
@@ -198,4 +198,18 @@ private class HVEMKnowledgeArticleCtrlTestClass {
 
         return c.Id;
     }
+
+    private static Set<String> getKavNames() {
+        Set<String> kavNames;
+        kavNames = new Set<String>();
+        Map<String,Schema.SOBjectType> gd = Schema.getGlobalDescribe();
+
+        for (String s : gd.keySet()) {
+            if (s.contains('__kav')) {
+                kavNames.add(s);
+            }
+        }
+        return kavNames;
+    }
+
 }

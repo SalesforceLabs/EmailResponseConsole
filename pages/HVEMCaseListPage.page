@@ -33,7 +33,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </apex:outputPanel>
 
     <apex:outputPanel id="idHVEMCaseList" rendered="{!!($CurrentPage.parameters.isdtp==null || loggedUserInstance.HVEM_User__c==false)}">
-        <apex:includeScript value="/support/console/22.0/integration.js"/>
+        <apex:includeScript value="/support/console/26.0/integration.js"/>
         <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
 
         <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />

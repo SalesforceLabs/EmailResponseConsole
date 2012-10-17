@@ -28,7 +28,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <apex:component id="HVEMCaseConversationComponentId" access="global"
     controller="HVEMEmailEditorCompCtrl">
-    <apex:includeScript value="/support/console/22.0/integration.js" />
+    <apex:includeScript value="/support/console/26.0/integration.js" />
     <style type="text/css">
         .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton {
             background:

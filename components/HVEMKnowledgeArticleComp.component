@@ -27,7 +27,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component controller="HVEMKnowledgeArticleCtrl" access="global" allowDML="true" id="HVEMKnowledgeArticleCompId">
-    <apex:includeScript value="/support/console/25.0/integration.js"/>
+    <apex:includeScript value="/support/console/26.0/integration.js"/>
 
     <input type="hidden" id="idPreviousArticleHidden" value="" />
     <input type="hidden" id="idCurrentArticleHidden" value="" />

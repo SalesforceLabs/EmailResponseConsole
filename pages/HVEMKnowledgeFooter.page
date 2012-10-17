@@ -28,7 +28,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <apex:page >
 
-    <apex:includeScript value="/support/console/25.0/integration.js"/>
+    <apex:includeScript value="/support/console/26.0/integration.js"/>
     <script type="text/javascript">
 
         var callback = function(result) {

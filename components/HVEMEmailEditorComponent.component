@@ -28,7 +28,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <apex:component access="global" id="hvemEmailEditoComponentId"
     controller="HVEMEmailEditorCompCtrl" allowDML="true">
-    <apex:includeScript value="/support/console/25.0/integration.js" />
+    <apex:includeScript value="/support/console/26.0/integration.js" />
     <apex:includeScript value="{!URLFOR($Resource.HVEMCKEditor,'/ckeditor/ckeditor.js')}" />
     <style>
         .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton {

@@ -27,7 +27,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component controller="HVEMCaseListDetailsCtrl" allowDML="true">
-    <apex:includeScript value="/support/console/25.0/integration.js"/>
+    <apex:includeScript value="/support/console/26.0/integration.js"/>
     <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCaseListDetailsComponent.js')}" />
     <style type='text/css'>
        .hvemRefreshListButton,.rightArrowIcon {

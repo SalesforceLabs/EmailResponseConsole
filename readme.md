@@ -35,17 +35,21 @@ ERC is available on the AppExchange both as a managed and an un-managed package.
 Version History
 ---------------
 
-*Version ?? - Not released yet*
+*Version 3.5 - Not released yet*
 
+- Updated the packaging with sample app, tab, layout, etc. for an easier trial type installation
+- Added the support of pinned list view with detection of change of current tab
+- Added keyboard shortcut support (navigate in the list of results, insert link/content)
+- Added "Send Back To Queue" option for the user (can be disabled by the administrator)
+- Removed the Case Feed support - experimental feature the is not stable enough and that introduced a dependency on Case Feed feature
 - Move the case list view information message (on previous) down a bit
 - Fix spacing issue in the case list view information message and make it black instead of red
 - Fix the redundant feed items when an article is attached more than one time to the case
-- updated the packaging with sample app, tab, layout, etc. for an easier trial type installation
-- Heavy refactoring of the KB component
-- Added an event listener in th KB component for navigating the results list and for inserting link/content in the publisher
 - Added a sample console footer component with KB navigation links
+- Heavy refactoring of the KB component
 - Removed redondant components HVEMCaseList...
 - Reformatted the source code: tabs --> 4 spaces, cleaner indentation, etc.
+- Increased the code coverage a bit
  
 *Version 3 - AppExchange Release: 2012/07/19*
 

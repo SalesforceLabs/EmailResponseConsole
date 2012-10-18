@@ -3,6 +3,7 @@
     <customSettingsType>List</customSettingsType>
     <customSettingsVisibility>Protected</customSettingsVisibility>
     <description>this settings will store all email routing address entered by admin in ERC settings</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Email_Address__c</fullName>

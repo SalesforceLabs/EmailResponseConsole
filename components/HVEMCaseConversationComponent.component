@@ -2,77 +2,71 @@
 Copyright (c) 2012, salesforce.com, Inc.
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, 
+    * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-    this list of conditions and the following disclaimer in the documentation 
+    * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
-    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
-    may be used to endorse or promote products derived from this software 
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software
     without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE. 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component id="HVEMCaseConversationComponentId" access="global"
-	controller="HVEMEmailEditorCompCtrl">
-	<apex:includeScript value="/support/console/22.0/integration.js" />
-	<Style>
-		body .bPageBlock .pbBody .pbSubheader img {
-			background-repeat: no-repeat;
-			height: 17px;
-			margin-right: 2px;
-			width: 22px;
-		}
+    controller="HVEMEmailEditorCompCtrl">
+    <apex:includeScript value="/support/console/26.0/integration.js" />
+    <style type="text/css">
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton {
+            background:
+                url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
+                -65px -7px no-repeat transparent;
+        }
+        body .bPageBlock .pbBody .pbSubheader img {
+            background-repeat: no-repeat;
+            height: 17px;
+            margin-right: 2px;
+            width: 22px;
+        }
+        a {
+            color: #0055e3 !important;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .diabledLink {
+            color: grey !important;
+            cursor: default !important;
+            text-decoration: none !important;
+        }
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton {
+            background-position: -95px -7px;
+        }
+    </style>
 
-		a {
-			color: #0055e3 !important;
-			text-decoration: none;
-			cursor: pointer;
-		}
+    <script type="text/javascript">
+        var isHVEMUser = '{!activeUser.HVEM_User__c}';
+        window.onload=function(){
+            var pbs = document.getElementById('HVEMCaseConversationPageId:HVEMCaseConversationForm:com:HVEMCaseConversationComponentId:caseDetailPageBlockId:caseDetailPageBlockSectionId');
 
-		.diabledLink {
-			color: grey !important;
-			cursor: default !important;
-			text-decoration: none !important;
-		}
-
-		.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton
-			{
-			background:
-				url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
-				-65px -7px no-repeat transparent;
-		}
-
-		.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton
-			{
-			background-position: -95px -7px;
-		}
-	</Style>
-
-	<script>        
-        var isHVEMUser = '{!activeUser.HVEM_User__c}';         
-        window.onload=function(){   
-            var pbs = document.getElementById('HVEMCaseConversationPageId:HVEMCaseConversationForm:com:HVEMCaseConversationComponentId:caseDetailPageBlockId:caseDetailPageBlockSectionId');                
-                          
             var inConsole = testIsInConsole();
             var emailCount = {!emailCount};
             /**
             * Code to hide Case detail buttons
             **/
-            for(var i=0;i<=emailCount-1;i++){                
+            for(var i=0;i<=emailCount-1;i++){
                 var emailTemplateImage = document.getElementById('img_HVEMCaseConversationPageId:HVEMCaseConversationForm:com:HVEMCaseConversationComponentId:emailPageBlockId:emailRepeatId:'+i+':emailPageBlockSectionId');
                 if(emailTemplateImage != null){
                     if({!incomingMail}[i] == false){
@@ -81,48 +75,48 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     else{
                         emailTemplateImage.src='{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/emailInbound.png')}';
                     }
-                }               
-            } 
+                }
+            }
             if(pbs != null && {!isServiceCloud}){
-                if('{!activeUser.HVEM_User__c}' == 'true'){                 
+                if('{!activeUser.HVEM_User__c}' == 'true'){
                     twistSection(pbs.childNodes[0].childNodes[0]);
                 }
-                for(var i=1;i<=emailCount-1;i++){                
+                for(var i=1;i<=emailCount-1;i++){
                     var emailTemplate = document.getElementById('HVEMCaseConversationPageId:HVEMCaseConversationForm:com:HVEMCaseConversationComponentId:emailPageBlockId:emailRepeatId:'+i+':emailPageBlockSectionId');
-                    twistSection(emailTemplate.childNodes[0].childNodes[0]);                
-                }           
-           }       
-                  
+                    twistSection(emailTemplate.childNodes[0].childNodes[0]);
+                }
+           }
+
         }
     </script>
-	<apex:pageMessage id="bodyBlankErrorId"
-		rendered="{!IF((thread == null),false,true)}" severity="error"
-		strength="2" summary="Mail cannot be Send with a blank Body"
-		title="Error Message" />
-	<apex:pageBlock id="caseDetailPageBlockId">
-		<apex:pageblockSection id="caseDetailPageBlockSectionId" columns="1"
-			title="Case Details - {!caseInstance.CaseNumber}">
-			<apex:outputLink rendered="{!NOT(isServiceCloud)}"
-				style="white-space:nowrap;" title="Link" value="/apex/HVEMMainPage"
-				id="theLink"> {!$Label.Back_to_List_Cases} </apex:outputLink>
-			<apex:detail id="detailTag_Id" relatedList="{!!isServiceCloud}"
-				subject="{!caseInstance.id}" title="false" inlineEdit="false" />
-		</apex:pageblockSection>
-	</apex:pageBlock>
-	<apex:pageBlock id="emailPageBlockId"
-		rendered="{!AND(activeUser.HVEM_User__c,isServiceCloud)}">
-		<apex:repeat id="emailRepeatId" value="{!emailMessageList}"
-			var="emailMessage">
-			<div class="hvemEmailItem"><apex:pageblockSection id="emailPageBlockSectionId" columns="1"
-				title="{!emailMessage.createdDate}  {!emailMessage.Subject}">
-				<apex:pageBlockSectionItem id="PBSITextId">
-					<apex:outputField value="{!emailMessage.TextBody}"
-						rendered="{!IF(AND(ISBLANK(emailMessage.HTMLbody),ISNULL(emailMessage.HTMLbody)),true,false)}" />
-				</apex:pageBlockSectionItem>
-				<apex:pageBlockSectionItem id="PBSIHtmlId">
-					<apex:outputText escape="false" value="{!emailMessage.HTMLbody}" />
-				</apex:pageBlockSectionItem>
-			</apex:pageblockSection></div>
-		</apex:repeat>
-	</apex:pageBlock>
+    <apex:pageMessage id="bodyBlankErrorId"
+        rendered="{!IF((thread == null),false,true)}" severity="error"
+        strength="2" summary="Mail cannot be Send with a blank Body"
+        title="Error Message" />
+    <apex:pageBlock id="caseDetailPageBlockId">
+        <apex:pageblockSection id="caseDetailPageBlockSectionId" columns="1"
+            title="Case Details - {!caseInstance.CaseNumber}">
+            <apex:outputLink rendered="{!NOT(isServiceCloud)}"
+                style="white-space:nowrap;" title="Link" value="/apex/HVEMMainPage"
+                id="theLink"> {!$Label.Back_to_List_Cases} </apex:outputLink>
+            <apex:detail id="detailTag_Id" relatedList="{!!isServiceCloud}"
+                subject="{!caseInstance.id}" title="false" inlineEdit="false" />
+        </apex:pageblockSection>
+    </apex:pageBlock>
+    <apex:pageBlock id="emailPageBlockId"
+        rendered="{!AND(activeUser.HVEM_User__c,isServiceCloud)}">
+        <apex:repeat id="emailRepeatId" value="{!emailMessageList}"
+            var="emailMessage">
+            <div class="hvemEmailItem"><apex:pageblockSection id="emailPageBlockSectionId" columns="1"
+                title="{!emailMessage.createdDate}  {!emailMessage.Subject}">
+                <apex:pageBlockSectionItem id="PBSITextId">
+                    <apex:outputField value="{!emailMessage.TextBody}"
+                        rendered="{!IF(AND(ISBLANK(emailMessage.HTMLbody),ISNULL(emailMessage.HTMLbody)),true,false)}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="PBSIHtmlId">
+                    <apex:outputText escape="false" value="{!emailMessage.HTMLbody}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection></div>
+        </apex:repeat>
+    </apex:pageBlock>
 </apex:component>

@@ -3,6 +3,7 @@
     <customSettingsType>List</customSettingsType>
     <customSettingsVisibility>Public</customSettingsVisibility>
     <description>This Custom settings will be used to store mapping created between Case picklist values and corresponding reply to address</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Case_API_and_Label__c</fullName>

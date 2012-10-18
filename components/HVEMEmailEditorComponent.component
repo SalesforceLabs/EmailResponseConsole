@@ -2,42 +2,39 @@
 Copyright (c) 2012, salesforce.com, Inc.
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, 
+    * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-    this list of conditions and the following disclaimer in the documentation 
+    * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
-    * Neither the name of the salesforce.com, Inc. nor the names of its contributors 
-    may be used to endorse or promote products derived from this software 
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software
     without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
-OF THE POSSIBILITY OF SUCH DAMAGE. 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
 <apex:component access="global" id="hvemEmailEditoComponentId"
     controller="HVEMEmailEditorCompCtrl" allowDML="true">
-    <apex:includeScript value="/support/console/22.0/integration.js" />
+    <apex:includeScript value="/support/console/26.0/integration.js" />
     <apex:includeScript value="{!URLFOR($Resource.HVEMCKEditor,'/ckeditor/ckeditor.js')}" />
     <style>
-        .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton
-            {
-            background:
-                url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
-                -65px -7px no-repeat transparent;
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton {
+            background: url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}") -65px -7px no-repeat transparent;
         }
-        
+
         .LabelStyle {
             font-size: 14px;
             font-weight: normal;
@@ -45,21 +42,20 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             cursor: pointer;
             background: grey;
         }
-        
+
         body .btn {
             padding: 2px 0px;
         }
-        
+
         .Fontbolder {
             font-weight: bolder;
         }
-        
+
         .btnhidden {
             display: none;
         }
-        
+
         .btnvisible {
-            
             color: #333333;
             font-size: 0.9em;
             font-weight: bold;
@@ -70,22 +66,22 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             float: right;
             border-radius: 5px 5px 5px 5px;
         }
-        
+
         .hyperLink {
             cursor: pointer;
             margin: 3px;
             color: #0055e3;
             text-decoration: none;
         }
-        
-        .labelStyle{
+
+        .labelStyle {
             left: 10px;
             margin-right: 1px;
             position: relative;
             cursor: pointer;
-        
-        } 
-        .divClass{
+        }
+
+        .divClass {
             border: 1px solid;
             border-color: #B5B5B5 #B5B5B5 #7F7F7F;
             border-radius: 5px 5px 5px 5px;
@@ -94,8 +90,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             margin-top:-1px;
             display: none;
         }
-                     
-      .highLightSelection {
+
+        .highLightSelection {
             background-color: #effaff;
             cursor: pointer;
             display: block;
@@ -104,8 +100,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             font-size: 0.9em;
             font-weight: bold;
             height:18px;
-       }
-       .removeHighLight {
+        }
+
+        .removeHighLight {
             background-color: #ffffff;
             cursor: pointer;
             display: block;
@@ -114,54 +111,104 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             font-size: 0.9em;
             font-weight: bold;
             height:18px;
-       }
-         
-     .dropdownSelection{
-        background-color: #ffffff;
-        cursor: pointer;
-        display: block;
-        width:133px;
-        border-radius: 5px 5px 5px 5px;
-        font-size: 0.9em;
-        font-weight: bold;
-        height:18px;
-     }
-	 .discardLink {
-        color:blue;
-        margin-top:4px;
-        position: absolute;
-        right: 194px;        
-    }    
-    .disableDiscard{
-        display:none;
-        color:grey;
-        margin-top: -10px;
-        position: absolute;
-        right: 194px;
-    }
-    .singleLine{
-        position:absolute;
-        margin-top: 4px;
-        right: 182px;
-    }    
-    .activeSaveLink{
-        color:blue;
-        margin-top: 4px;
-        position: absolute;
-        right: 144px;
-    }
-    .disableSave{
-         color:grey;
-         margin-top: 4px;
-         position: absolute;
-         right: 149px;    
-    }
-	.showOptionDiv{
-		margin-top: 7.5px;
-		position: absolute;
-		right: 10px;
-	}
+        }
+
+        .dropdownSelection {
+            background-color: #ffffff;
+            cursor: pointer;
+            display: block;
+            width:133px;
+            border-radius: 5px 5px 5px 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            height:18px;
+        }
+
+        .discardLink {
+            color:blue;
+            margin-top:4px;
+            position: absolute;
+            right: 194px;
+        }
+
+        .disableDiscard {
+            display:none;
+            color:grey;
+            margin-top: -10px;
+            position: absolute;
+            right: 194px;
+        }
+
+        .singleLine {
+            position:absolute;
+            margin-top: 4px;
+            right: 182px;
+        }
+
+        .activeSaveLink {
+            color:blue;
+            margin-top: 4px;
+            position: absolute;
+            right: 144px;
+        }
+
+        .disableSave {
+            color:grey;
+            margin-top: 4px;
+            position: absolute;
+            right: 149px;
+        }
+
+        .showOptionDiv {
+            margin-top: 7.5px;
+            position: absolute;
+            right: 10px;
+        }
     </style>
+    <script type="text/javascript">
+
+        var eventInsertInEditor = function(result) {
+            console.log("received hvemInsertInEditor");
+            // message format:
+            //   for links:
+            //     Link:::<article title>][<article url>
+            var msg = result.message.split(":::");
+            if (msg.length<2) {
+                console.log("Error 1: " + result.message);
+                return;
+            }
+            // TODO if length>2 then "join"
+            if (msg[0]==="Link") {
+                var data = msg[1].split("][");
+                if (data.length<2) {
+                    console.log("Error 2: " + result.message);
+                    return;
+                }
+                // TODO if length>2 then "join"
+
+                insertURL(data[0],data[1],'url');
+                return;
+            }
+            if (msg[0]==="Content") {
+                // TODO if length>2 then "join"
+                insertURL('',msg[1],'content');
+                return;
+            }
+            console.log("Error 3: " + result.message);
+        }
+
+        //window.onload = init;
+        if (window.addEventListener) {
+            window.addEventListener('load', init, false);
+        } else if (window.attachEvent) {
+            window.attachEvent('onload', init );
+        }
+
+        function init(){
+            console.log("onload...");
+            sforce.console.addEventListener('hvemInsertInEditor', eventInsertInEditor);
+        }
+    </script>
     <apex:outputPanel id="errorPanel" rendered="{!isServiceCloud}">
         <apex:pageMessages />
         <apex:pageMessage id="bodyBlankErrorId" rendered="{!bodyBlankError}"
@@ -210,54 +257,66 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}"
             width="20px" height="20px" />
     </div>
-    <apex:actionFunction name="populateEditorAF" status="loadingStatus"
-        action="{!populateEditor}" reRender="idEditorPanel"
-        oncomplete="populateEditorJS();" />
-    <apex:actionFunction name="sendAndNextActionAF" status="loadingStatus"
-        action="{!sendAndNextAction}"
-        rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel"
-        oncomplete="handleTabs();">
-        <apex:param name="nameEmailContent" id="idEmailContent" value=""
-            assignTo="{!emailBody}" />
-        <apex:param name="additionalToAddress" id="idAdditionalToAddress"
-            value="" assignTo="{!additionalToAddress}" />
-        <apex:param name="ccAddress" id="idCcAddress" value=""
-            assignTo="{!ccAddress}" />
-        <apex:param name="bccAddress" id="idBccAddress" value=""
-            assignTo="{!bccAddress}" />
-        <apex:param name="superUserApproval" id="idSuperUserApproval" value=""
-            assignTo="{!superUserApproval}" />
+    <apex:actionFunction name="populateEditorAF"
+            status="loadingStatus"
+            action="{!populateEditor}"
+            reRender="idEditorPanel"
+            oncomplete="populateEditorJS();" />
+    <apex:actionFunction name="sendAndNextActionAF"
+            status="loadingStatus"
+            action="{!sendAndNextAction}"
+            rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel"
+            oncomplete="handleTabs();">
+        <apex:param name="nameEmailContent"     id="idEmailContent"         value="" assignTo="{!emailBody}" />
+        <apex:param name="additionalToAddress"  id="idAdditionalToAddress"  value="" assignTo="{!additionalToAddress}" />
+        <apex:param name="ccAddress"            id="idCcAddress"            value="" assignTo="{!ccAddress}" />
+        <apex:param name="bccAddress"           id="idBccAddress"           value="" assignTo="{!bccAddress}" />
+        <apex:param name="superUserApproval"    id="idSuperUserApproval"    value="" assignTo="{!superUserApproval}" />
     </apex:actionFunction>
-    <apex:actionFunction name="discardDraftAF" status="loadingStatus"
-        action="{!discardDraft}"
-        rerender="idfullBodyPanel,idEditorPanel,errorPanel"
-        oncomplete="reloadCKEditor();" />
-    <apex:actionFunction name="saveDraftAF" status="loadingStatus"
-        action="{!saveDraft}" oncomplete="saveDiscardLink();"
-        rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,saveDiscardId">
-        <apex:param name="nameEmailContent" id="EmailContent" value=""
-            assignTo="{!emailBody}" />
-        <apex:param name="additionalToAddress" id="AdditionalToAddress"
-            value="" assignTo="{!additionalToAddress}" />
-        <apex:param name="ccAddress" id="CcAddress" value=""
-            assignTo="{!ccAddress}" />
-        <apex:param name="bccAddress" id="BccAddress" value=""
-            assignTo="{!bccAddress}" />
+    <apex:actionFunction name="sendCaseBackToQueueAF"
+            status="loadingStatus"
+            action="{!sendCaseBackToQueue}"
+            rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel"
+            oncomplete="handleTabs();">
     </apex:actionFunction>
-    <apex:actionFunction name="insertArticleContentAF" status="loadingStatus" action="{!insertArticleContent}" rerender="idEditorPanel" oncomplete="loadEditor();">
-        <apex:param assignTo="{!templateType}" name="templateType" value="" />
-        <apex:param value="" assignTo="{!selectedKnowledgeArticleId}" name="selectedKnowledgeArticleId" />
-        <apex:param value="" assignTo="{!selectedKnowledgeArticleFrameSourceId}" name="selectedKnowledgeArticleFrameSourceId" />
-        <apex:param value="" assignTo="{!selectedKnowledgeArticleFrameSource}" name="selectedKnowledgeArticleFrameSource" />
-        <apex:param value="" assignTo="{!articleTypeOfSelectedArticle}" name="articleTypeOfSelectedArticle" />
-        <apex:param assignTo="{!articleTitle}" value="" name="articleTitle" />
-        <apex:param assignTo="{!articleSummary}" value="" name="articleSummary" />
+    <apex:actionFunction name="discardDraftAF"
+            status="loadingStatus"
+            action="{!discardDraft}"
+            rerender="idfullBodyPanel,idEditorPanel,errorPanel"
+            oncomplete="reloadCKEditor();" />
+    <apex:actionFunction name="saveDraftAF"
+            status="loadingStatus"
+            action="{!saveDraft}"
+            oncomplete="saveDiscardLink();"
+            rerender="errorPanel,idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,saveDiscardId">
+        <apex:param name="nameEmailContent"     id="EmailContent"           value="" assignTo="{!emailBody}" />
+        <apex:param name="additionalToAddress"  id="AdditionalToAddress"    value="" assignTo="{!additionalToAddress}" />
+        <apex:param name="ccAddress"            id="CcAddress"              value="" assignTo="{!ccAddress}" />
+        <apex:param name="bccAddress"           id="BccAddress"             value="" assignTo="{!bccAddress}" />
+    </apex:actionFunction>
+    <apex:actionFunction name="insertArticleContentAF"
+            status="loadingStatus"
+            action="{!insertArticleContent}"
+            rerender="idEditorPanel"
+            oncomplete="loadEditor();">
+        <apex:param name="templateType"                             value="" assignTo="{!templateType}" />
+        <apex:param name="selectedKnowledgeArticleId"               value="" assignTo="{!selectedKnowledgeArticleId}" />
+        <apex:param name="selectedKnowledgeArticleFrameSourceId"    value="" assignTo="{!selectedKnowledgeArticleFrameSourceId}" />
+        <apex:param name="selectedKnowledgeArticleFrameSource"      value="" assignTo="{!selectedKnowledgeArticleFrameSource}" />
+        <apex:param name="articleTypeOfSelectedArticle"             value="" assignTo="{!articleTypeOfSelectedArticle}" />
+        <apex:param name="articleTitle"                             value="" assignTo="{!articleTitle}" />
+        <apex:param name="articleSummary"                           value="" assignTo="{!articleSummary}" />
     </apex:actionfunction>
-    <apex:actionFunction name="initializeEmailTemplateAF" status="loadingStatus"
-         action="{!initializeEmailTemplate}" reRender="emailTemplateId" />
-    <apex:actionFunction name="changeCaseStausAF" status="loadingStatus"
-         action="{!changeCaseStatus}" oncomplete="handleTabs();"
-         rerender="idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,spanId,errorPanel"/>         
+    <apex:actionFunction name="initializeEmailTemplateAF"
+            status="loadingStatus"
+            action="{!initializeEmailTemplate}"
+            reRender="emailTemplateId" />
+    <apex:actionFunction name="changeCaseStatusAF"
+            status="loadingStatus"
+            action="{!changeCaseStatus}"
+            oncomplete="handleTabs();"
+            rerender="idEditorPanel,idToAddressPanel,idNoCaseinQueuePanel,spanId,errorPanel"/>
+
     <apex:outputPanel id="idfullBodyPanel" rendered="{!isServiceCloud}">
         <table class="hvemPubTable" width="100%;">
             <tr>
@@ -284,7 +343,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;"
                     value="{!$Label.Additional_To}  " /></td>
                 <td align="left" style="margin-left: 3px;"><apex:inputTextArea style="resize:none;" disabled="{!isUnderApproval}" cols="50"
-                    rows="5" id="idAdditionalTo" value="{!additionalTo}" /> 
+                    rows="5" id="idAdditionalTo" value="{!additionalTo}" />
                     <apex:outputPanel rendered="{!!isUnderApproval}">
                     <a> <img
                         onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
@@ -302,7 +361,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 </td>
                 <td align="left" style="margin-left: 3px;">
                     <apex:inputTextArea cols="50" rows="5" id="idCcTo" value="{!addCc}"
-                        disabled="{!isUnderApproval}" /> 
+                        disabled="{!isUnderApproval}" />
                     <apex:outputPanel rendered="{!!isUnderApproval}">
                             <a> <img style="cursor: pointer;"
                                 onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
@@ -319,7 +378,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td align="right"><apex:outputLabel style="margin:3px;font-weight:bold;" value="{!$Label.Add_Bcc}  " />
                 </td>
                 <td align="left" style="margin-left: 3px;"><apex:inputTextArea cols="50" rows="5" id="idBccTo" value="{!addBcc}"
-                    disabled="{!isUnderApproval}" /> 
+                    disabled="{!isUnderApproval}" />
                     <apex:outputPanel rendered="{!!isUnderApproval}">
                         <a> <img style="cursor: pointer;"
                             onclick="window.open ('/apex/HVEMEmailLookUpPage?id=' + '{!caseId}','mywindow','menubar=1,resizable=1,width=550,height=550');"
@@ -336,13 +395,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td align="right"><apex:outputLabel value="{!$Label.Template}" style="font-weight:bold;" /></td>
                  <td>
                   <apex:outputPanel id="templatePanaelId">
-                      <apex:selectList disabled="{!isUnderApproval}" 
-                        id="folderSelectListId" style="width:250px;border: 1px solid black" 
+                      <apex:selectList disabled="{!isUnderApproval}"
+                        id="folderSelectListId" style="width:250px;border: 1px solid black"
                         size="1" value="{!folders}" onchange="initializeEmailTemplateAF();">
                         <apex:selectOptions value="{!emailFolders}"/>
                     </apex:selectList>&nbsp;&nbsp;
                         <apex:selectList disabled="{!isUnderApproval}"
-                        id="emailTemplateId" style="width:250px;border: 1px solid black" 
+                        id="emailTemplateId" style="width:250px;border: 1px solid black"
                         size="1" value="{!selectedTemplate}"  onchange="populateEditorAF();">
                         <apex:selectOptions value="{!EmailTemplatesList}"/>
                     </apex:selectList>
@@ -354,7 +413,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                       value="{!$Label.Body}" /></td>
                  <td>
                     <apex:outputPanel id="editorAreaPanel">
-                       <textArea style="width:100%;" id="idMainEmailBody"  name="nameMainEmailBody"   rows="20" cols="120"/> 
+                       <textArea style="width:100%;" id="idMainEmailBody"  name="nameMainEmailBody"   rows="20" cols="120"/>
                     </apex:outputPanel>
                 </td>
             </tr>
@@ -366,32 +425,57 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         id="caseStatusSelectListId" value="{!caseStatus}"
                         multiselect="false" size="1" style="border: 1px solid black">
                         <apex:selectOptions value="{!caseStatusFieldValues}" />
-                    </apex:selectList> 
+                    </apex:selectList>
                     <apex:inputCheckbox disabled="{!isUnderApproval}"
                         id="includeThreadCheckBoxId" value="{!includeThread}"
                         selected="false" />
-                        <apex:outputLabel style="font-weight:bold;">Include Thread</apex:outputLabel>
-                     <apex:outputPanel id="saveDiscardId" style="float:right;width:302px">
+                    <apex:outputLabel style="font-weight:bold;">Include Thread</apex:outputLabel>
+
+                    <apex:outputPanel id="saveDiscardId" style="float:right;width:302px">
                         <apex:commandLink styleClass="discardLink" rendered="{!configOptions.Allow_Drafts__c}" id="DiscardId" value="{!$Label.Discard_Changes}" onclick="discardDraftAF();" oncomplete="return false;"/>&nbsp;
-                        <label id="discardChangesSpan" Class="disableDiscard" >{!$Label.Discard_Changes}</label>&nbsp;    
-                        
+                        <label id="discardChangesSpan" Class="disableDiscard" >{!$Label.Discard_Changes}</label>&nbsp;
+
                         <apex:outputLabel rendered="{!configOptions.Allow_Drafts__c}" styleClass="singleLine"> | </apex:outputLabel> &nbsp;
                         <apex:commandLink styleClass="activeSaveLink" rendered="{!configOptions.Allow_Drafts__c && !isUnderApproval}" id="SaveId" onclick="saveDraftJS();" oncomplete="return false;">{!$Label.Save}</apex:commandLink>&nbsp;&nbsp;
-                                                    
+
                         <apex:outputLabel styleClass="disableSave" value="{!$Label.Save}" rendered="{!isUnderApproval}"></apex:outputLabel>
-                        <span id="spanId" style="width:100px"> <apex:commandButton disabled="{!isUnderApproval}" value="{!$Label.Send_and_Next_Case}" 
-                            onclick="sendAndNextActionJS('NormalSend');" oncomplete="return false;" style="margin-left:0px;position:absolute;right:29px;"/>
-                            <apex:commandButton id="showOptionsId" rendered="{!If(enableChangeCaseStatus || isSuperUser,true,false)}" disabled="{!isUnderApproval}" value="▼" onclick="showOptions();"
-                            onblur="hideDropDownOptions();" oncomplete="return false;" style="width:6%;float:right;margin-left:-5px;" /><br />
+                        <span id="spanId" style="width:100px">
+                            <apex:commandButton disabled="{!isUnderApproval}"
+                                    value="{!$Label.Send_and_Next_Case}"
+                                    onclick="sendAndNextActionJS('NormalSend');"
+                                    oncomplete="return false;"
+                                    style="margin-left:0px;position:absolute;right:29px;"/>
+                            <apex:commandButton id="showOptionsId"
+                                    rendered="{!If(enableChangeCaseStatus || isSuperUser || allowSendBackToQueue, true,false)}"
+                                    disabled="{!isUnderApproval}"
+                                    value="▼"
+                                    onclick="showOptions();"
+                                    onblur="hideDropDownOptions();"
+                                    oncomplete="return false;"
+                                    style="width:6%;float:right;margin-left:-5px;" />
+                            <br />
                             <div class="divClass" id="DivId" style="margin-top: 7.5px;position: absolute;right: 10px;">
-                                <span onmouseover="populateMouseVar('in','changeCaseId');" onblur="hideOptions('other');"
-                                      onmouseout="populateMouseVar('out','changeCaseId')" id="changeCaseId" class="dropdownSelection"
-                                      style="width:132px; height:18px;" onclick = "hideOptions('spam');">
-                                      <apex:outputLabel styleClass="labelStyle" style="Bottom:-2px;" value="{!$Label.Change_status}" title="Change status"></apex:outputLabel></span>
-                                <span onmouseover="populateMouseVar('in','superUserApproval');" onblur="hideOptions('other');"
-                                      onmouseout="populateMouseVar('out','superUserApproval');" id="superUserApproval" class="dropdownSelection" 
-                                      style="width:132px; height: 18px;margin-right:1px;margin-top: -1px;" onclick="hideOptions('review');">
-                                      <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="{!$Label.Submit_for_Review}" title="Submit for Review"></apex:outputLabel></span>
+                                <apex:outputPanel rendered="{!If(enableChangeCaseStatus, true,false)}">
+                                    <span onmouseover="populateMouseVar('in','changeCaseId');" onblur="hideOptions('other');"
+                                            onmouseout="populateMouseVar('out','changeCaseId')" id="changeCaseId" class="dropdownSelection"
+                                            style="width:132px; height:18px;" onclick = "hideOptions('spam');">
+                                        <apex:outputLabel styleClass="labelStyle" style="Bottom:-2px;" value="{!$Label.Change_status}" title="Change status"></apex:outputLabel>
+                                    </span>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!If(isSuperUser, true,false)}">
+                                    <span onmouseover="populateMouseVar('in','superUserApproval');" onblur="hideOptions('other');"
+                                            onmouseout="populateMouseVar('out','superUserApproval');" id="superUserApproval" class="dropdownSelection"
+                                            style="width:132px; height: 18px;margin-right:1px;margin-top: -1px;" onclick="hideOptions('review');">
+                                        <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="{!$Label.Submit_for_Review}" title="Submit for Review"></apex:outputLabel>
+                                    </span>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!If(allowSendBackToQueue, true,false)}">
+                                    <span onmouseover="populateMouseVar('in','sendBackToQueue');" onblur="hideOptions('other');"
+                                            onmouseout="populateMouseVar('out','sendBackToQueue');" id="sendBackToQueue" class="dropdownSelection"
+                                            style="width:132px; height: 18px;margin-right:1px;margin-top: -1px;" onclick="hideOptions('sendback');" oncomplete="return false;">
+                                        <apex:outputLabel styleClass="labelStyle" style="top:1px;" value="{!$Label.Send_back_to_queue}" title="Submit for Review"></apex:outputLabel>
+                                    </span>
+                                </apex:outputPanel>
                             </div>
                         </span>
                     </apex:outputPanel>
@@ -436,13 +520,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </apex:outputPanel>
     <apex:outputPanel id="idEditorPanel">
         <apex:inputHidden value="{!isTemplateDeleted}" id="TemplateDeleted" />
-        <apex:inputHidden value="{!selectedEmailTemplate.HtmlValue}"
-            id="htmlValue" />
+        <apex:inputHidden value="{!selectedEmailTemplate.HtmlValue}" id="htmlValue" />
         <apex:inputHidden value="{!type}" id="templateType" />
         <apex:inputHidden value="{!bodyValue}" id="textValue" />
         <apex:inputHidden value="{!caseFromQueue.Id}" id="nextCaseId" />
-        <apex:inputHidden value="{!caseFromQueue.caseNumber}"
-            id="nextCasenumber" />
+        <apex:inputHidden value="{!caseFromQueue.caseNumber}" id="nextCasenumber" />
         <apex:inputHidden value="{!isValidated}" id="isValidated" />
         <apex:inputHidden value="{!isNoCustomError}" id="isNoCustomError" />
     </apex:outputPanel>
@@ -450,83 +532,80 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <div style="position: absolute; top: 150px; left: 200px;"><apex:actionStatus id="loadingStatus" onstart="freezeBackground();"
         onstop="unFreezeBackground();">
     </apex:actionStatus></div>
-    <script>   
+    <script>
             function displayContent(templateType,knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary){
                 insertArticleContentAF(templateType,knowledgeArticleId,frameSourceId, frameSourceName, articleName, articleTitle, articleSummary);
             }
-             
+
             function loadEditor(){
-            	var templateType = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:templateType').value;
-           		var editorTextValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:textValue').value;
-           		var editorElement = document.getElementById('idMainEmailBody');
-           		var editorValue = editorElement.value ;
-                
-            	if(templateType == 'text'){
-            	   editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
-	               var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
-                   decoded = decoded.replace('<![CDATA[', '');
-	               decoded = decoded.replace(']]>', '');
-	               var beforeString = editorElement.value.substring(0,editorElement.selectionStart); 
-                   var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length); 
-                   editorElement.value =   beforeString + decoded + '  ' + afterString;
+                var templateType = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:templateType').value;
+                var editorTextValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:textValue').value;
+                var editorElement = document.getElementById('idMainEmailBody');
+                var editorValue = editorElement.value ;
+
+                if(templateType == 'text'){
+                    editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    var beforeString = editorElement.value.substring(0,editorElement.selectionStart);
+                    var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length);
+                    editorElement.value =   beforeString + decoded + '  ' + afterString;
                 }else if(templateType == 'custom'){
-                   var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
-                   decoded = decoded.replace('<![CDATA[', '');
-                   decoded = decoded.replace(']]>', '');
-                   var element = CKEDITOR.dom.element.createFromHtml('<table><tr><td>' + decoded + '</table></tr></td>');
-                   CKEDITOR.instances.idMainEmailBody.insertElement( element );
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    var element = CKEDITOR.dom.element.createFromHtml('<table><tr><td>' + decoded + '</table></tr></td>');
+                    CKEDITOR.instances.idMainEmailBody.insertElement( element );
                 }else{
-                   editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
-	               var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
-                   decoded = decoded.replace('<![CDATA[', '');
-	               decoded = decoded.replace(']]>', '');
-	               var beforeString = editorElement.value.substring(0,editorElement.selectionStart); 
-                   var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length); 
-                   editorElement.value =   beforeString + decoded + '  ' + afterString;
+                    editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    var beforeString = editorElement.value.substring(0,editorElement.selectionStart);
+                    var afterString = editorElement.value.substring(editorElement.selectionStart,editorValue.length);
+                    editorElement.value =   beforeString + decoded + '  ' + afterString;
                 }
-            	
-            	
-            }   
-              
+            }
+
             var isTemplateDeleted = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:TemplateDeleted').value;
             var editorHtmlValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:htmlValue').value;
             var templateType = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:templateType').value;
             var editorTextValue = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:textValue').value;
             var previousEmailTemplate = templateType;
-            var isHVEMUser = '{!activeUser.HVEM_User__c}'; 
+            var isHVEMUser = '{!activeUser.HVEM_User__c}';
             var inConsole = testIsInConsole();
             if(isHVEMUser == 'true' && inConsole == 1){
                 if(templateType == 'custom'){
-                        var editor = CKEDITOR.replace( 'nameMainEmailBody' );
-                        CKEDITOR.instances.idMainEmailBody.setData('');
-                        // Decode the now encoded text
-                        var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
-                        decoded = decoded.replace('<![CDATA[', '');
-                        decoded = decoded.replace(']]>', '');
-                        decoded = trim(decoded.replace( '<p>', '' ));
-                        decoded = trim(decoded.replace( '</p>', '' ));
-                        CKEDITOR.instances.idMainEmailBody.setData(decoded);
+                    var editor = CKEDITOR.replace( 'nameMainEmailBody' );
+                    CKEDITOR.instances.idMainEmailBody.setData('');
+                    // Decode the now encoded text
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,false);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    decoded = trim(decoded.replace( '<p>', '' ));
+                    decoded = trim(decoded.replace( '</p>', '' ));
+                    CKEDITOR.instances.idMainEmailBody.setData(decoded);
                 }else{
-                        editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
-                        var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
-                        decoded = decoded.replace('<![CDATA[', '');
-                        decoded = decoded.replace(']]>', '');
-                        if(inConsole == 1){
-                            document.getElementById('idMainEmailBody').value = editorTextValue;
-                        }                    
-                    
+                    editorTextValue = editorTextValue.replace(/<br\/>/g, "\n");
+                    var decoded = HVEMApp.Util.String.unescapeHtml(editorTextValue,true);
+                    decoded = decoded.replace('<![CDATA[', '');
+                    decoded = decoded.replace(']]>', '');
+                    if(inConsole == 1){
+                        document.getElementById('idMainEmailBody').value = editorTextValue;
+                    }
                 }
            }
           //changes
-            window.onload=function(){  
+            window.onload=function(){
                 if(inConsole == 1 && isHVEMUser == 'true'){
-                    var templateSelectList = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:emailTemplateId');                               
-                    
+                    var templateSelectList = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:emailTemplateId');
+
                     for(var i=(templateSelectList.options.length - 1);i>=0;i--){
                          if(templateSelectList .options[i].disabled == true){
-                            templateSelectList .options[i].className = 'Fontbolder'; 
+                            templateSelectList .options[i].className = 'Fontbolder';
                         }
-                    }                
+                    }
                    //Phase - II - Email Editor Component - START
                    var saveLink = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:SaveId');
                    var discardLink = document.getElementById('HVEMEmailEditorPublishierPageId:HVEMEmailPublisierForm:com1:hvemEmailEditoComponentId:DiscardId');
@@ -535,24 +614,24 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                            discardLink.style.display = 'none';
                            document.getElementById('discardChangesSpan').style.display='block';
                        }
-                  }     
+                  }
                    if('{!isUnderApproval}' == 'true'){
                        if('{!configOptions.Allow_Drafts__c}' == 'true'){
                            discardLink.style.display = 'none';
                            document.getElementById('discardChangesSpan').style.display='block';
                       }
-                       
+
                    }else if('{!isUnderApproval}' == 'false'){}
                    if(templateType == 'custom' && '{!isUnderApproval}' == 'true'){
                        CKEDITOR.instances.idMainEmailBody.setReadOnly(true);
                    }else if('{!isUnderApproval}' == 'true'){
                        document.getElementById('idMainEmailBody').disabled = true;
                    }
-                   
-                //Phase - II - Email Editor Component - END 
+
+                //Phase - II - Email Editor Component - END
                 }
             }
-                               
+
     </script>
 
     <script>
@@ -561,8 +640,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         if(templateType == 'text'){
                             var editorElement = document.getElementById('idMainEmailBody');
                             var editorValue = editorElement.value;
-                            var beforeString =editorValue.substring(0,editorElement.selectionStart); 
-                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length); 
+                            var beforeString =editorValue.substring(0,editorElement.selectionStart);
+                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length);
                             editorElement.value =   beforeString + url + '  ' + afterString;
                         }else if(templateType == 'custom'){
                             var element = CKEDITOR.dom.element.createFromHtml( '<a style="margin-right:10px;" href="' + url + ' " target="__blank" >' + articleTitleForUrl +  '</a> ' );
@@ -570,39 +649,39 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                         }else{
                             var editorElement = document.getElementById('idMainEmailBody');
                             var editorValue = editorElement.value ;
-                            var beforeString =editorValue.substring(0,editorElement.selectionStart); 
-                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length); 
+                            var beforeString =editorValue.substring(0,editorElement.selectionStart);
+                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length);
                             editorElement.value =   beforeString + url + '  ' +  afterString;
                         }
                    }
-                   if(type == 'content') 
+                   if(type == 'content')
                      {
                         if(templateType == 'text'){
                             var editorElement = document.getElementById('idMainEmailBody');
                             var editorValue = editorElement.value;
-                            var beforeString = editorValue.substring(0,editorElement.selectionStart); 
-                            var afterString = editorValue.substring(editorElement.selectionStart,editorValue.length); 
+                            var beforeString = editorValue.substring(0,editorElement.selectionStart);
+                            var afterString = editorValue.substring(editorElement.selectionStart,editorValue.length);
                             editorElement.value =   beforeString + url + '  ' + afterString;
                         }else if(templateType == 'custom'){
                             CKEDITOR.instances.idMainEmailBody.insertHtml('<p>' +  ' ' + url +  '</p> ' );
                         }else{
                             var editorElement = document.getElementById('idMainEmailBody');
                             var editorValue = editorElement.value ;
-                            var beforeString =editorValue.substring(0,editorElement.selectionStart); 
-                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length); 
+                            var beforeString =editorValue.substring(0,editorElement.selectionStart);
+                            var afterString =editorValue.substring(editorElement.selectionStart,editorValue.length);
                             editorElement.value =   beforeString + url + '  ' +  afterString;
                         }
                    }
-                            
+
          }
-    
-    
+
+
           /** Script to show and hide drop down button */
-          
+
          var isMouseOver = false;
          var isoptionsVisible = 'false';
          var isActionComplete = 'false';
-         
+
          function showOptions(){
              if(inConsole == 1){
              if(isoptionsVisible ==  'false'){
@@ -615,49 +694,53 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                   }else{
                        document.getElementById('changeCaseId').className = 'btnhidden';
                    }
-              
+
                    if({!isSuperUser}){
                          document.getElementById('DivId').style.display='block';
                  if(document.getElementById('superUserApproval').className == 'btnhidden')
                      document.getElementById('superUserApproval').className = 'btnvisible';
                  else if(document.getElementById('superUserApproval').className == 'btnvisible')
-                     document.getElementById('superUserApproval').className = 'btnhidden';   
+                     document.getElementById('superUserApproval').className = 'btnhidden';
                    }else{
                        document.getElementById('superUserApproval').className = 'btnhidden';
                    }
                    isoptionsVisible = 'true';
                    isActionComplete = 'false';
-                   
+
                }else if(isoptionsVisible == 'true'){
-                     document.getElementById('DivId').style.display='none';                 
+                     document.getElementById('DivId').style.display='none';
                      isoptionsVisible = 'false';
                      isActionCalled = 'false';
                      isActionComplete = 'false';
-               }   
-             } 
+               }
+             }
          }
-         
-         function hideOptions(type){
-                 if(type == 'review'){
-                     sendAndNextActionJS('SuperUserApproval');
-                 isActionComplete = 'true';
-                 isoptionsVisible = 'false';
-                }else if(type == 'spam'){
-                 changeCaseStausAF();
-                 isActionComplete = 'true';
-                 isoptionsVisible = 'false';
-                 }
-             document.getElementById('DivId').style.display='none';  
-                 } 
-                  
+
+        function hideOptions(type){
+            if(type == 'review'){
+                sendAndNextActionJS('SuperUserApproval');
+                isActionComplete = 'true';
+                isoptionsVisible = 'false';
+            }else if(type == 'spam'){
+                changeCaseStatusAF();
+                isActionComplete = 'true';
+                isoptionsVisible = 'false';
+            }else if(type == 'sendback'){
+                sendCaseBackToQueueAF();
+                isActionComplete = 'true';
+                isoptionsVisible = 'false';
+            }
+            document.getElementById('DivId').style.display='none';
+        }
+
          function hideDropDownOptions(){
              if(isActionComplete == 'false' && isMouseOver == 'false'){
-                 document.getElementById('DivId').style.display='none';  
+                 document.getElementById('DivId').style.display='none';
                  isActionComplete = 'true';
                  isoptionsVisible = 'false';
-             } 
+             }
          }
-        
+
          function populateMouseVar(type,CaseId){
              if(inConsole == 1){
                  if(type == 'out'){
@@ -666,8 +749,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                  }else if(type == 'in'){
                      isMouseOver = 'true';
                         document.getElementById(CaseId).className='highLightSelection';
-                 }  
-             }             
+                 }
+             }
          }
         function saveDiscardLink(){
                 document.getElementById('discardChangesSpan').style.display='none';
@@ -675,7 +758,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 discardLink.style.display = 'block';
                 return false;
         }
-        
-        
+
+
     </script>
 </apex:component>

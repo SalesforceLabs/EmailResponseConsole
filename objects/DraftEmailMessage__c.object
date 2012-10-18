@@ -34,6 +34,7 @@
     </actionOverrides>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>false</enableActivities>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
@@ -48,6 +49,7 @@
     </fields>
     <fields>
         <fullName>Case__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>Case</label>
         <referenceTo>Case</referenceTo>
@@ -214,6 +216,11 @@
         <unique>false</unique>
     </fields>
     <label>Draft Email Message</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
     <nameField>
         <label>DraftEmailMessage Name</label>
         <type>Text</type>

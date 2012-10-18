@@ -32,6 +32,13 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Allow_sending_cases_back_to_queue__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Allow sending cases back to the queue</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Article_Link_Base_URL__c</fullName>
         <description>HVEM config setting which sets article link base URL</description>
         <externalId>false</externalId>
@@ -162,13 +169,6 @@
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
         <label>Insert_KB_Article_Content</label>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>IsCustomEmailPublisher__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <label>IsCustomEmailPublisher</label>
         <type>Checkbox</type>
     </fields>
     <fields>

@@ -1,0 +1,350 @@
+<!--
+Copyright (c) 2012, salesforce.com, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+    * Neither the name of the salesforce.com, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+ -->
+
+<apex:component controller="HVEMCaseListDetailsCtrl" allowDML="true">
+    <apex:includeScript value="/support/console/26.0/integration.js"/>
+    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCaseListDetailsComponent.js')}" />
+    <style type='text/css'>
+       .hvemRefreshListButton,.rightArrowIcon {
+           background:
+               url("{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/sprite.png')}")
+               -5px -5px no-repeat transparent;
+        }
+        .hvemHigtlightedQueue {
+            background-color: #effaff;
+            border: 1px solid #b3c0c9;
+        }
+    </style>
+    <apex:outputPanel id="idPrimarytabPanel">
+        <script type='text/javascript'>
+            var selectedCaseId = '{!caseId}';
+            var currentCase = '';
+            var finalQueueId = '{!finalQueueId}';
+            var isHVEMUser = '{!loggedUserInstance.HVEM_User__c}';
+
+            function openCaseDetailsPrimaryTab(type){
+                if(type == 'queue' && {!casesInQueueList.size} == 0){
+                    return;
+                }
+                sforce.console.focusPrimaryTabByName('{!JSENCODE(selectedCase.CaseNumber)}', focusTabCallback);
+            }
+
+            function focusTabCallback(result) {
+                if (result.success != true) {
+                    // setting the focus failed, let's try to open the tab
+                    sforce.console.openPrimaryTab(null,'/{!JSENCODE(selectedCase.Id)}', true, '{!JSENCODE(selectedCase.CaseNumber)}',openPrimaryTabSuccess,'{!JSENCODE(selectedCase.CaseNumber)}');
+                    refreshFull('fromRefresh');
+                }
+                selectCase(selectedCaseId, false);
+            }
+            function openPrimaryTabSuccess(result) {
+                // nothing really to do...
+            }
+        </script>
+    </apex:outputPanel>
+    <script type='text/javascript'>
+         function selectQueue(queueId) {
+            document.getElementById('idSelectedQueue').value = queueId;
+            if(document.getElementById(queueId) != null && document.getElementById(queueId) != ''){
+                //document.getElementById(queueId).className='hvemListItem hvemHigtlightedQueue';
+                document.getElementById(queueId).style.backgroundColor = '#effaff';
+                document.getElementById(queueId).style.border = '1px solid #b3c0c9';
+            }
+        }
+
+        function selectCase(selectCaseId, bOnload) {
+            document.getElementById('idSelectedCase').value = selectCaseId;
+            var caseContainerId = 'idSelectedCase_' + selectCaseId;
+            if (prevFocusedTabId != -1 && prevFocusedTabId != selectCaseId) {
+                // un-select the currently selected case
+                unSelectCase();
+            }
+            if(document.getElementById(caseContainerId) != null && document.getElementById(caseContainerId) != ''){
+                document.getElementById(caseContainerId).className='highLightSelection';
+            } else {
+                // the case is not in the list, let's refresh the list (after a "send and next")
+                // TODO: check that the list won't refresh constinuously
+                //       if the open case is not assigned to the current user (shold not happen, but...)
+                refreshFull('fromRefresh');
+            }
+        }
+        function unSelectCase() {
+            var prevCaseContainerId = 'idSelectedCase_' + prevFocusedTabId;
+            if(document.getElementById(prevCaseContainerId) != null && document.getElementById(prevCaseContainerId) != ''){
+                document.getElementById(prevCaseContainerId).className='hvemCaseItem';
+            }
+        }
+
+        var enclosingTabObjId = -1;
+        var focusedTabObjId = -1;
+        var prevFocusedTabId = -1;
+        var focusChecker;
+        function resetSelection() {
+            enclosingTabObjId = -1;
+            focusedTabObjId = -1;
+            prevFocusedTabId = -1;
+        }
+
+        window.onload = init;
+        function init(){
+            focusChecker = setInterval(checkFocusedTab, 1000);
+
+            sforce.console.getEnclosingPrimaryTabObjectId(setEnclosingTabObjId);
+            sforce.console.getFocusedPrimaryTabObjectId(setFocusedTabObjId);
+
+            sforce.console.addEventListener('HVEM:::CaseList:::Refresh', refreshEventHandler);
+        }
+
+        var refreshEventHandler = function() {
+            refreshFull('fromRefresh');
+        }
+        var setEnclosingTabObjId = function(result) {
+            enclosingTabObjId = normaliseSforceID(result.id);
+        }
+        var setFocusedTabObjId = function(result) {
+            prevFocusedTabId = focusedTabObjId;
+            focusedTabObjId = normaliseSforceID(result.id);
+            if(focusedTabObjId!=null && focusedTabObjId!="null" && focusedTabObjId!=-1) {
+                if (focusedTabObjId!=prevFocusedTabId) {
+                    selectCase(focusedTabObjId, false);
+                }
+            } else {
+                if (focusedTabObjId!=null && focusedTabObjId!="null" && focusedTabObjId!=-1) {
+                    unSelectCase();
+                    //prevFocusedTabId = -1;
+                } else if (prevFocusedTabId != null && prevFocusedTabId != "null" && prevFocusedTabId != -1 ) {
+                    unSelectCase();
+                }
+            }
+        }
+        var checkFocusedTab = function() {
+            if (enclosingTabObjId==null || enclosingTabObjId=="null" || enclosingTabObjId==-1) {
+                sforce.console.getFocusedPrimaryTabObjectId(setFocusedTabObjId);
+            } else {
+                // not a pinned list view, no need to highlight the focused tab
+                clearInterval(focusChecker);
+            }
+        }
+        function normaliseSforceID( id) { // fluff up a 15 char id to return an 18 char id
+            if (id == null) return id;
+            id = id.replace(/\"/g, ''); // scrub quotes from this id
+            if (id.length == 18) {
+                return id;
+            }
+            if (id.length != 15) {
+                //print('well, id is not 15, bye' + id + ' ' + id.length);
+                return null;
+            }
+            var suffix = "";
+            for (var i = 0; i < 3; i++) {
+                var flags = 0;
+                for (var j = 0; j < 5; j++) {
+                    var c = id.charAt(i * 5 + j);
+                    if (c >= 'A' && c <= 'Z') {
+                        flags += 1 << j;
+                    }
+                }
+                if (flags <= 25) {
+                    suffix += "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(flags);
+                } else {
+                    suffix += "012345".charAt(flags-26);
+                }
+            }
+            return id + suffix;
+        }
+    </script>
+    <apex:outputPanel id="onloadScriptPanel">
+    </apex:outputPanel>
+
+    <input type="hidden" id="idSelectedQueue" name="nameSelectedQueue" value="{!finalQueueId}" />
+    <input type="hidden" id="idSelectedCase" name="nameSelectedCase" value="" />
+
+    <apex:form id="idMainPanel">
+
+        <apex:actionFunction name="assignCaseFromQueueAF"
+            action="{!assignCaseFromQueue}"
+            rerender="idPreviousCasePanel,idCaseoutputPanel,idQueueCaseCountPanel,idPrimarytabPanel"
+            oncomplete="openCaseDetailsPrimaryTab('queue');">
+            <apex:param name="QueueId" assignTo="{!queueId}" value="" />
+        </apex:actionFunction>
+        <apex:actionFunction name="openCaseDetailsPrimaryTabAF"
+            action="{!openCaseDetailsPrimaryTab}" rerender="idPrimarytabPanel"
+            onComplete="openCaseDetailsPrimaryTab('case');">
+            <apex:param name="CaseId" assignTo="{!caseId}" value="" />
+        </apex:actionFunction>
+        <apex:actionFunction name="refreshFull" status="loadingStatus"
+            action="{!refreshCaseQueueList}"
+            oncomplete="resetSelection();"
+            rerender="idQueueCaseCountPanel,idPreviousCasePanel,idCaseoutputPanel">
+            <apex:param name="refreshParam" assignTo="{!refreshListParam}" value="" />
+        </apex:actionFunction>
+        <apex:actionFunction name="storeSelectedQueuePageId"
+            action="{!storeSelectedQueuePageId}" rerender="idPrimarytabPanel">
+            <apex:param name="queuePageId" assignTo="{!queuePageId}" value="" />
+        </apex:actionFunction>
+        <apex:actionFunction name="showDraftsOnlyCaseListAF"
+            status="loadingStatus" action="{!draftsCaseListFunc}"
+            rerender="messageId,idCaseoutputPanel,idQueueCaseCountPanel"
+            oncomplete="initConsole();">
+            <apex:param assignTo="{!isDrafts}" name="isDrafts" value="" />
+        </apex:actionFunction>
+        <apex:actionStatus id="loadingStatus" onstart="freezeBackground();"
+            onstop="unFreezeBackground();">
+        </apex:actionStatus>
+
+        <table class="hvemTable" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="tdStyle">
+                    <apex:outputPanel id="idQueueCaseCountPanel">
+                        <apex:outputPanel rendered="{!If(queueListErrorMessage != '',true,false)}">
+                            <apex:outputLabel styleClass="LabelStyle" value="{!queueListErrorMessage}" />
+                            <br />
+                        </apex:outputPanel>
+                        <apex:pageBlock >
+                            <apex:pageblockTable value="{!queueCountList}" var="queueCountVar">
+                                <apex:column >
+                                    <div id="facetDivId">
+                                        <apex:facet name="header">
+                                            {!$Label.My_Assigned_Queues} : {!queueCountList.size}
+                                            <input
+                                                type="button" id="refreshImageId"
+                                                onclick="refreshFull('fromRefresh');"
+                                                class="hvemRefreshListButton" style="margin-top:-4px" title="Refresh" />
+                                        </apex:facet>
+                                    </div>
+                                    <table width="100%;" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td align="left"
+                                                id="idSelectedQueue_{!queueCountVar.queueInstance.Group.Id}"
+                                                class="hvemListItem"
+                                                style="{!IF('idSelectedQueue_'+queueCountVar.queueInstance.Group.Id==finalQueueId, 'background-color:#effaff;border:1px solid #b3c0c9;','border-bottom: 0px;')}"
+                                                onclick="showQueueSelected(this);">
+                                                    <apex:outputLabel styleClass="hvemLabel"
+                                                            value="{!queueCountVar.queueInstance.Group.Name} : {!queueCountVar.caseCount}" />
+                                            </td>
+                                            <td class="tdNone"
+                                                style="border-bottom: 0px; padding-right: 1 !important;"
+                                                align="right"><img class="rightArrowIcon"
+                                                onclick="assignCaseFromQueueAF('{!queueCountVar.queueInstance.Group.Id}')"
+                                                title="Choose Next Case" style="cursor: pointer;"
+                                                src="/s.gif" /></td>
+                                        </tr>
+                                    </table>
+                                </apex:column>
+                            </apex:pageblockTable>
+                        </apex:pageBlock>
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdStyle">
+                    <apex:outputPanel id="idPreviousCasePanel" styleClass="hvemBasicPanel">
+                        <apex:pageBlock rendered="{!If(isPreviousCasePresent ,true,false)}">
+                            <apex:outputPanel id="idPreviousCaseInternalPanel">
+                                <apex:outputLabel styleClass="commonCssBold hvemHeading">{!$Label.Previous_Case_Label}</apex:outputLabel>
+                                <table width="100%">
+                                    <tr>
+                                        <td class="hvemCaseItem">
+                                            <a onclick="openCaseDetailsPrimaryTabAF('{!previousCase.Id}');">
+                                                <apex:outputLabel style="cursor:pointer;text-decoration:underline;" value="{!previousCase.CaseNumber} - " />
+                                                    <strong>
+                                                        <apex:outputLabel style="cursor:pointer;text-decoration:underline;"
+                                                            value="{!previousCase.Status}" />
+                                                    </strong>
+                                            </a>
+                                            <em><apex:outputLabel value="{!previousCase.Contact.Name}" /></em>
+                                            <p><apex:outputLabel value="{!previousCase.Subject}" style="white-space:wrap;" /></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </apex:outputPanel>
+                        </apex:pageBlock>
+                        <apex:outputLabel styleClass="InfoLabelStyle"
+                            value="{!previousCaseErrorMessage}"
+                            rendered="{!If(previousCaseErrorMessage !='',true,false)}">
+                        </apex:outputLabel>
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdStyle">
+                    <apex:outputPanel id="idCaseoutputPanel">
+                        <apex:outputPanel rendered="{!If(caseListErrorMessage != '',true,false)}">
+                            <apex:outputLabel styleClass="LabelStyle" value="{!caseListErrorMessage}" />
+                            <br />
+                        </apex:outputPanel>
+                        <apex:pageBlock >
+                            <apex:pageblockTable title="{!$Label.Assigned_Case_List}"
+                                value="{!loggedUserCaseInnerList}" var="loggedInUserCaseVar">
+
+                                <apex:column >
+                                    <apex:facet name="header">
+                                        <apex:outputPanel id="facetDivId" styleClass="draftsClass">
+                                            {!$Label.My_Assigned_Cases} : {!loggedInUserCaseList.size}
+                                            <apex:outputPanel rendered="{!isDraftsAllowed}">
+                                                <apex:inputCheckbox style="cursor: pointer;right:47%;"
+                                                    id="checkId" value="{!isDrafts}"
+                                                    title="{!$Label.Show_cases_saved}"
+                                                    styleClass="draftOnlyClass"
+                                                    onclick="showDraftsOnlyCaseListAF(this.checked);" />
+                                                <label for="Drafts" style="right: 40%;"
+                                                    class="draftOnlyClass">{!$label.Drafts_Rejected}</label>
+                                            </apex:outputPanel>
+                                        </apex:outputPanel>
+                                    </apex:facet>
+                                    <div id="idSelectedCase_{!loggedInUserCaseVar.loggedUserCase.Id}" class="{!IF(loggedInUserCaseVar.loggedUserCase.Id==caseId,'highLightSelection','hvemCaseItem')}">
+                                        <a onclick="openCaseDetailsPrimaryTabAF('{!loggedInUserCaseVar.loggedUserCase.Id}');">
+                                            <apex:outputLabel style="cursor:pointer;text-decoration:underline;"
+                                                value="{!loggedInUserCaseVar.loggedUserCase.CaseNumber} - " />
+                                            <strong><apex:outputLabel style="cursor:pointer;text-decoration:underline;"
+                                                value="{!loggedInUserCaseVar.loggedUserCase.Status}" /></strong>
+                                        </a>
+                                        <apex:image rendered="{!loggedInUserCaseVar.isRejected}" style="float:right;" title="{!$Label.Case_rejected_email}" value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/RejectedDraft.png')}" width="20px" height="18px"/>
+                                        <apex:image rendered="{!loggedInUserCaseVar.isDraft}" style="float:right;" title="{!$Label.Case_draft_email}" value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/DraftCase.png')}" width="16px" height="14px"/>
+
+                                        <em><apex:outputLabel value="{!loggedInUserCaseVar.loggedUserCase.Contact.Name}" /></em>
+                                        <p><apex:outputLabel value="{!loggedInUserCaseVar.loggedUserCase.Subject}" style="white-space:wrap;" /></p>
+                                    </div>
+                                </apex:column>
+                                <br />
+                            </apex:pageblockTable>
+                            <apex:outputPanel rendered="{!isFound}">
+                                <apex:pageMessage severity="info" strength="1" title="{!$Label.No_Drafts_Rwjected_Cases_found}" />
+                            </apex:outputPanel>
+                        </apex:pageBlock>
+                        <br />
+                    </apex:outputPanel>
+                </td>
+            </tr>
+        </table>
+        <div id="disablingDiv" style="position: absolute; top: 0px; left: 0px;"></div>
+        <div id="loadingImage" style="position: absolute; left: 40%; top: 40%;">
+            <apex:image value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/Images/loadingBar.gif')}" width="20px" height="20px" />
+        </div>
+    </apex:form>
+</apex:component>

@@ -89,6 +89,14 @@
         <value>Allow changing case status without sending an email</value>
     </labels>
     <labels>
+        <fullName>Allow_send_back_to_queue</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Allow send back to queue</shortDescription>
+        <value>Allow sending cases back to the source queue</value>
+    </labels>
+    <labels>
         <fullName>ArticleTypes_filter</fullName>
         <categories>HVEM</categories>
         <language>en_US</language>
@@ -1215,6 +1223,14 @@
         <protected>true</protected>
         <shortDescription>Send and Next Case</shortDescription>
         <value>Send and Next Case</value>
+    </labels>
+    <labels>
+        <fullName>Send_back_to_queue</fullName>
+        <categories>HVEM</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Send back to queue</shortDescription>
+        <value>Send Back To Queue</value>
     </labels>
     <labels>
         <fullName>Setup_Manage_Users_Public_Groups</fullName>

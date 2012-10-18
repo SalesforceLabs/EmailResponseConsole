@@ -26,14 +26,41 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
-<apex:page standardController="Case" showheader="false" sidebar="false" id="HVEMKnowledgeArticlePageId">
+<apex:page >
 
-   <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />
-   <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMKnowledgeArticleComponent.css')}" />
+    <apex:includeScript value="/support/console/26.0/integration.js"/>
+    <script type="text/javascript">
 
-   <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMKnowledgeArticleComponent.js')}" />
-    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
+        var callback = function(result) {
+            if (result.success) {
+            } else {
+            }
+         };
 
-   <c:HVEMKnowledgeArticleComp id="KnowledgeArticleComId"/>
+
+        function eventGoUp() {
+            sforce.console.fireEvent('hvemKbUp', 'HVEM:::KB:::GoUp', callback);
+        }
+        function eventGoDown() {
+            sforce.console.fireEvent('hvemKbDown', 'HVEM:::KB:::GoDown', callback);
+        }
+        function eventInsertArticleLink() {
+            sforce.console.fireEvent('hvemKbInsertLink', 'HVEM:::KB:::InsertLink', callback);
+        }
+        function eventInsertArticleContent() {
+            sforce.console.fireEvent('hvemKbInsertContent', 'HVEM:::KB:::InsertContent', callback);
+        }
+    </script>
+
+    <div>
+        <a href="" onclick="eventGoUp(); return false;">Up</a>
+        &nbsp;&nbsp;
+        <a href="" onclick="eventGoDown(); return false;">Down</a>
+    </div>
+    <div>
+        <a href="" onclick="eventInsertArticleLink(); return false;">Insert Link</a>
+        &nbsp;&nbsp;
+        <a href="" onclick="eventInsertArticleContent(); return false;">Insert Content</a>
+    </div>
 
 </apex:page>

@@ -26,14 +26,19 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 
-<apex:page standardController="Case" showheader="false" sidebar="false" id="HVEMKnowledgeArticlePageId">
+<apex:page sidebar="false" controller="HVEMCaseListDetailsCtrl">
 
-   <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />
-   <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMKnowledgeArticleComponent.css')}" />
+    <apex:outputPanel id="idEnhancedList" rendered="{!$CurrentPage.parameters.isdtp==null || loggedUserInstance.HVEM_User__c==false}">
+        <apex:enhancedList type="Case" height="500" rowsPerPage="25" id="CaseList" customizable="true" />
+    </apex:outputPanel>
 
-   <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMKnowledgeArticleComponent.js')}" />
-    <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
+    <apex:outputPanel id="idHVEMCaseList" rendered="{!!($CurrentPage.parameters.isdtp==null || loggedUserInstance.HVEM_User__c==false)}">
+        <apex:includeScript value="/support/console/26.0/integration.js"/>
+        <apex:includeScript value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
 
-   <c:HVEMKnowledgeArticleComp id="KnowledgeArticleComId"/>
+        <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.HVEMStaticResource,'/HVEM_StaticResource/CSS/HVEMCaseListDetailsStyle.css')}" />
 
+        <c:HVEMCaseList id="HVEMCaseListId" />
+    </apex:outputPanel>
 </apex:page>

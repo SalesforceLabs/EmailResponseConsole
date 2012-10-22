@@ -50,6 +50,13 @@ Version History
 - Removed redondant components HVEMCaseList...
 - Reformatted the source code: tabs --> 4 spaces, cleaner indentation, etc.
 - Increased the code coverage a bit
+- Deprecated Visualforce components (not used anymore, not updated in this release):
+-- HVEMCaseFeedComponent
+-- HVEMCaseListDetails
+-- HVEMCaseListLeftSidebar
+- Deprecated Visualforce pages (not used anymore, not updated in this release):
+-- HVEMCaseListLeftSidebarPage
+-- HVEMMainPage
  
 *Version 3 - AppExchange Release: 2012/07/19*
 

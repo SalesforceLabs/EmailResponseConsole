@@ -51,7 +51,7 @@ Version History
 - Reformatted the source code: tabs --> 4 spaces, cleaner indentation, etc.
 - Increased the code coverage a bit
 - Deprecated components, removed from the unmanaged package, still present but unused in teh managed package:
- - Visualforce components: HVEMCaseFeedComponent, HVEMCaseListDetails, HVEMCaseListLeftSidebar
+ - Visualforce components: HVEMCaseFeedEmailPublisherComponent, HVEMCaseListDetails, HVEMCaseListLeftSidebar
  - Visualforce pages: HVEMCaseListLeftSidebarPage, HVEMMainPage
  
 *Version 3 - AppExchange Release: 2012/07/19*

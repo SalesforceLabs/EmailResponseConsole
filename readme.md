@@ -53,6 +53,7 @@ Version History
 - Deprecated components, removed from the unmanaged package, still present but unused in teh managed package:
  - Visualforce components: HVEMCaseFeedEmailPublisherComponent, HVEMCaseListDetails, HVEMCaseListLeftSidebar
  - Visualforce pages: HVEMCaseListLeftSidebarPage, HVEMMainPage
+ - Apex classes: HVEMCaseFeedEmailPublisherCntrl
  
 *Version 3 - AppExchange Release: 2012/07/19*
 

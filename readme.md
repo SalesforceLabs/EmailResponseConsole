@@ -15,7 +15,7 @@ The ERC is a collection of custom components for the Service Cloud Console tight
 
 License
 -------
-ERC is published by Force.com Labs and is Copyright (c) 2011 Salesforce.com, Inc.
+ERC is published by Force.com Labs and is Copyright (c) 2012 Salesforce.com, Inc.
 
 The app is available via the BSD license.  Contributions welcome. Contact labs at salesforce dot com or submit a pull request for details.
 

@@ -35,7 +35,7 @@ ERC is available on the AppExchange both as a managed and an un-managed package.
 Version History
 ---------------
 
-*Version 3.5 - Not released yet*
+*Version 3.5 - AppExchange Release: 2012/10/31*
 
 - Updated the packaging with sample app, tab, layout, etc. for an easier trial type installation
 - Added the support of pinned list view with detection of change of current tab
